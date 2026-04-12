@@ -49,4 +49,13 @@ Then o sistema armazena os metadados do vídeo com status "processando"
 And o sistema envia o arquivo para o serviço de processamento de mídia
 And o sistema retorna uma confirmação de recebimento da solicitação
 And o sistema atualiza o status do vídeo para "publicado" após o processamento ser concluído com sucesso
-And final
+
+Scenario: rejeitar publicação de vídeo por limite de armazenamento excedido
+
+Given o usuário “João” está cadastrado no sistema
+And o usuário possui um canal ativo
+And o arquivo de vídeo enviado não atende aos limites de tamanho permitidos
+When o sistema recebe a solicitação de upload de um novo vídeo
+Then o sistema rejeita a solicitação de publicação
+And o sistema não armazena o vídeo nem seus metadados
+And o sistema retorna uma mensagem informando que o limite de armazenamento do vídeo foi excedido
