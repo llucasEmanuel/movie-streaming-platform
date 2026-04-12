@@ -18,4 +18,22 @@ Given o usuário “João” está na página de gerenciamento do canal
 And “João” seleciona um arquivo de vídeo em formato não suportado
 When “João” solicita a publicação do vídeo
 Then o sistema exibe a mensagem "Formato de vídeo não suportado!"
-And o sistema não adiciona o vídeo à lista do canal
+And o sistema não adiciona o vídeo à lista do canal 
+
+Scenario: atualizar informações do canal com sucesso
+
+Given o usuário “João” está na página de edição do canal
+And o sistema exibe os dados atuais do canal
+When “João” altera o nome e/ou a descrição do canal
+And “João” solicita salvar as alterações
+Then o sistema exibe a mensagem "Dados do canal atualizados com sucesso"
+And o sistema exibe os novos dados atualizados do canal
+
+Scenario: visualizar estatísticas do canal
+
+Given o usuário “João” está na página do canal
+And o canal possui vídeos publicados
+When “João” solicita a visualização das estatísticas
+Then o sistema exibe o número total de visualizações
+And o sistema exibe o número de inscritos
+And o sistema exibe a quantidade de vídeos do canal
