@@ -37,3 +37,15 @@ When “João” solicita a visualização das estatísticas
 Then o sistema exibe o número total de visualizações
 And o sistema exibe o número de inscritos
 And o sistema exibe a quantidade de vídeos do canal
+
+Scenario: publicação do vídeo 
+
+Given o usuário “João” está cadastrado no sistema
+And o usuário possui um canal ativo
+And o sistema suporta o formato de vídeo enviado
+And o arquivo de vídeo atende aos limites de tamanho permitidos
+When o sistema recebe a solicitação de publicação de vídeo com seus metadados
+Then o sistema armazena os metadados do vídeo com status "processando"
+And o sistema envia o arquivo para o serviço de processamento de mídia
+And o sistema retorna uma confirmação de recebimento da solicitação
+And o sistema atualiza o status do vídeo para "publicado" após o processamento ser concluído com sucesso
