@@ -49,3 +49,4 @@ Then o sistema armazena os metadados do vídeo com status "processando"
 And o sistema envia o arquivo para o serviço de processamento de mídia
 And o sistema retorna uma confirmação de recebimento da solicitação
 And o sistema atualiza o status do vídeo para "publicado" após o processamento ser concluído com sucesso
+And final
