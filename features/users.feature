@@ -54,3 +54,13 @@ Scenario: Remoção de usuário
     When eu seleciono "Remover conta"
     And eu confirmo a escolha com "Confirmo que quero remover a conta"
     Then o sistema deve mostrar a mensagem "Conta removida com sucesso"
+
+Scenario: Recuperação de conta
+    Given eu estou na tela "Página inicial"
+    And eu seleciono "Esqueci minha senha"
+    When eu preencho "piedrito123@gmail.com" como email de recuperação
+    And eu recebo um email requisitando uma nova senha
+    And eu preencho "piedrito456" como nova senha
+    And eu seleciono "Confirmar"
+    Then eu recebo uma mensagem de confirmação "Nova senha salva"
+    And eu posso logar com a minha conta e com a nova senha
