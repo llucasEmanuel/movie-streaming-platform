@@ -46,3 +46,9 @@ Scenario: Alterar visibilidade de playlist privada para pública
     When eu altero a visibilidade da playlist "Filmes Nerds" para "Pública"
     Then a playlist "Filmes Nerds" aparece nos resultados de busca
     And a playlist "Filmes Nerds" está acessível publicamente
+
+Scenario: Adicionar filme duplicado na playlist
+    Given a playlist "Marvel" já contém o filme "Iron Man"
+    When eu tento adicionar o filme "Iron Man" novamente
+    Then o sistema  avisa que já existe esse filme na playlist
+    And não adiciona novamente
