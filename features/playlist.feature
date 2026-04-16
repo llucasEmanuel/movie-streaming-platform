@@ -36,3 +36,4 @@ Scenario: Falha ao alterar visibilidade da playlist
     And ocorre um erro interno no sistema
     Then o sistema exibe uma mensagem de erro
     And a playlist "Filmes de ação" permanece como "Pública"
+    And aparece uma mensagem do sistema "Erro ao mudar visibilidade"
