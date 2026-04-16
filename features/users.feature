@@ -74,3 +74,11 @@ Scenario: Erro ao redefinir senha com código de verificação inválido
     And seleciono "Redefinir senha"
     Then eu devo ver uma mensagem de erro "Código de verificação inválido"
     And a senha da conta não deve ser atualizada
+    
+Scenario: Realizar login com conta Google com sucesso
+    Given eu estou na tela "Login"
+    And possuo uma conta vinculada ao Google com email "victoria@gmail.com"
+    When eu seleciono "Entrar com Google"
+    And escolho a conta "victoria@gmail.com"
+    Then eu devo ser autenticado no sistema
+    And devo ser redirecionado para a tela "Página inicial"
