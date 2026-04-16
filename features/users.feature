@@ -109,3 +109,13 @@ Scenario: Remoção de usuário
     When eu acesso a tela "Histórico"
     Then eu devo ver o conteúdo "Stranger Things - S05E02" no histórico
     And eu devo ver o progresso "35%" associado a esse conteúdo
+
+Scenario: Redefinir senha com código válido
+    Given eu possuo uma conta cadastrada com email "alvaro@email.com"
+    And solicitei recuperação de senha para o email "alvaro@email.com"
+    And o código de verificação válido enviado foi "834921"
+    When eu informo o código "834921"
+    And informo a nova senha "NovaSenha@123"
+    And seleciono "Redefinir senha"
+    Then eu devo ver uma mensagem de confirmação "Senha redefinida com sucesso"
+    And a senha da conta deve ser atualizada
