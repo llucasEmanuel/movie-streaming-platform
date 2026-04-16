@@ -20,3 +20,19 @@ Scenario: Acessar playlist privada via link direto
     When a usuária "Maria" tenta acessar a playlist "Filmes de Romance" por um link direto
     Then o sistema nega o acesso à playlist "Filmes de Romance"
     And o sistema exibe a mensagem "Este conteúdo não está mais disponível"
+
+Scenario: Usuário não autorizado tenta alterar visibilidade da playlist
+    Given o usuário "Maria" está logado no sistema
+    And a playlist "Filmes Nerds" pertence ao usuário "Júlio"
+    And a playlist "Filmes Nerds" está definida como "Pública"
+    When a usuária "Maria" tenta alterar a visibilidade da playlist "Filmes Nerds" para "Privada"
+    Then o sistema nega a alteração de visibilidade
+    And a playlist "Filmes Nerds" permanece como "Pública"
+
+Scenario: Falha ao alterar visibilidade da playlist
+    Given eu estou logado como "Júlio"
+    And a playlist "Filmes de ação" está definida como "Pública"
+    When eu tento alterar a visibilidade para "Privada"
+    And ocorre um erro interno no sistema
+    Then o sistema exibe uma mensagem de erro
+    And a playlist "Filmes de ação" permanece como "Pública"
