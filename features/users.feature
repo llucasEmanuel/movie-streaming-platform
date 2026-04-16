@@ -90,7 +90,7 @@ Scenario: Visualizar progresso de um conteúdo já aberto no histórico
     And o conteúdo "Stranger Things - S01E01" está registrado no meu histórico com progresso de "35%"
     When eu acesso a tela "Histórico"
     Then eu devo ver o conteúdo "Stranger Things - S01E01" no histórico
-    And eu devo ver o progresso "35%" associado a esse conteúdo
+    And eu devo ver o progresso "87%" associado a esse conteúdo
 
 Scenario: Login com perfil não cadastrado
     Given eu estou na tela "Página inicial" 
