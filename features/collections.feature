@@ -10,4 +10,10 @@ Scenario: Criar uma lista com sucesso
     Then eu devo ver a mensagem de confirmação “Lista criada com sucesso!”.
     And a lista “Filmes para as férias” deve estar visível na minha coleção de listas.
 
+Scenario: Adicionar um filme a uma lista com sucesso
+    Given eu estou na página do filme “Interstellar”.
+    And eu possuo a lista “Filmes para as férias” criada.
+    When eu adiciono “Interstellar” à minha lista “Filmes para as férias”.
+    Then eu devo ver a mensagem de confirmação “Filme adicionado com sucesso!”.
+    And ao acessar a página “Filmes para as férias”, eu devo ver “Interstellar” na lista.
 
