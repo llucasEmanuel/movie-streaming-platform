@@ -7,9 +7,9 @@ Scenario: Contabilização de visualização após 50% de reprodução
     And registra a visualização de "Iago" para evitar contagens duplicadas no futuro
 
 Scenario: Exclusão de conta com deleção em cascata 
-    Given a usuária "Iara" tem um canal chamado “Canal da Ana” com vídeos no servidor 
+    Given a usuária "Ana Clara" tem um canal chamado “Canal da Ana” com vídeos no servidor 
     And o usuário "Pedro" possui um vídeo de “Ana Clara” em sua lista "Assistir Mais Tarde" 
-    When o sistema valida o pedido de exclusão permanente da conta de "Iara" 
+    When o sistema valida o pedido de exclusão permanente da conta de "Ana Clara" 
     Then o sistema apaga permanentemente o perfil, o canal e os vídeos de “Ana Clara”
     And remove o vídeo deletado da lista do usuário “Pedro”
     And encerra a sessão retornando um estado de sucesso
