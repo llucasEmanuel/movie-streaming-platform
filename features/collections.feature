@@ -17,3 +17,11 @@ Scenario: Adicionar um filme a uma lista com sucesso
     Then eu devo ver a mensagem de confirmação “Filme adicionado com sucesso!”.
     And ao acessar a página “Filmes para as férias”, eu devo ver “Interstellar” na lista.
 
+Scenario: Remover um filme de uma lista com sucesso
+    Given a lista “Filmes para as férias” contém o filme “Interstellar”.
+    And eu estou visualizando a página da lista “Filmes para as férias”.
+    When eu removo o filme “Interstellar” desta lista.
+    Then eu devo ver a mensagem de confirmação “Filme removido com sucesso!”.
+    And o filme “Interstellar” não deve mais constar na lista “Filmes para as férias”.
+
+
