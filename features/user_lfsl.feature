@@ -25,3 +25,18 @@ Scenario: Falha ao tentar se inscrever em um canal sem estar logado
     When ele clica no botão "Inscrever-se" no canal "Aprenda C++"
     Then o sistema não registra a inscrição
     And redireciona o visitante para a tela de login com a mensagem "Faça login para se inscrever neste canal"
+    
+Scenario: Criação de perfil adicional para personalização de experiência
+    Given que o usuário "Ricardo" está autenticado em sua conta principal
+    And sua conta possui atualmente apenas o perfil "Padrão"
+    When ele solicita a criação de um novo perfil chamado "Kids" com a opção de "Conteúdo Seguro" ativada
+    Then o sistema valida os dados e registra o novo perfil vinculado à conta de "Ricardo"
+    And o sistema passa a exibir ambos os perfis na tela de seleção de usuário ao iniciar a sessão
+    And o histórico de vídeos assistidos do perfil "Kids" é iniciado de forma independente do perfil "Padrão"
+
+Scenario: Cadastro bem-sucedido via formulário
+    Given que o visitante está na página de registro
+    When ele preenche o nome "Iago", o e-mail "iago@teste.com" e uma senha de "8" caracteres com símbolos e maiúsculas
+    Then o sistema cria a conta e o perfil único associado
+    And envia um link de verificação para o e-mail informado
+    And bloqueia o login até que a verificação seja confirmada
