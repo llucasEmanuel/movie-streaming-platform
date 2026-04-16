@@ -74,3 +74,18 @@ Scenario: Erro ao redefinir senha com código de verificação inválido
     And seleciono "Redefinir senha"
     Then eu devo ver uma mensagem de erro "Invalid Verification code"
     And a senha da conta não deve ser atualizada
+    
+Scenario: Realizar login com conta Google com sucesso
+    Given eu estou na tela "Login"
+    And possuo uma conta vinculada ao Google com email "alvaro@gmail.com"
+    When eu seleciono "Entrar com Google"
+    And escolho a conta "alvaro@gmail.com"
+    Then eu devo ser autenticado no sistema
+    And devo ser redirecionado para a tela "Página inicial"
+
+Scenario: Visualizar progresso de um conteúdo no histórico
+    Given eu estou logado como "alvaro@email.com"
+    And o conteúdo "Stranger Things - S01E01" está registrado no meu histórico com progresso de "35%"
+    When eu acesso a tela "Histórico"
+    Then eu devo ver o conteúdo "Stranger Things - S01E01" no histórico
+    And eu devo ver o progresso "35%" associado a esse conteúdo
