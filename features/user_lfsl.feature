@@ -25,3 +25,4 @@ Scenario: Falha ao tentar se inscrever em um canal sem estar logado
     When ele clica no botão "Inscrever-se" no canal "Aprenda C++"
     Then o sistema não registra a inscrição
     And redireciona o visitante para a tela de login com a mensagem "Faça login para se inscrever neste canal"
+    And oferece a opção de realizar o login simplificado via Google SSO para agilizar a inscrição
