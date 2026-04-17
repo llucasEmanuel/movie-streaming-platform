@@ -23,3 +23,4 @@ Feature: Recomendações
         And eu estou na página principal	
         When eu indico que não quero recomendações da série "Lost"
         Then eu não vejo a série "Lost" na tela 
+        Then eu sigo na página principal
