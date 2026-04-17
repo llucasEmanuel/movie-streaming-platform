@@ -22,10 +22,8 @@ Feature: Recomendações
         Given que o sistema exibe a séries "Lost" como recomendação
         And eu estou na página principal	
         When eu indico que não quero recomendações da série "Lost"
-<<<<<<< HEAD
         Then eu não vejo a série "Lost" na tela 
         Then eu sigo na página principal
-=======
         Then eu não vejo a série "Lost" na tela     
 
     Scenario: Seleção de um conteúdo 
@@ -37,7 +35,6 @@ Feature: Recomendações
         And eu vejo a opção "Play"
 
     Scenario: Ignorar filtro de exclusão em buscar por correspondência exata
-        Given o utilizador “Carlos” possui feedback negativo aramazenado no sistema para o conteúdo “Stranger Things” 
-        When eu envio ao serviço uma consulta de busca exata por “Matrix” para o utilizador
-        Then o sistema retorna o vídeo “Matrix”
->>>>>>> dev
+        Given o utilizador "Carlos" possui feedback negativo aramazenado no sistema para o conteúdo "Matrix"
+        When eu envio ao serviço uma consulta de busca exata por "Matrix" para o utilizador
+        Then o sistema retorna o vídeo "Matrix"
