@@ -1,5 +1,5 @@
 Scenario: Contabilização de visualização após 50% de reprodução 
-    Given o usuário "Iago" assiste ao vídeo "Aprenda C++"  com “1000” visualizações
+    Given o usuário "Iago" assiste ao vídeo "Aprenda JAVA"  com “1000” visualizações
     And "Iago" ainda não gerou uma visualização para este vídeo 
     When o sistema recebe o aviso de que o progresso ultrapassou “50%”
     Then o sistema atualiza o tempo atual no histórico de "Iago" 
