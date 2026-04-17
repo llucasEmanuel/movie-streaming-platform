@@ -22,4 +22,12 @@ Feature: Recomendações
         Given que o sistema exibe a séries "Lost" como recomendação
         And eu estou na página principal	
         When eu indico que não quero recomendações da série "Lost"
-        Then eu não vejo a série "Lost" na tela 
+        Then eu não vejo a série "Lost" na tela     
+
+    Scenario: Seleção de um conteúdo 
+        Given que o sistema possui a série “Peaky Blinders” com a descrição “Série sobre uma gangue…” 
+        And eu estou na página principal 
+        When eu escolho o conteúdo “Peaky blinders”
+        Then eu vejo o título “Peaky Blinders” 
+        And eu vejo a descrição “Série sobre uma gangue…” 
+        And eu vejo a opção “Play
