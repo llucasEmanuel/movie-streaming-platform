@@ -63,5 +63,10 @@ Feature: Categorias de Séries e Filmes
     Then o sistema deve exibir a mensagem "Seção indisponível"
     And os conteúdos da seção não devem ser exibidos
     
-  
+  Scenario: Filtrar conteúdos por dois gêneros em uma playlist sem resultados correspondentes
+    Given o usuário está visualizando a página da playlist "Filmes clássicos"
+    And a playlist "Filmes clássicos" não contém conteúdos dos gêneros "romance" e "drama"
+    When o usuário aplica os filtros de gênero "romance" e "drama" na playlist
+    Then o sistema deve exibir a mensagem "Nenhum conteúdo encontrado"
+    And nenhum conteúdo deve ser exibido
 
