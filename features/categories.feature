@@ -51,3 +51,12 @@ Feature: Categorias de Séries e Filmes
     When o usuário aplica o filtro de gênero "terror" na playlist
     Then o sistema deve exibir a mensagem "Nenhum conteúdo encontrado"
 
+  Scenario: Visualizar conteúdos das seções do site 
+    Given o usuário está na página principal 
+    And a seção “<secao>” está disponível
+    And existe um ranking “semanal” do tipo “filmes” definido pelo sistema
+    When o usuário seleciona a visualização de “filmes” na seção “<secao>”
+    Then a seção “<secao>” passa a exibir os “10” conteúdos do tipo “filmes”
+    And conteúdos de outros tipos não são exibidos em “<secao>”
+ 
+<secao> = |Em alta| |Recomendados| | Assistidos recentemente|
