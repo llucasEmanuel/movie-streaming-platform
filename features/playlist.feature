@@ -52,3 +52,11 @@ Scenario: Adicionar filme duplicado na playlist
     When eu tento adicionar o filme "Iron Man" novamente
     Then o sistema exibe o alerta "Este filme já faz parte da playlist Marvel"
     And a operação de adição é cancelada
+
+Scenario: Falha ao criar playlist com nome já existente
+    Given eu estou logado como "Júlio"
+    And eu estou na página "Minhas playlists"
+    And já existe uma playlist "Filmes Nerds"
+    When eu tento criar outra playlist com o nome "Filmes Nerds"
+    Then o sistema exibe uma mensagem de erro
+    And nenhuma nova playlist é criada
