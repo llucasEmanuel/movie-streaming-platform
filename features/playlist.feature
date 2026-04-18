@@ -36,4 +36,5 @@ Scenario: compartilhar playlist
 Given estou na pagina da minha playlist
 And quero que meus amigos vejam minha playlist
 When clico no símbolo de compartilhar
-teste
+Then possuo os links de compartilhamento para os meus amigos entrarem
+And posso enviar os links por onde quiser
