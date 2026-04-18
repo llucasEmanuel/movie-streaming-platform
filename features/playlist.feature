@@ -33,8 +33,6 @@ When clico para excluir o filme
 Then o filme não está mais salvo na playlist
 
 Scenario: compartilhar playlist
-Given estou na pagina da minha playlist
-And quero que meus amigos vejam minha playlist
+Given quero que meus amigos vejam minha playlist
 When clico no símbolo de compartilhar
 Then possuo os links de compartilhamento para os meus amigos entrarem
-And posso enviar os links por onde quiser
