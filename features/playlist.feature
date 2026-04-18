@@ -67,3 +67,11 @@ Scenario: Criar playlist pública
     When eu crio a playlist "Filmes Ficção" como "Pública"
     Then a playlist "Filmes Ficção" aparece na minha lista de playlists
     And a playlist "Filmes Ficção" está acessível publicamente
+
+Scenario: Falha ao criar playlist sem nome
+    Given eu estou logado como "Júlio"
+    And eu estou na página "Minhas playlists"
+    When eu tento criar uma playlist sem informar um nome
+    Then o sistema exibe uma mensagem de erro
+    And nenhuma playlist é criada
+
