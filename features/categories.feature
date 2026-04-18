@@ -10,6 +10,32 @@ Feature: Categorias de Séries e Filmes
 
 <secao> = |Favoritos| |Minhas playlists| |Assistir depois|
 
+  Scenario: Tentar visualizar conteúdos de uma seção indisponível do usuário
+    Given o usuário está na página principal
+    And a seção "Favoritos" não está disponível
+    When o usuário seleciona a opção "Favoritos"
+    Then o sistema deve exibir a mensagem "Seção indisponível"
+    And os elementos da seção não devem ser exibidos
+    
+<secao> = |Favoritos| |Minhas playlists| |Assistir depois|
+
+  Scenario: Visualizar conteúdos das seções do site 
+    Given o usuário está na página principal 
+    And a seção “<secao>” está disponível
+    And existe um ranking “semanal” do tipo “filmes” definido pelo sistema
+    When o usuário seleciona a visualização de “filmes” na seção “<secao>”
+    Then a seção “<secao>” passa a exibir os “10” conteúdos do tipo “filmes”
+    And conteúdos de outros tipos não são exibidos em “<secao>”
+ 
+<secao> = |Em alta| |Recomendados| | Assistidos recentemente|
+
+  Scenario: Visualizar conteúdos das seções do site com seção indisponível
+    Given o usuário está na página principal
+    And a seção "Em alta" não está disponível
+    When o usuário seleciona a visualização de "filmes" na seção "Em alta"
+    Then o sistema deve exibir a mensagem "Seção indisponível"
+    And os conteúdos da seção não devem ser exibidos
+
   Scenario: Acessar uma playlist
     Given o usuário está na seção "Minhas playlists"
     And a playlist "Filmes clássicos" está cadastrada na seção "Minhas playlists"
@@ -45,23 +71,14 @@ Feature: Categorias de Séries e Filmes
     When o usuário aplica os filtros de gênero “romance” e “drama” na playlist
     Then apenas conteúdos dos gêneros “romance e “drama” são exibidos
     And conteúdos de outros gêneros não devem ser exibidos
-
-  Scenario: Visualizar conteúdos das seções do site 
-    Given o usuário está na página principal 
-    And a seção “<secao>” está disponível
-    And existe um ranking “semanal” do tipo “filmes” definido pelo sistema
-    When o usuário seleciona a visualização de “filmes” na seção “<secao>”
-    Then a seção “<secao>” passa a exibir os “10” conteúdos do tipo “filmes”
-    And conteúdos de outros tipos não são exibidos em “<secao>”
- 
-<secao> = |Em alta| |Recomendados| | Assistidos recentemente|
-
-  Scenario: Visualizar conteúdos das seções do site com seção indisponível
-    Given o usuário está na página principal
-    And a seção "Em alta" não está disponível
-    When o usuário seleciona a visualização de "filmes" na seção "Em alta"
-    Then o sistema deve exibir a mensagem "Seção indisponível"
-    And os conteúdos da seção não devem ser exibidos
     
-  
+  Scenario: Filtrar conteúdos por dois gêneros em uma playlist sem resultados correspondentes
+    Given o usuário está visualizando a página da playlist "Filmes clássicos"
+    And a playlist "Filmes clássicos" não contém conteúdos dos gêneros "romance" e "drama"
+    When o usuário aplica os filtros de gênero "romance" e "drama" na playlist
+    Then o sistema deve exibir a mensagem "Nenhum conteúdo encontrado"
+    And nenhum conteúdo deve ser exibido
+
+
+
 
