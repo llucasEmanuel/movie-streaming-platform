@@ -1,19 +1,14 @@
 Feature: Categorias de Séries e Filmes
   Funcionalidades de visualização e filtragem de conteúdos em seções e playlists
 
-  Scenario Outline: Visualizar conteúdos das seções do usuário
+  Scenario: Visualizar conteúdos das seções do usuário
     Given o usuário está na página principal
     And a seção "<secao>" está disponível
     When o usuário seleciona a opção "<secao>"
     Then a seção "<secao>" é exibida
     And os elementos de "<secao>" são exibidos
 
-    Examples:
-      | secao             |
-      | Favoritos         |
-      | Minhas playlists  |
-      | Assistir depois   |
-
+<secao> = |Favoritos| |Minhas playlists| |Assistir depois|
 
   Scenario: Acessar uma playlist
     Given o usuário está na seção "Minhas playlists"
