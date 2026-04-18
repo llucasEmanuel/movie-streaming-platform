@@ -39,3 +39,9 @@ When clico no símbolo de compartilhar
 Then possuo os links de compartilhamento para os meus amigos entrarem
 And posso enviar os links por onde quiser
 
+Scenario: excluir playlist
+Given estou na pagina da minha playlist
+And não quero mais que essa playlist exista
+When clico no simbolo de lixeira para excluir a playlist
+Then a playlist é excluida
+And não vejo mais ela na lista de playlists
