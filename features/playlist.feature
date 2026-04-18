@@ -75,3 +75,10 @@ Scenario: Falha ao criar playlist sem nome
     Then o sistema exibe uma mensagem de erro
     And nenhuma playlist é criada
 
+Scenario: Excluir playlist com sucesso
+    Given eu estou logado como "Júlio"
+    And eu estou na página "Minhas playlists"
+    And existe uma playlist "Filmes Nerds"
+    When eu excluo a playlist "Filmes Nerds"
+    Then a playlist "Filmes Nerds" não aparece mais na lista
+    And a playlist "Filmes Nerds" não está armazenada no sistema
