@@ -60,3 +60,10 @@ Scenario: Falha ao criar playlist com nome já existente
     When eu tento criar outra playlist com o nome "Filmes Nerds"
     Then o sistema exibe uma mensagem de erro
     And nenhuma nova playlist é criada
+
+Scenario: Criar playlist pública
+    Given eu estou logado como "Júlio"
+    And eu estou na página "Minhas playlists"
+    When eu crio a playlist "Filmes Ficção" como "Pública"
+    Then a playlist "Filmes Ficção" aparece na minha lista de playlists
+    And a playlist "Filmes Ficção" está acessível publicamente
