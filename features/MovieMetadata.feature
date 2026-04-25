@@ -15,11 +15,11 @@ Feature: MovieMetadata
         Given o filme "The Rink" possui apenas o metadado "título" preenchido
         When eu seleciono o filme "The Rink"
         Then eu visualizo "título" preenchido
-        And todos os outros metadados como "N/A"
+        And os campos de metadados vazios exibem o texto "N/A"
         And eu visualizo a opção de "Assistir"
 
     Scenario: Ausência de título do filme
-        Given o filme não possui "título"
+        Given o filme não possui o metadado "título"
         When o filme é selecionado
         Then a tela de "Página do filme" é exibida
         And eu visualizo "título" como o nome do arquivo de vídeo do filme
