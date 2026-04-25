@@ -54,6 +54,7 @@ Given o usuário está editando seu perfil
 When seleciona a opção "Cancelar"
 Then o sistema descarta as alterações feitas
 And mantém os dados originais
+And exibe uma mensagem informando que não houve alterações
 
 Scenario: Persistência dos dados após atualização
 
