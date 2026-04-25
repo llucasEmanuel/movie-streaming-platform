@@ -93,3 +93,19 @@ When altera a sua foto com um arquivo de imagem inválido
 And salva
 Then o sistema exibe uma mensagem de erro
 And os dados não são alterados
+
+Scenario: Atualizar senha de perfil com senha válida
+
+Given o usuário está na tela de edição de perfil
+When altera a sua senha com uma senha válida
+And salva
+Then o sistema atualiza o campo 'senha' corretamente
+And exibe uma mensagem de sucesso
+
+Scenario: Atualizar senha com senha inválida
+
+Given o usuário está na tela de edição de perfil
+When altera a sua senha com uma senha inválida
+And salva
+Then o sistema exibe uma mensagem de erro
+And os dados não são alterados
