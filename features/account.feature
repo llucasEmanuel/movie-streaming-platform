@@ -30,7 +30,7 @@ Scenario: Editar perfil sem alterar dados
 Given o usuário está na tela de edição de perfil
 When seleciona "Salvar" sem modificar nenhum campo
 Then o sistema mantém os dados atuais
-And pode exibir uma mensagem informando que não houve alterações
+And exibe uma mensagem informando que não houve alterações
 
 Scenario: Falha ao editar perfil com email inválido
 
@@ -75,3 +75,20 @@ Given o usuário está na tela de edição de perfil
 When altera nome e email simultaneamente
 And salva
 Then o sistema atualiza ambos os campos corretamente
+And exibe uma mensagem de sucesso
+
+Scenario: Atualizar foto de perfil
+
+Given o usuário está na tela de edição de perfil
+When altera a sua foto com um arquivo de imagem válido
+And salva
+Then o sistema atualiza o campo foto de perfil corretamente
+And exibe uma mensagem de sucesso
+
+Scenario: Atualizar foto de perfil enviando arquivo de imagem inválido
+
+Given o usuário está na tela de edição de perfil
+When altera a sua foto com um arquivo de imagem inválido
+And salva
+Then o sistema exibe uma mensagem de erro
+And os dados não são alterados
