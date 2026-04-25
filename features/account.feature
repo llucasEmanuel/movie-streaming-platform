@@ -1,29 +1,38 @@
 Feature: Edição de perfil
   Como um usuário da plataforma
-  Eu desejo ter a opção de editar as informações do meu perfil (nome, foto, bio)
-  Para que eu possa manter atualizar e personalizar meus dados 
+  Eu desejo ter a opção de editar as informações do meu perfil (nome, foto, e-mail, senha)
+  Para que eu possa atualizar e personalizar meus dados 
 
 Scenario: Visualizar perfil do usuário
 
 Given o usuário está logado
-When acessa a tela de perfil
+When o usuário acessa a tela de perfil
 Then o sistema exibe os dados cadastrados do usuário
 
-Scenario: Editar perfil com sucesso
-
-Given o usuário está logado
-And está na tela de perfil
-When altera seu nome ou email
-And seleciona a opção "Salvar"
-Then o sistema atualiza os dados do perfil
-And exibe uma mensagem de sucesso
-
-Scenario: Falha ao editar perfil com email já utilizado
+Scenario: Atualizar campo e-mail com valor válido
 
 Given o usuário está na tela de edição de perfil
-When tenta alterar seu email para um email já usado por outra conta
-Then o sistema exibe uma mensagem de erro
-And os dados antigos são mantidos
+When o usuário altera o e-mail para "teste@email.com"
+And seleciona "Salvar alterações"
+Then o sistema atualiza o campo e-mail com "teste@email.com"
+And o sistema exibe a mensagem "Alterações salvas com sucesso"
+
+Scenario: Falha ao editar perfil com email inválido
+
+Given o usuário está na tela de edição de perfil
+When insere um email em formato inválido
+And seleciona "Salvar alterações"
+Then o sistema exibe a mensagem "Falha ao salvar alterações. E-mail inválido"
+And não atualiza os dados
+
+Scenario: Cancelar edição de e-mail
+
+Given o usuário está na tela de edição de perfil
+When altera o campo e-mail 
+And seleciona a opção "Cancelar"
+Then o sistema descarta as alterações feitas
+And o sistema mantém o valor original do e-mail
+And o sistema exibe a mensagem "Nenhuma alteração foi realizada"
 
 Scenario: Editar perfil sem alterar dados
 
@@ -32,13 +41,12 @@ When seleciona "Salvar" sem modificar nenhum campo
 Then o sistema mantém os dados atuais
 And exibe uma mensagem informando que não houve alterações
 
-Scenario: Falha ao editar perfil com email inválido
+Scenario: Falha ao editar perfil com email já utilizado
 
 Given o usuário está na tela de edição de perfil
-When insere um email em formato inválido
-And tenta salvar
-Then o sistema exibe mensagem de erro de validação
-And não atualiza os dados
+When tenta alterar seu email para um email já usado por outra conta
+Then o sistema exibe uma mensagem de erro
+And os dados antigos são mantidos
 
 Scenario: Alterar nome do usuário com sucesso
 
@@ -47,14 +55,6 @@ And está na tela de perfil
 When altera apenas o nome
 And salva as alterações
 Then o sistema atualiza o nome do usuário corretamente
-
-Scenario: Cancelar edição de perfil
-
-Given o usuário está editando seu perfil
-When seleciona a opção "Cancelar"
-Then o sistema descarta as alterações feitas
-And mantém os dados originais
-And exibe uma mensagem informando que não houve alterações
 
 Scenario: Persistência dos dados após atualização
 
