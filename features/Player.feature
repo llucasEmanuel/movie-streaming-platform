@@ -54,3 +54,9 @@ Feature: Player
         When eu adianto a posição da barra de progresso
         Then o novo trecho do filme deve ser carregado
         And a reprodução deve ser retomada do novo trecho
+
+    Scenario: Link de reprodução corrompido ou inexistente
+        Given o link de reprodução do filme está corrompido ou inexistente
+        And eu estou na tela "Página do filme"
+        When eu seleciono a opção "Assistir"
+        Then a mensagem de erro "Este título não está disponível no momento" é exibida
