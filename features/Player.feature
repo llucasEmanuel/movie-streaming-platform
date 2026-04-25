@@ -22,7 +22,7 @@ Feature: Player
 
     Scenario: Reprodução do filme é pausada
         Given o filme "Nosferatu" está sendo reproduzido
-        When eu clico no player de vídeo
+        When eu aciono a interrupção de reprodução
         Then a reprodução do filme é pausada
         And um ícone de pausa aparece no centro do player de vídeo
         And a barra de progresso do filme fica visível
@@ -60,3 +60,4 @@ Feature: Player
         And eu estou na tela "Página do filme"
         When eu seleciono a opção "Assistir"
         Then a mensagem de erro "Este título não está disponível no momento" é exibida
+        And a tela de "Página do filme" é exibida novamente
