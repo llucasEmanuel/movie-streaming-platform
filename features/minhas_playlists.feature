@@ -1,3 +1,5 @@
+Feature: Playlists do usuário
+
 Scenario Outline: Visualizar seções e playlists disponíveis na página principal
     Given o usuário está logado na plataforma
     And o usuário está na página principal
@@ -43,10 +45,11 @@ Scenario: Adicionar nova playlist personalizada
     When o usuário solicita a opção "Adicionar playlist"
     And o sistema exibe o formulário de "Criação de playlist"
     And o usuário preenche o campo de nome da playlist com "Maratonar nas férias"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Salvar"
     Then o sistema cria a playlist "Maratonar nas férias"
     And a playlist "Maratonar nas férias" aparece na seção "Minhas playlists"
-    And o sistema exibe a mensagem "Playlist adicionada com sucesso!" 
+    And o sistema exibe a mensagem "Playlist adicionada com sucesso!"
 
 
 Scenario: Cancelar criação de nova playlist personalizada
@@ -55,8 +58,8 @@ Scenario: Cancelar criação de nova playlist personalizada
     And o usuário não possui uma playlist chamada "Maratonar nas férias"
     When o usuário solicita a opção "Adicionar playlist"
     And o sistema exibe o formulário de "Criação de playlist"
-    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário preenche o campo de nome da playlist com "Maratonar nas férias"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Cancelar"
     Then o sistema não cria a playlist "Maratonar nas férias"
     And a playlist "Maratonar nas férias" não aparece na seção "Minhas playlists"
@@ -68,6 +71,7 @@ Scenario: Adicionar playlist personalizada sem informar nome
     When o usuário solicita a opção "Adicionar playlist"
     And o sistema exibe o formulário de "Criação de playlist"
     And o usuário não preenche o campo de nome da playlist
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Salvar"
     Then o sistema não cria uma nova playlist
     And o usuário permanece no formulário de "Criação de playlist"
@@ -81,6 +85,7 @@ Scenario: Adicionar playlist personalizada com nome já existente
     When o usuário solicita a opção "Adicionar playlist"
     And o sistema exibe o formulário de "Criação de playlist"
     And o usuário preenche o campo de nome da playlist com "Maratonar nas férias"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Salvar"
     Then o sistema não cria uma nova playlist
     And a seção "Minhas playlists" mantém apenas uma playlist chamada "Maratonar nas férias"
@@ -94,7 +99,6 @@ Scenario: Remover uma playlist personalizada
     When o usuário solicita a opção "Remover playlist"
     Then o sistema remove a playlist "Maratonar nas férias"
     And a playlist "Maratonar nas férias" não aparece na seção "Minhas playlists"
-    And o sistema exibe a mensagem "Playlist removida com sucesso!" 
 
 
 Scenario: Editar o nome de uma playlist personalizada
@@ -105,14 +109,14 @@ Scenario: Editar o nome de uma playlist personalizada
     When o usuário solicita a opção "Editar playlist" da playlist "Maratonar nas férias"
     And o sistema exibe o formulário de "Edição de playlist" da playlist "Maratonar nas férias"
     And o usuário altera o campo de nome de "Maratonar nas férias" para "Maratonar no feriadão"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Salvar"
     Then o sistema altera o campo de nome da playlist para "Maratonar no feriadão"
     And a playlist "Maratonar no feriadão" aparece na seção "Minhas playlists"
     And a playlist "Maratonar nas férias" não aparece na seção "Minhas playlists"
-    And o sistema exibe a mensagem "Playlist editada com sucesso!"
 
 
-Scenario: Editar o nome de uma playlist personalizada para um nome já existente na seção 
+Scenario: Editar o nome de uma playlist personalizada para um nome já existente na seção
     Given o usuário está na seção "Minhas playlists"
     And existe a playlist personalizada "Maratonar nas férias"
     And existe a playlist "Filmes favoritos do mês"
@@ -120,6 +124,7 @@ Scenario: Editar o nome de uma playlist personalizada para um nome já existente
     When o usuário solicita a opção "Editar playlist" da playlist "Maratonar nas férias"
     And o sistema exibe o formulário de "Edição de playlist" da playlist "Maratonar nas férias"
     And o usuário altera o campo de nome de "Maratonar nas férias" para "Filmes favoritos do mês"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Salvar"
     Then o sistema não altera o campo de nome da playlist "Maratonar nas férias" para "Filmes favoritos do mês"
     And a playlist "Maratonar nas férias" aparece na seção "Minhas playlists"
@@ -135,21 +140,21 @@ Scenario: Cancelar edição do nome de uma playlist personalizada
     When o usuário solicita a opção "Editar playlist" da playlist "Maratonar nas férias"
     And o sistema exibe o formulário de "Edição de playlist" da playlist "Maratonar nas férias"
     And o usuário altera o campo de nome de "Maratonar nas férias" para "Maratonar no feriadão"
+    And o sistema exibe as opções "Salvar" e "Cancelar"
     And o usuário seleciona a opção "Cancelar"
     Then o sistema não altera o campo de nome da playlist
     And a playlist "Maratonar nas férias" continua aparecendo na seção "Minhas playlists"
     And a playlist "Maratonar no feriadão" não aparece na seção "Minhas playlists"
 
 
-Scenario Outline: Adicionar filme a uma playlist padrão 
+Scenario Outline: Adicionar filme a uma playlist padrão
     Given o usuário está na playlist "Catálogo"
-    And o usuário está visualizando o filme "<filme>" 
+    And o usuário está visualizando o filme "<filme>"
     And a playlist padrão "<playlist>" existe na seção "Minhas playlists"
     And o filme "<filme>" possui a opção "<opcao>"
     And o filme "<filme>" ainda não está na playlist "<playlist>"
     When o usuário seleciona a opção "<opcao>"
     Then o sistema adiciona o filme "<filme>" à playlist "<playlist>"
-    And o sistema exibe uma mensagem informando que o filme foi salvo na playlist "Maratonar nas férias"
     And o filme "<filme>" é salvo na playlist "<playlist>"
 
     Examples:
@@ -159,34 +164,33 @@ Scenario Outline: Adicionar filme a uma playlist padrão
 
 
 Scenario Outline: Adicionar filme já existente em uma playlist padrão
-  Given o usuário está na playlist "Maratonar nas férias"
-  And o usuário está visualizando o filme "<filme>"
-  And a playlist padrão "<playlist>" existe na seção "Minhas playlists"
-  And o filme "<filme>" possui a opção "<opcao>"
-  And o filme "<filme>" já está salvo na playlist "<playlist>"
-  When o usuário seleciona a opção "<opcao>"
-  Then o sistema não adiciona uma nova cópia do filme "<filme>" à playlist "<playlist>"
-  And o sistema exibe uma mensagem informando que o filme já está na playlist "<playlist>"
-  And a playlist "<playlist>" mantém apenas um registro do filme "<filme>"
+    Given o usuário está na playlist "Catálogo"
+    And o usuário está visualizando o filme "<filme>"
+    And a playlist padrão "<playlist>" existe na seção "Minhas playlists"
+    And o filme "<filme>" possui a opção "<opcao>"
+    And o filme "<filme>" já está salvo na playlist "<playlist>"
+    When o usuário seleciona a opção "<opcao>"
+    Then o sistema não adiciona uma nova cópia do filme "<filme>" à playlist "<playlist>"
+    And o sistema exibe uma mensagem informando que o filme já está na playlist "<playlist>"
+    And a playlist "<playlist>" mantém apenas um registro do filme "<filme>"
 
-  Examples:
-    | filme   | opcao                   | playlist        |
-    | Top Gun | Adicionar aos favoritos | Favoritos       |
-    | Top Gun | Assistir depois         | Assistir depois |
+    Examples:
+      | filme   | opcao                   | playlist        |
+      | Top Gun | Adicionar aos favoritos | Favoritos       |
+      | Top Gun | Assistir depois         | Assistir depois |
 
 
 Scenario: Adicionar filme a uma playlist personalizada
     Given o usuário está na playlist "Catálogo"
-    And o usuário está visualizando o filme "Gran Torino" 
+    And o usuário está visualizando o filme "Gran Torino"
     And o filme "Gran Torino" possui a opção "Adicionar à playlist"
     And a playlist personalizada "Maratonar nas férias" existe na seção "Minhas playlists"
     And o filme "Gran Torino" ainda não está na playlist "Maratonar nas férias"
     When o usuário seleciona a opção "Adicionar à playlist" do filme "Gran Torino"
-    And o usuário vê as playlists personalizadas presentes na seção "Minhas Playlists"
+    And o usuário vê as playlists personalizadas presentes na seção "Minhas playlists"
     And o usuário escolhe a playlist "Maratonar nas férias"
     Then o sistema adiciona o filme "Gran Torino" à playlist "Maratonar nas férias"
     And o filme "Gran Torino" é salvo na playlist "Maratonar nas férias"
-    And o sistema exibe uma mensagem informando que o filme foi salvo na playlist "Maratonar nas férias"
 
 
 Scenario: Adicionar filme já existente em uma playlist personalizada
@@ -204,27 +208,27 @@ Scenario: Adicionar filme já existente em uma playlist personalizada
 
 
 Scenario: Remover filme de uma playlist
-    Given o usuário está na playlist chamada "Maratonar nas férias"
+    Given o usuário está na seção "Minhas playlists"
+    And existe a playlist personalizada "Maratonar nas férias"
     And a playlist "Maratonar nas férias" possui o filme "Top Gun"
-    And o filme "Gran Torino" possui a opção "Remover da playlist"
+    And o filme "Top Gun" possui a opção "Remover da playlist"
     When o usuário acessa a playlist "Maratonar nas férias"
     And o usuário seleciona o filme "Top Gun"
-    And o usuário seleciona a opção do filme "Remover o filme da playlist"
+    And o usuário seleciona a opção do filme "Remover da playlist"
     Then o sistema remove o filme "Top Gun" da playlist "Maratonar nas férias"
-    And o filme "Gran Torino" deixa de aparecer na playlist "Maratonar nas férias"
+    And o filme "Top Gun" deixa de aparecer na playlist "Maratonar nas férias"
     And a playlist "Maratonar nas férias" continua existindo
 
 
-Scenario: Remover todos os filmes de uma playlist 
+Scenario: Remover todos os filmes de uma playlist
     Given o usuário está na seção "Minhas playlists"
     And existe a playlist personalizada "Maratonar nas férias"
-    And a playlist "Maratonar nas férias" pelo menos um filme
+    And a playlist "Maratonar nas férias" possui pelo menos um filme
     And existe a opção "Limpar playlist" na playlist "Maratonar nas férias"
     When o usuário solicita a opção "Limpar playlist"
     Then o sistema remove todos os filmes da playlist "Maratonar nas férias"
     And a playlist "Maratonar nas férias" continua aparecendo na seção "Minhas playlists"
     And a playlist "Maratonar nas férias" fica vazia
-    And o sistema exibe a mensagem "Playlist limpa com sucesso!"
 
 
 Scenario: Remover todos os filmes de uma playlist vazia
@@ -237,6 +241,3 @@ Scenario: Remover todos os filmes de uma playlist vazia
     And a playlist "Maratonar nas férias" continua vazia
     And a playlist "Maratonar nas férias" continua aparecendo na seção "Minhas playlists"
     And o sistema exibe a mensagem "A playlist já está vazia!"
-
-  
-  
