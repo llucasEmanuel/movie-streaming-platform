@@ -1,5 +1,14 @@
 Feature: Playlists do usuário
 
+    Esta feature permite que o usuário acesse suas playlists personalizadas e padrões do sistema
+    e gerencie os filmes do seu interesse em cada uma delas.
+
+    As playlists padrão "Favoritos" e "Assistir depois" já existem na seção "Minhas playlists",
+    mas não podem ser editadas ou removidas pelo usuário.
+
+    As playlists personalizadas podem ser criadas, editadas e removidas.
+
+
 Scenario Outline: Visualizar seções e playlists disponíveis na página principal
     Given o usuário está logado na plataforma
     And o usuário está na página principal
