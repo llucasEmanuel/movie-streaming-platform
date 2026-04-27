@@ -94,7 +94,16 @@ Scenario: Adicionar filme já existente em uma playlist personalizada
     And o sistema exibe uma mensagem informando que o filme já está na playlist "Maratonar nas férias"
 
 
-
+Scenario: Remover filme de uma playlist
+    Given o usuário está na playlist chamada "Maratonar nas férias"
+    And a playlist "Maratonar nas férias" possui o filme "Top Gun"
+    And o filme "Gran Torino" possui a opção "Remover da playlist"
+    When o usuário acessa a playlist "Maratonar nas férias"
+    And o usuário seleciona o filme "Top Gun"
+    And o usuário seleciona a opção do filme "Remover o filme da playlist"
+    Then o sistema remove o filme "Top Gun" da playlist "Maratonar nas férias"
+    And o filme "Top Gun" deixa de aparecer dentro da playlist "Maratonar nas férias"
+    And a playlist "Maratonar nas férias" continua existindo
 
 
 Scenario: Criação de uma nova playlist personalizada
