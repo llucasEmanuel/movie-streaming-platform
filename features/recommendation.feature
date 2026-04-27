@@ -22,7 +22,7 @@ Scenario: Recomendar filmes de um gênero frequentemente assistido
     Given que o usuário assistiu a mais de 5 filmes do gênero "Comédia" na última semana 
     When o usuário acessa a seção "Recomendados" 
     Then a seção "Filmes do seu gênero favorito: Comédia" deve ser exibida 
-    And o filme "Invocação do Mal" deve aparecer entre as primeiras opções desta seção
+    And o filme "Cabras da Peste" deve aparecer entre as primeiras opções desta seção
 
 Scenario: Sugerir conteúdos de drama para entusiastas do gênero
     Given que o usuário assistiu a 10 filmes no último mês
