@@ -56,7 +56,7 @@ Scenario: Filme adicionado a uma playlist personalizada
     When o usuário seleciona a opção "Adicionar à playlist"
     And o usuário escolhe a playlist "Maratonar nas férias"
     Then o sistema adiciona o filme "Gran Torino" à playlist "Maratonar nas férias"
-    And o filme "Gran Torino" passa a aparecer na playlist "Maratonar nas férias"
+    And o filme "Gran Torino" é salvo na playlist "Maratonar nas férias"
 
 
 Scenario: Criação de uma nova playlist personalizada
