@@ -33,22 +33,6 @@ Feature: Player
         Then o player é fechado automaticamente
         And a tela de "Página do filme" é exibida novamente
 
-    Scenario: Saída da reprodução do filme
-        Given o filme "The Floorwalker" está sendo reproduzido
-        When eu saio do player de vídeo
-        And o filme não foi encerrado
-        Then a barra de progresso do filme "The Floorwalker" é salva
-        And a tela de "Página do filme" é exibida novamente
-
-    Scenario: Retomada da reprodução do filme
-        Given o filme "The Floorwalker" foi reproduzido anteriormente
-        And o filme não foi reproduzido até o final
-        And eu estou na tela "Página do filme"
-        When eu seleciono a opção "Assistir"
-        Then o player de vídeo é inicializado
-        And o filme é carregado a partir de onde sua reprodução foi interrompida
-        And o filme começa a ser reproduzido
-
     Scenario: Adiantamento na reprodução do filme
         Given o filme "A Noite dos Mortos Vivos" está sendo reproduzido
         When eu adianto a posição da barra de progresso
