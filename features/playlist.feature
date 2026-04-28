@@ -45,3 +45,5 @@ And não quero mais que essa playlist exista
 When clico no simbolo de lixeira para excluir a playlist
 Then a playlist é excluida
 And não vejo mais ela na lista de playlists
+
+oi teste
