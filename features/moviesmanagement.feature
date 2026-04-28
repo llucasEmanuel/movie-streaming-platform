@@ -24,3 +24,11 @@ Feature: Gerenciamento de Filmes no Catálogo
     When eu altero a sinopse para "A saga de João Grilo e Chicó"
     And eu confirmo a alteração
     Then eu vejo a sinopse "A saga de João Grilo e Chicó" nos detalhes do filme
+
+ Scenario: Remoção de um filme do catálogo
+    Given que o sistema possui os filmes "Shrek" e "Toy Story" no catálogo
+    And eu estou autenticado como administrador
+    And eu estou na página de catálogo de filmes
+    When eu removo o filme "Shrek"
+    Then eu não vejo o filme "Shrek" na listagem do catálogo
+    And eu continuo vendo o filme "Toy Story" na listagem do catálogo
