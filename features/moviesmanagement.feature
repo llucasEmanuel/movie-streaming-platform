@@ -11,7 +11,7 @@ Feature: Gerenciamento de Filmes no Catálogo
     And eu vejo que este filme possui a sinopse "A saga de João Grilo" e possui duração de "104 minutos"
 
  Scenario: Tentativa de cadastro sem campos obrigatórios
-    Given que eu estou autenticado como administrador
+    Given que eu estou autenticado como "administrador"
     And eu estou na página "Adicionar novo filme"
     When eu tento adicionar um filme deixando o título "" e com sinopse "Um filme qualquer"
     Then eu vejo a mensagem de erro "O título é obrigatório"
