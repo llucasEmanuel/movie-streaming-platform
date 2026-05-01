@@ -19,10 +19,10 @@ Feature: Gerenciamento de Filmes no Catálogo
 
  Scenario: Edição de metadados de um filme já existente
     Given que o sistema possui o filme "O Auto da Compadecida" com sinopse "Sinopse antiga"
-    And eu estou autenticado como administrador
-    And eu estou na página de edição do filme "O Auto da Compadecida"
+    And eu estou autenticado como "administrador"
+    And eu estou na página de "edição" do filme "O Auto da Compadecida"
     When eu altero a sinopse para "A saga de João Grilo e Chicó"
-    Then eu vejo a sinopse "A saga de João Grilo e Chicó" nos detalhes do filme
+    Then eu vejo a sinopse "A saga de João Grilo e Chicó" nos "detalhes" do filme "O Auto da Compadecida"
 
  Scenario: Remoção de um filme do catálogo
     Given que o sistema possui os filmes "Shrek" e "Toy Story" no catálogo
