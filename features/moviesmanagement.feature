@@ -4,7 +4,7 @@ Feature: Gerenciamento de Filmes no Catálogo
   So that os usuários tenham conteúdo atualizado para assistir
 
   Scenario: Cadastro de um novo filme com sucesso
-    Given que eu estou autenticado como administrador
+    Given que eu estou autenticado como "administrador"
     And eu estou na página "Adicionar novo filme"
     When eu adiciono o filme "O Auto da Compadecida" com sinopse "A saga de João Grilo" e duração "104 minutos"
     Then eu vejo o filme "O Auto da Compadecida" no catálogo
