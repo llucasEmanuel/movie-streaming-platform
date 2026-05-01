@@ -34,7 +34,7 @@ Feature: Gerenciamento de Filmes no Catálogo
 
  Scenario: Tentativa de cadastrar um filme que já existe no catálogo
     Given que o sistema já possui o filme "O Senhor dos Anéis"
-    And eu estou autenticado como administrador
+    And eu estou autenticado como "administrador"
     And eu estou na página "Adicionar novo filme"
     When eu tento adicionar o filme "O Senhor dos Anéis" com sinopse "A jornada do anel" e duração "178 minutos"
     Then eu vejo a mensagem de erro "Este filme já está cadastrado no catálogo"
