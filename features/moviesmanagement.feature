@@ -41,10 +41,9 @@ Feature: Gerenciamento de Filmes no Catálogo
     And o sistema não cria uma cópia duplicada do filme "O Senhor dos Anéis"
 
  Scenario: Tentativa de remover o título na edição de um filme
-    Given que o sistema possui o filme "Gladiador" com o título "Gladiador" e sinopse "Filme épico"
-    And eu estou autenticado como administrador
-    And eu estou na página de edição do filme "Gladiador"
-    When eu altero o título para em branco
-    And eu confirmo a alteração
+    Given que o sistema possui o filme "Gladiador" e sinopse "Filme épico"
+    And eu estou autenticado como "administrador"
+    And eu estou na página de "edição" do filme "Gladiador"
+    When eu altero o título para ""
     Then eu vejo a mensagem de erro "O título é obrigatório"
-    And eu vejo que o título do filme continua sendo "Gladiador" no catálogo
+    And eu vejo que o título do filme continua sendo "Gladiador" no "Catálogo de Filmes"
