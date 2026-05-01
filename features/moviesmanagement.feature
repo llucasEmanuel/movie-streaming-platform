@@ -7,8 +7,8 @@ Feature: Gerenciamento de Filmes no Catálogo
     Given que eu estou autenticado como "administrador"
     And eu estou na página "Adicionar novo filme"
     When eu adiciono o filme "O Auto da Compadecida" com sinopse "A saga de João Grilo" e duração "104 minutos"
-    Then eu vejo o filme "O Auto da Compadecida" no catálogo
-    And eu vejo que este filme possui a sinopse "A saga de João Grilo" e possui duração de "104 minutos"
+    Then eu vejo o filme "O Auto da Compadecida" no "Catálogo de Filmes"
+    And eu vejo que o filme "O Auto da Compadecida" possui a sinopse "A saga de João Grilo" e possui duração de "104 minutos"
 
  Scenario: Tentativa de cadastro sem campos obrigatórios
     Given que eu estou autenticado como "administrador"
@@ -26,8 +26,8 @@ Feature: Gerenciamento de Filmes no Catálogo
 
  Scenario: Remoção de um filme do catálogo
     Given que o sistema possui os filmes "Shrek" e "Toy Story" no catálogo
-    And eu estou autenticado como administrador
-    And eu estou na página de catálogo de filmes
+    And eu estou autenticado como "administrador"
+    And eu estou na página de "Catálogo de Filmes"
     When eu removo o filme "Shrek"
     Then eu não vejo o filme "Shrek" no "Catálogo de Filmes"
     And eu continuo vendo o filme "Toy Story" no "Catálogo de Filmes"
