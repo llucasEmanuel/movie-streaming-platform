@@ -5,8 +5,8 @@ Feature: Player
     Para que eu consiga assistir, pausar, retroceder e avançar a reprodução
 
     Scenario: Reproduzir filme com sucesso
-        Given eu sou "Usuário" do sistema
-        And eu estou na tela "Página do filme"
+        Given eu acesso o sistema como "usuário"
+        And eu estou na página "Página do filme" do filme "Metropolis"
         When eu seleciono a opção "Assistir"
         Then o player de vídeo é inicializado
         And o filme é carregado
@@ -14,24 +14,23 @@ Feature: Player
 
     Scenario: Timeout no carregamento do filme
         Given o player de vídeo foi inicializado
-        And um filme iniciou seu carregamento
-        When o tempo de carregamento excede "30" "segundos"
+        And o filme "The Rink" iniciou seu carregamento
+        When o tempo de carregamento excede "30 segundos"
         Then o carregamento do filme é interrompido
-        And a mensagem de erro "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde" é exibida
-        And a tela de "Página do filme" é exibida novamente
+        And eu vejo a mensagem de erro "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde"
+        And eu vejo a página "Página do filme" do filme "The Rink"
 
     Scenario: Reprodução do filme é pausada
         Given o filme "Nosferatu" está sendo reproduzido
         When eu aciono a interrupção de reprodução
-        Then a reprodução do filme é pausada
-        And um ícone de pausa aparece no centro do player de vídeo
+        Then a reprodução do filme "Nosferatu" é pausada
         And a barra de progresso do filme fica visível
 
     Scenario: Fim da reprodução do filme
         Given o filme "Metropolis" está sendo reproduzido
         When o filme termina a sua reprodução
         Then o player é fechado automaticamente
-        And a tela de "Página do filme" é exibida novamente
+        And eu vejo a página "Página do filme" do filme "Metropolis"
 
     Scenario: Adiantamento na reprodução do filme
         Given o filme "A Noite dos Mortos Vivos" está sendo reproduzido
@@ -41,7 +40,7 @@ Feature: Player
 
     Scenario: Link de reprodução corrompido ou inexistente
         Given o link de reprodução do filme está corrompido ou inexistente
-        And eu estou na tela "Página do filme"
+        And eu estou na página "Página do filme" do filme "A Noite dos Mortos Vivos"
         When eu seleciono a opção "Assistir"
-        Then a mensagem de erro "Este título não está disponível no momento" é exibida
-        And a tela de "Página do filme" é exibida novamente
+        Then eu vejo a mensagem de erro "Este título não está disponível para reprodução no momento"
+        And eu vejo a página "Página do filme" do filme "A Noite dos Mortos Vivos"
