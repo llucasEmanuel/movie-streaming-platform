@@ -41,7 +41,7 @@ Feature: Gerenciamento de Filmes no Catálogo
     And o sistema não cria uma cópia duplicada do filme "O Senhor dos Anéis"
 
  Scenario: Tentativa de remover o título na edição de um filme
-    Given que o sistema possui o filme "Gladiador" e sinopse "Filme épico"
+    Given que o sistema possui o filme "Gladiador" com sinopse "Filme épico"
     And eu acesso o sistema como "administrador"
     And eu estou na página de "edição" do filme "Gladiador"
     When eu altero o título para ""
@@ -49,8 +49,8 @@ Feature: Gerenciamento de Filmes no Catálogo
     And eu vejo que o título do filme continua sendo "Gladiador" no "Catálogo de Filmes"
 
  Scenario: Tentativa de gerenciamento por usuário não autorizado
-    Given qeu acesso o sistema como "usuário"
-    And eu estou na "Página Inicial"
+    Given que acesso o sistema como "usuário"
+    And eu estou na página "Página Inicial"
     When eu tento acessar a página "Adicionar novo filme"
     Then eu vejo a mensagem de erro "Acesso negado. Privilégios de administrador necessários."
-    And eu continuo na "Página Inicial"
+    And eu continuo na página "Página Inicial"
