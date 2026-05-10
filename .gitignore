@@ -1,3 +1,12 @@
 .git/
-.github/
-node_modules/
+
+# Variáveis de ambiente
+backend/node_modules/
+
+# Variáveis de ambiente
+.env
+backend/.env
+
+# Código resultante da compilação do TypeSrcipt
+dist/
+backend/dist/
