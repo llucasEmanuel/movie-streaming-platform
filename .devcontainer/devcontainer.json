@@ -1,0 +1,28 @@
+{
+  "name": "CInema - ESS Project",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  // Configurações do VS Code dentro do container
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "firsttris.vscode-jest-runner",
+        "ms-azuretools.vscode-docker"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+      }
+    }
+  },
+  // Encaminha a porta do Express (ex: 3000) para sua máquina local
+  "forwardPorts": [3000],
+  
+  // Comando para rodar após o container ser criado (instalar dependências)
+  "postCreateCommand": "npm install",
+
+  // Usuário padrão (a imagem da Microsoft já cria o usuário 'node')
+  "remoteUser": "node"
+}
