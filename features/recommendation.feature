@@ -4,20 +4,20 @@ Feature: Recomendações e Seções Personalizadas
     So that eu possa descobrir novos filmes de forma rápida e personalizada
 
 Scenario: Exibir recomendações padrão para novo usuário
-    Given o usuário está logado na plataforma
-    And o usuário não possui histórico de visualização
-    And o usuário está na página inicial
-    When o usuário acessar a seção "Recomendados"
-    Then o sistema deve exibir a playlist "Lançamentos e Populares" na primeira posição da página 
+    Given eu acesso o sistema como "usuário"
+    And eu não possuo histórico de visualização
+    And eu estou na página "Principal"
+    When eu acesso a página "Recomendados"
+    Then a página "Recomendados" deve exibir a playlist "Lançamentos e Populares" em destaque na página 
     And não deve ser exibida nenhuma seção de recomendações baseada em gostos pessoais
 
 Scenario Outline: Priorizar recomendações com base no gênero mais assistido
-    Given o usuário está logado na plataforma
-    And o usuário assistiu a 6 filmes do gênero <tipo> nos últimos 7 dias
-    And o usuário está na pagina inicial
-    When o usuário acessa a seção "Recomendados"
-    Then o sistema exibe a playlist <recomendacao> entre as 3 primeiras seções
-    And a playlist <recomendacao> contém os filmes do gênero <tipo>
+    Given eu acesso o sistema como "usuário"
+    And eu assisti a "6" filmes do gênero "<tipo>" nos últimos "7" dias
+    And eu estou na pagina "Principal"
+    When eu acesso a página "Recomendados"
+    Then a página "Recomendados" exibe a playlist "<recomendacao>" entre as 3 primeiras seções
+    And a playlist "<recomendacao>" contém os filmes do gênero "<tipo>"
 
     Examples:
     |tipo    |recomendacao            |   
@@ -26,38 +26,39 @@ Scenario Outline: Priorizar recomendações com base no gênero mais assistido
     |Ação    |Recomendações de Ação   |          
 
 Scenario: Atualizar recomendações após nova interação do usuário
-    Given que o usuário assistiu a 2 filmes do gênero "Ação" nos últimos 7 dias
-    And o usuário assistiu a 4 filmes do gênero "Documentário" nos últimos 7 dias
-    When o usuário assiste a um novo filme do gênero "Documentário"
-    And o usuário acessa a seção "Recomendados"
-    Then o sistema exibe a playlist "Recomendações de Documentários" acima da playlist "Ação"
+    Given eu acesso o sistema como "usuário"
+    And eu assisti a "2" filmes do gênero "Ação" nos últimos "7" dias
+    And eu assisti a "4" filmes do gênero "Documentário" nos últimos "7" dias
+    When eu assistir a um novo filme do gênero "Documentário"
+    And eu acessar a seção "Recomendados"
+    Then a página "Recomendados" exibe a playlist "Recomendações de Documentários" acima da playlist "Ação"
     And a playlist "Recomendações de Documentários" contém os filmes do gênero "Documentário"
 
 Scenario: Remover personalização após limpeza do histórico
-    Given que o usuário está logado
-    And que o usuário possui no histórico o filme "Vingadores"
-    And o sistema exibe a playlist "Porque você assistiu Vingadores"
-    When o usuário seleciona a opção "Apagar histórico completo"
-    And o usuário acessa a seção "Recomedados"
-    Then o sistema não exibe a playlist "Porque você assistiu Vingadores"
-    And o sistema exibe a playlist "Lançamentos e Populares"
-    And o sistema não exibe seções personalizadas baseadas em histórico
+    Given eu acesso o sistema como "usuário"
+    And possuo no histórico o filme "Vingadores"
+    And o página "Recomendados" exibe a playlist "Porque você assistiu Vingadores"
+    When eu seleciono a opção "Apagar histórico completo"
+    And eu acesso a página "Recomendados"
+    Then o página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
+    And a página "Recomendados" exibe a playlist "Lançamentos e Populares"
+    And a página "Recomendados" não exibe seções personalizadas baseadas em histórico
 
 Scenario: Não exibir recomendações de gênero quando não há dados suficientes
-    Given que o usuário está logado
-    And que o usuário assistiu a 1 filme do gênero "Terror"
-    And a regra de negócio exige no mínimo 3 filmes do mesmo gênero para gerar recomendações
-    When o usuário acessa a seção "Recomedados"
-    Then o sistema não exibe a playlist "Recomendações de Terror"
-    And o sistema exibe a mensagem "Assista mais conteúdos para melhorar suas recomendações"
+    Given eu acesso o sistema como "usuário"
+    And eu assisti a "1" filme do gênero "Terror"
+    And a regra de negócio exige no mínimo "3" filmes do mesmo gênero para gerar recomendações
+    When eu acesso a página "Recomendados"
+    Then a página "Recomendados" não exibe a playlist "Recomendações de Terror"
+    And a página "Recomendados" exibe a mensagem "Assista mais conteúdos para melhorar suas recomendações"
 
 Scenario Outline: Gerar recomendações baseadas em filme específico assistido
-    Given que o usuário está logado
-    And o usuário possui no histórico o filme <filme_visto>
-    And o usuário está na pagina inicial
-    When o usuário acessa a seção "Recomedados"
-    Then o sistema exibe a playlist "Porque você assistiu <filme_visto>"
-    And a playlist "Porque você assistiu <filme_visto>" contém o filme <filme_recomendado>
+    Given eu acesso o sistema como "usuário"
+    And eu possuo no histórico o filme "<filme_visto>"
+    And eu estou na página "Principal"
+    When eu acesso a página "Recomendados"
+    Then a página "Recomendados" exibe a playlist "Porque você assistiu <filme_visto>"
+    And a playlist "Porque você assistiu <filme_visto>" contém o filme "<filme_recomendado>"
 
     Examples:
     |filme_visto     |filme_recomendado|
@@ -66,28 +67,28 @@ Scenario Outline: Gerar recomendações baseadas em filme específico assistido
     |Círculo de Fogo |Matrix           |
 
 Scenario: Atualizar seções após remoção parcial do histórico
-    Given o usuário está logado na plataforma
-    And o usuário está na página principal
-    And o usuário possui no histórico os filmes "Vingadores" e "Titanic"
+    Given eu acesso o sistema como "usuário"
+    And eu estou na página "Recomendados"
+    And eu possuo no histórico os filmes "Vingadores" e "Titanic"
     And a playlist "Porque você assistiu Vingadores" está disponível
     And a playlist "Porque você assistiu Titanic" está disponível
-    When o usuário remove o filme "Vingadores" do histórico
-    And o usuário atualiza a seção "Recomendados"
-    Then o sistema não exibe a playlist "Porque você assistiu Vingadores"
-    And o sistema exibe a playlist "Porque você assistiu Titanic"
+    When eu removo o filme "Vingadores" do histórico
+    And eu atualizo a página "Recomendados"
+    Then a página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
+    And a página "Recomendados" exibe a playlist "Porque você assistiu Titanic"
 
 Scenario: Restringir acesso para usuário não autenticado
-    Given o usuário não está logado na plataforma
-    When o usuário acessa a página principal
+    Given eu não está logado na plataforma
+    When eu acesso a página "Principal"
     Then o sistema exibe a mensagem "Faça login para acessar o conteúdo"
-    And o sistema não exibe seções
-    And o sistema não exibe playlists
+    And o sistema não exibe "Páginas"
+    And o sistema não exibe "Playlists"
 
 Scenario: Gerar recomendações após atingir o mínimo de filmes no gênero
-    Given o usuário está logado na plataforma
-    And o usuário assistiu a 2 filmes do gênero "Terror"
-    And a regra de negócio exige no mínimo 3 filmes do mesmo gênero para gerar recomendações
-    When o usuário assiste ao filme "Invocação do Mal"
-    And o usuário acessa a seção "Recomendados"
-    Then o sistema exibe a playlist "Recomendações de Terror"
+    Given eu acesso o sistema como "usuário"
+    And eu assisti a "2" filmes do gênero "Terror"
+    And a regra de negócio exige no mínimo "3" filmes do mesmo gênero para gerar recomendações
+    When eu assisto ao filme "Invocação do Mal"
+    And eu acesso a página "Recomendados"
+    Then a página "Recomendados" exibe a playlist "Recomendações de Terror"
     And a playlist "Recomendações de Terror" contém os filmes do gênero "Terror"
