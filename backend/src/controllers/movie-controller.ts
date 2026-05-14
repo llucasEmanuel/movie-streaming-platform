@@ -30,3 +30,22 @@ export const postMovie = async (req: Request, res: Response) => {
   }
 };
 
+export const patchMovie = async (req: Request, res: Response) => {
+  try {
+    const title = String(req.params.title);
+    const updates = req.body;
+    const movieUpdated = await updateMovieService(title, updates);
+    res.status(200).json(movieUpdated); // Retorna todas as informações referentes ao filme
+  } catch (error: any) {
+    if (error instanceof NotFoundError) {
+      return res.status(404).json({ message: error.message });
+    }
+
+    if (error instanceof ValidationError) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    res.status(500).json({ message: "Erro inesperado" });
+  }
+};
+

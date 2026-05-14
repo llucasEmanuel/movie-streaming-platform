@@ -43,3 +43,6 @@ export const insertMovie = async (movie: MovieModel) => {
   database.push(movie);
 };
 
+export const updateMovie = async (
+  title: string,
+

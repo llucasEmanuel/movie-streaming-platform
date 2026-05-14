@@ -45,3 +45,6 @@ export const createMovieService = async (movie: MovieModel) => {
   return movie;
 };
 
+export const updateMovieService = async (
+  title: string,
+

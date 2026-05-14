@@ -5,3 +5,4 @@ export const router = Router();
 
 router.get("/movies", getMovies);
 router.post("/movies", postMovie);
+router.patch("/movies/:title", patchMovie);
