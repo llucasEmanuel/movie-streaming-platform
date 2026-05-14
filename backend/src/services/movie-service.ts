@@ -1,10 +1,18 @@
 import { MovieModel } from "../models/movie-model";
-import { deleteMovie, getAllMovies, insertMovie, updateMovie } from "../repositories/movie-repository";
-import { BadRequestError, ConflictError, NotFoundError, ValidationError } from "../errors/errors";
+import {
+  deleteMovie,
+  getAllMovies,
+  insertMovie,
+  updateMovie,
+} from "../repositories/movie-repository";
+import {
+  BadRequestError,
+  ConflictError,
+  NotFoundError,
+  ValidationError,
+} from "../errors/errors";
 
-export const getMoviesService = async () => {
-  return getAllMovies();
-};
+// Por enquanto, todas as buscas estão ocorrendo pelo título do filme, mas irá mudar no futuro.
 
 export const createMovieService = async (movie: MovieModel) => {
   // Aqui é necessário verificar se há algum campo da requisição que não foi preenchido
@@ -45,6 +53,51 @@ export const createMovieService = async (movie: MovieModel) => {
   return movie;
 };
 
+export const getMoviesService = async () => {
+  return getAllMovies();
+};
+
+export const deleteMovieService = async (title: string) => {
+  if (!title || title.trim() === "") {
+    throw new ValidationError("Título do filme deve ser informado");
+  }
+  const deleted = await deleteMovie(title);
+
+  if (!deleted) {
+    throw new NotFoundError(
+      "Impossível excluir! Não existe esse filme na base de dados",
+    );
+  }
+};
+
 export const updateMovieService = async (
   title: string,
+  updates: Partial<MovieModel>,
+) => {
+  // Verifica se há algum título antes de tentar fazer a atualização
+  if (!title || title.trim() === "") {
+    throw new ValidationError("Título do filme deve ser informado");
+  }
 
+  // Verificando se o filme já está cadastrado na plataforma
+  if (updates.title) {
+    const data = await getAllMovies();
+    const alreadyExists = data.some(
+      (movieInfo) => movieInfo.title === updates.title,
+    );
+
+    if (alreadyExists) {
+      throw new ConflictError(
+        "Não é possível fazer essa atualização. Já existe um filme com esse nome",
+      );
+    }
+  }
+
+  const updatedMovie = await updateMovie(title, updates);
+
+  if (!updatedMovie) {
+    throw new NotFoundError("Não foi possível atualizar. Filme não encontrado");
+  }
+
+  return updatedMovie;
+};
