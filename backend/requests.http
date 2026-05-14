@@ -1,0 +1,37 @@
+### Testar Rota Inicial
+GET http://localhost:3000/
+
+###
+
+### Listar Filmes
+GET http://localhost:3000/movies
+
+###
+
+### Criar Novo Filme
+POST http://localhost:3000/movies
+Content-Type: application/json
+
+{
+  "id": 5,
+  "title": "O Senhor dos Anéis",
+  "synopsis": "Testando",
+  "genres": ["Comedia", "Drama"],
+  "duration": 201,
+  "url_movie": "teste"
+}
+
+###
+
+### Atualizar Filme
+PATCH http://localhost:3000/movies/O Senhor dos Anéis
+Content-Type: application/json
+
+{
+  "duration": 300
+}
+
+###
+
+### Deletar Filme
+DELETE http://localhost:3000/movies/O Senhor dos Anéis

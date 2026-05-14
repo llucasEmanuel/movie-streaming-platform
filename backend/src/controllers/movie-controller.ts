@@ -1,17 +1,14 @@
 import { Request, Response } from "express";
-import {
-  createMovieService,
-  getMoviesService,
-} from "../services/movie-service";
-
-export const postMovie = async (req: Request, res: Response) => {
-  const infoMovie = req.body;
-  const httpResponse = await createMovieService(infoMovie);
-
-  res.status(httpResponse.statusCode).json(httpResponse.body);
-};
+import { createMovieService, deleteMovieService, getMoviesService, updateMovieService } from "../services/movie-service";
+import { MovieModel } from "../models/movie-model";
+import { BadRequestError, ConflictError, NotFoundError, ValidationError } from "../errors/errors";
 
 export const getMovies = async (req: Request, res: Response) => {
-  const httpResponse = await getMoviesService();
-  res.status(httpResponse.statusCode).json(httpResponse.body);
+  try {
+    const allMovies = await getMoviesService();
+    res.status(200).json(allMovies); // Retorna todos os filmes
+  } catch (error: any) {
+    res.status(400).json({ message: error.message });
+  }
 };
+
