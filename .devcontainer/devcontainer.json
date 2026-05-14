@@ -1,28 +1,25 @@
 {
   "name": "CInema - ESS Project",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
-  // Configurações do VS Code dentro do container
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "app", // Indica qual serviço será o ambiente de dev
+  "workspaceFolder": "/workspaces/movie_streaming_platform",
+  
   "customizations": {
     "vscode": {
       "extensions": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "firsttris.vscode-jest-runner",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "ckotzb.postgresql-client" // Sugestão: extensão para explorar o banco
       ],
       "settings": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
       }
     }
   },
-  // Encaminha a porta do Express (ex: 3000) para sua máquina local
-  "forwardPorts": [3000],
-  
-  // Comando para rodar após o container ser criado (instalar dependências)
-  "postCreateCommand": "npm install",
 
-  // Usuário padrão (a imagem da Microsoft já cria o usuário 'node')
+  "forwardPorts": [3000, 5432],
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y postgresql-client && cd backend && npm install",
   "remoteUser": "node"
 }

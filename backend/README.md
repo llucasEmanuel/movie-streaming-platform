@@ -16,7 +16,10 @@
 
 # ⚙️ Como Rodar o Backend?
 Estando dentro do *devcontainer* e dentro da pasta `movie-streaming-platform/`, é necessário ir para a pasta `backend/` e, em seguida, rodar o *script* `dev`. Isso pode ser feito pelo seguinte comando:
-
 ```bash
 cd backend && npm run dev
+```
+Se estiver rodando pela primeira vez, provavelmente vai ser necessário instalar os pacotes `npm`. Para isso, estando na pasta `backend/` é só rodar
+```bash
+npm install
 ```
