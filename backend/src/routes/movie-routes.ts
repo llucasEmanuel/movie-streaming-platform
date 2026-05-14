@@ -4,3 +4,4 @@ import { postMovie, getMovies, deleteMovie, patchMovie } from "../controllers/mo
 export const router = Router();
 
 router.get("/movies", getMovies);
+router.post("/movies", postMovie);

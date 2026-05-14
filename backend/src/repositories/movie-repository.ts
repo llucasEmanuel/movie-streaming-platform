@@ -39,3 +39,7 @@ export const getAllMovies = async (): Promise<MovieModel[]> => {
   return database;
 };
 
+export const insertMovie = async (movie: MovieModel) => {
+  database.push(movie);
+};
+
