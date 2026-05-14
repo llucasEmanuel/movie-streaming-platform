@@ -7,6 +7,8 @@ backend/node_modules/
 .env
 backend/.env
 
+backend/src/generated
+
 # Código resultante da compilação do TypeSrcipt
 dist/
 backend/dist/
