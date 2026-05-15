@@ -1,10 +1,18 @@
 import { Router } from "express";
-import { MovieController } from "../controllers/movie-controller";
+import {
+  MovieController,
+  postMovie,
+  getMovies,
+  deleteMovie,
+  patchMovie,
+} from "../controllers/movie-controller";
 
-const movieRoutes = Router();
 const movieController = new MovieController();
 
-// A rota captura o ID que você definiu no PR
-movieRoutes.get('/:moviesID', movieController.show);
+export const router = Router();
 
-export { movieRoutes };
+router.post("/movies", postMovie);
+router.get("/movies", getMovies);
+router.patch("/movies/:title", patchMovie);
+router.delete("/movies/:title", deleteMovie);
+router.get("/movies/:moviesID", movieController.show)
