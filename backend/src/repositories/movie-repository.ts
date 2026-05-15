@@ -11,6 +11,10 @@ export class MovieRepository {
   async save(data: any) {
     return await prisma.movie.create({ data });
   }
+
+  async getAll() {
+    return await prisma.movie.findMany();
+  }
 }
 
 // Camada responsável pela interação com o data 

@@ -31,6 +31,14 @@ export class MovieService {
       cast: movie.cast || "N/A"
     };
   }
+  async getRawMovieData(id: string) {
+    // O service chama o repository, mantendo-se isolado do Prisma
+    const movie = await this.repository.findById(id);
+
+    if (!movie) throw new NotFoundError("Filme não encontrado");
+
+    return movie;
+  }
 }
 
 // Por enquanto, todas as buscas estão ocorrendo pelo título do filme, mas irá mudar no futuro.
