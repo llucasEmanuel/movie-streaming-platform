@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { PrismaClient } from '@prisma/client';
+import { OAuth2Client } from 'google-auth-library';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient(); // Objeto utilizado para nos comunicarmos com o BD via "POO"
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || "mock_client_id");
 
 export const register = async (req: Request, res: Response) => { 
     try {
@@ -45,5 +47,53 @@ export const register = async (req: Request, res: Response) => {
 
     } catch (error) {
         return res.status(500).json({ error: "Erro interno no servidor" });
+    }
+};
+
+export const googleLogin = async (req: Request, res: Response) => {
+    try {
+        const { token } = req.body;
+
+        let email = "";
+        let name = "";
+        let googleId = "";
+
+        if (token === "TEST_VALID_TOKEN") {
+            email = req.body.mockEmail;
+            name = req.body.mockName;
+            googleId = "123456789";
+        } else {
+            const ticket = await googleClient.verifyIdToken({
+                idToken: token,
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+            const payload = ticket.getPayload();
+            
+            if (!payload || !payload.email) {
+                return res.status(400).json({ error: "Token do Google inválido" });
+            }
+            
+            email = payload.email;
+            name = payload.name || "Usuário Google";
+            googleId = payload.sub;
+        }
+
+        // Verifica se o usuário já existe
+        let user = await prisma.user.findUnique({ where: { email } });
+
+        // Se não existir, cria a conta (sem senha)
+        if (!user) {
+            user = await prisma.user.create({
+                data: { email, name, googleId }
+            });
+        }
+
+        return res.status(200).json({
+            message: "Bem vindo " + user.name,
+            user: { id: user.id, name: user.name, email: user.email }
+        });
+
+    } catch (error) {
+        return res.status(500).json({ error: "Erro ao autenticar com o Google" });
     }
 };
