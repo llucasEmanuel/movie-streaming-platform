@@ -49,19 +49,19 @@ export const createMovieService = async (movie: MovieModel) => {
     throw new ConflictError("Este filme já existe na base de dados");
   }
   // Verificar se a requisição veio completa, se sim, chamo o repositorie pra fazer a adição do filme no json e response created. Se não, retorno response badRequest()
-  await insertMovie(movie);
-  return movie;
+  const createdMovie = await insertMovie(movie);
+  return createdMovie;
 };
 
 export const getMoviesService = async () => {
   return getAllMovies();
 };
 
-export const deleteMovieService = async (title: string) => {
-  if (!title || title.trim() === "") {
-    throw new ValidationError("Título do filme deve ser informado");
+export const deleteMovieService = async (id: string) => {
+  if (!id || id.trim() === "") {
+    throw new ValidationError("ID do filme deve ser informado");
   }
-  const deleted = await deleteMovie(title);
+  const deleted = await deleteMovie(id);
 
   if (!deleted) {
     throw new NotFoundError(
@@ -71,19 +71,19 @@ export const deleteMovieService = async (title: string) => {
 };
 
 export const updateMovieService = async (
-  title: string,
+  id: string,
   updates: Partial<MovieModel>,
 ) => {
   // Verifica se há algum título antes de tentar fazer a atualização
-  if (!title || title.trim() === "") {
-    throw new ValidationError("Título do filme deve ser informado");
+  if (!id || id.trim() === "") {
+    throw new ValidationError("ID do filme deve ser informado");
   }
 
   // Verificando se o filme já está cadastrado na plataforma
   if (updates.title) {
     const data = await getAllMovies();
     const alreadyExists = data.some(
-      (movieInfo) => movieInfo.title === updates.title,
+      (movieInfo) => movieInfo.title === updates.title && movieInfo.id !== id,
     );
 
     if (alreadyExists) {
@@ -93,7 +93,7 @@ export const updateMovieService = async (
     }
   }
 
-  const updatedMovie = await updateMovie(title, updates);
+  const updatedMovie = await updateMovie(id, updates);
 
   if (!updatedMovie) {
     throw new NotFoundError("Não foi possível atualizar. Filme não encontrado");

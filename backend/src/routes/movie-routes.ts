@@ -10,5 +10,5 @@ export const router = Router();
 
 router.post("/movies", postMovie);
 router.get("/movies", getMovies);
-router.patch("/movies/:title", patchMovie);
-router.delete("/movies/:title", deleteMovie);
+router.patch("/movies/:id", patchMovie);
+router.delete("/movies/:id", deleteMovie);
