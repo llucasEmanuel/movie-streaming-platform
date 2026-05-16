@@ -10,12 +10,13 @@ datasource db {
 
 model Movie {
   id        String   @id @default(uuid())
-  title     String?  // O '?' significa que pode ser nulo (para testar o teu fallback)
-  file_name String?
-  synopsis  String?
-  genres    String?
-  duration  String?
-  director  String?
-  cast      String?
+  title     String  // O '?' significa que pode ser nulo (para testar o teu fallback)
+  url_movie String
+  url_poster String
+  synopsis  String
+  genres    String[]
+  duration  Int
+  directors  String[]
+  cast      String[]
   createdAt DateTime @default(now())
 }
