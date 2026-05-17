@@ -1,17 +1,37 @@
 import { Request, Response } from "express";
-import {
+import { MovieModel } from "../models/movie-model";
+import { 
+  MovieService,
   createMovieService,
   deleteMovieService,
   getMoviesService,
   updateMovieService,
 } from "../services/movie-service";
-import { MovieModel } from "../models/movie-model";
 import {
   BadRequestError,
   ConflictError,
   NotFoundError,
   ValidationError,
 } from "../errors/errors";
+
+export class MovieController {
+    async show(req: Request, res: Response) {
+        const { moviesID } = req.params;
+
+        // Verifica se o ID realmente é uma string única
+        if (typeof moviesID !== "string") {
+            return res.status(400).json({ message: "Invalid movie ID." });
+        }
+
+        try {
+            const movieService = new MovieService();
+            const metadata = await movieService.getMetadata(moviesID);
+            return res.json(metadata);
+        } catch (error: any) {
+            return res.status(404).json({ message: error.message });
+        }
+    }
+}
 
 export const postMovie = async (req: Request, res: Response) => {
   try {
@@ -77,4 +97,3 @@ export const patchMovie = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro inesperado" });
   }
 };
-
