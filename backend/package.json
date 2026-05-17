@@ -7,7 +7,11 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:cucumber",
+    "test:unit": "node --import tsx --test src/**/*.spec.ts",
+    "test:integration": "node --import tsx --test src/**/*.integration.spec.ts",
+    "test:e2e": "node --import tsx --test src/**/*.e2e.spec.ts",
+    "test:cucumber": "echo 'Falta adicionar o comando do cucumber no package.json'"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +34,7 @@
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3",
     "ts-node": "^10.9.2",
+    "tsx": "^4.22.0",
     "typescript": "^6.0.3"
   }
 }

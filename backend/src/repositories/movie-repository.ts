@@ -1,19 +1,16 @@
-import { prisma } from "../database/prisma-client";
+import { PrismaClient } from "@prisma/client";
+import { prisma as defaultPrisma } from "../database/prisma-client";
 import { MovieModel } from "../models/movie-model";
 
 export class MovieRepository {
+  constructor(private prisma: PrismaClient = defaultPrisma) {}
+
   async findById(id: string) {
-    return await prisma.movie.findUnique({
-      where: { id }
-    });
+    return await this.prisma.movie.findUnique({ where: { id } });
   }
 
   async save(data: any) {
-    return await prisma.movie.create({ data });
-  }
-
-  async getAll() {
-    return await prisma.movie.findMany();
+    return await this.prisma.movie.create({ data });
   }
 }
 
