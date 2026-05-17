@@ -1,4 +1,18 @@
+import { PrismaClient } from "@prisma/client";
+import { prisma as defaultPrisma } from "../database/prisma-client";
 import { MovieModel } from "../models/movie-model";
+
+export class MovieRepository {
+  constructor(private prisma: PrismaClient = defaultPrisma) {}
+
+  async findById(id: string) {
+    return await this.prisma.movie.findUnique({ where: { id } });
+  }
+
+  async save(data: any) {
+    return await this.prisma.movie.create({ data });
+  }
+}
 
 // Camada responsável pela interação com o data 
 

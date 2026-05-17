@@ -1,5 +1,6 @@
 import { MovieModel } from "../models/movie-model";
 import {
+  MovieRepository,
   deleteMovie,
   getAllMovies,
   insertMovie,
@@ -11,6 +12,25 @@ import {
   NotFoundError,
   ValidationError,
 } from "../errors/errors";
+
+export class MovieService {
+  private repository = new MovieRepository();
+
+  async getMetadata(id: string) {
+    const movie = await this.repository.findById(id); // Chama o repositório
+
+    if (!movie) throw new NotFoundError("Filme não encontrado");
+    return {
+      id: movie.id,
+      title: movie.title || "No title",
+      synopsis: movie.synopsis || "N/A",
+      genres: movie.genres || "N/A",
+      duration: movie.duration || "N/A",
+      director: movie.director || "N/A",
+      cast: movie.cast || "N/A"
+    };
+  }
+}
 
 // Por enquanto, todas as buscas estão ocorrendo pelo título do filme, mas irá mudar no futuro.
 
