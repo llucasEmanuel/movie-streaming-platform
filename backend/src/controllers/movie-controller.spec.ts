@@ -55,4 +55,35 @@ describe('MovieController - show', () => {
     
     mock.restoreAll();
   });
+
+  test('[MovieMetadata] deve retornar status 408 quando requisição do filme ultrpassa 10 segundos', async () => {
+    const expectedErrorMessage = "Não foi possível carregar a página do filme. Verifique sua conexão ou tente novamente mais tarde";
+    
+    // Mock do Service para demorar 11 segundos
+    const getMetadataMock = mock.method(MovieService.prototype, 'getMetadata', () => {
+      return new Promise((resolve) => {
+        // Trava nessa linha por 11 segundos
+        setTimeout(resolve, 11000); 
+      });
+    });
+
+    const controller = new MovieController();
+    const req = { params: { moviesID: '123' } } as any;
+    
+    let statusCode = 0;
+    let responseData = {};
+    
+    const res = {
+      status: (code: number) => { statusCode = code; return res; },
+      json: (data: any) => { responseData = data; return res; }
+    } as any;
+
+    // Roda o controller apenas após passar os 11 segundos, resultando em timeout
+    await controller.show(req, res);
+
+    assert.strictEqual(statusCode, 408);
+    assert.deepStrictEqual(responseData, { message: expectedErrorMessage });
+
+    getMetadataMock.mock.restore();
+  });
 });

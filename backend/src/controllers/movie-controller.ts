@@ -74,17 +74,36 @@ export class MovieController {
   async show(req: Request, res: Response) {
     const { moviesID } = req.params;
 
-    // Verifica se o ID realmente é uma string única
     if (typeof moviesID !== "string") {
-        return res.status(400).json({ message: "Invalid movie ID." });
+      return res.status(400).json({ message: "Invalid movie ID." });
     }
 
     try {
-        const movieService = new MovieService();
-        const metadata = await movieService.getMetadata(moviesID);
-        return res.json(metadata);
+      const movieService = new MovieService();
+
+      // Promise que rejeita automaticamente após 10 segundos
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT_EXCEEDED")), 10000)
+      );
+
+      // Promise.race executa as duas funções ao mesmo tempo e ganha a que terminar primeiro
+      const metadata = await Promise.race([
+        movieService.getMetadata(moviesID),
+        timeoutPromise
+      ]);
+
+      return res.json(metadata);
+
     } catch (error: any) {
-        return res.status(404).json({ message: error.message });
+      // Se o timeout ganhou a corrida, capturamos o erro aqui
+      if (error.message === "TIMEOUT_EXCEEDED") {
+        return res.status(408).json({ 
+          message: "Não foi possível carregar a página do filme. Verifique sua conexão ou tente novamente mais tarde" 
+        });
+      }
+
+      // Se foi outro erro, mantém o comportamento padrão
+      return res.status(404).json({ message: error.message });
     }
   }
 }
