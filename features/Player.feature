@@ -12,6 +12,7 @@ Feature: Player
         And o filme é carregado
         And o filme começa a ser reproduzido
 
+    @backend
     Scenario: Timeout no carregamento do filme
         Given o player de vídeo foi inicializado
         And o filme "The Rink" iniciou seu carregamento
@@ -32,12 +33,14 @@ Feature: Player
         Then o player é fechado automaticamente
         And eu vejo a página "Página do filme" do filme "Metropolis"
 
+    @backend
     Scenario: Adiantamento na reprodução do filme
         Given o filme "A Noite dos Mortos Vivos" está sendo reproduzido
         When eu adianto a posição da barra de progresso
         Then o novo trecho do filme deve ser carregado
         And a reprodução deve ser retomada do novo trecho
 
+    @backend
     Scenario: Link de reprodução corrompido ou inexistente
         Given o link de reprodução do filme "A Noite dos Mortos Vivos" está corrompido ou inexistente
         And eu estou na página "Página do filme" do filme "A Noite dos Mortos Vivos"

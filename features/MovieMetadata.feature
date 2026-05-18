@@ -4,6 +4,7 @@ Feature: MovieMetadata
     Eu desejo poder visualizar os metadados de um filme
     Para que eu saiba detalhes do filme antes de iniciar a reprodução 
 
+    @backend
     Scenario Outline: Validar exibição de metadados
         Given eu acesso o sistema como "usuário"
         When eu seleciono o filme "<filme_selecionado>"
@@ -24,6 +25,7 @@ Feature: MovieMetadata
             | The Rink          | The Rink   | N/A                        | N/A                      | N/A         | N/A        | N/A                                          |
             | Filme Sem Título  | N/A        | N/A                        | N/A                      | N/A         | N/A        | N/A                                          |
 
+    @backend
     Scenario: Timeout da requisição de metadados do filme
         Given o servidor de metadados está instável ou inalcançável
         When eu seleciono o filme "A Noite dos Mortos Vivos"
