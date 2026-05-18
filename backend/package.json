@@ -11,7 +11,7 @@
     "test:unit": "node --import tsx --test src/**/*.spec.ts",
     "test:integration": "node --import tsx --test src/**/*.integration.spec.ts",
     "test:e2e": "node --import tsx --test src/**/*.e2e.spec.ts",
-    "test:cucumber": "echo 'Falta adicionar o comando do cucumber no package.json'"
+    "test:cucumber": "npx cucumber-js --tags @backend"
   },
   "keywords": [],
   "author": "",
@@ -25,10 +25,11 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@cucumber/cucumber": "^12.9.0",
     "@prisma/client": "^6.19.3",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.7.0",
+    "@types/node": "^25.8.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
     "nodemon": "^3.1.14",
