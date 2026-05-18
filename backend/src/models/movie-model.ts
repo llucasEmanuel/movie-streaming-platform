@@ -6,7 +6,8 @@ export interface MovieModel {
   duration: number;
   url_movie: string;
   url_poster: string;
-  cast: string[];
-  directors: string[];
+  isDeleted: boolean;
+  cast?: string[];
+  directors?: string[];
   createdAt: Date;
 }
