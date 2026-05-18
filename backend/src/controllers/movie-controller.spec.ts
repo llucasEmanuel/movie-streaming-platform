@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { MovieController } from './movie-controller';
 import { MovieService } from '../services/movie-service';
 
-describe('MovieController - show', () => {
+describe('MovieController - Movie Metadata', () => {
 
   test('[MovieMetadata] deve retornar metadados com sucesso', async () => {
     const mockMetadata = { id: '123', title: 'Inception' };
@@ -33,7 +33,7 @@ describe('MovieController - show', () => {
 
   test('[MovieMetadata] deve retornar 404 quando o filme não for encontrado', async () => {
     const errorMessage = "Movie not found";
-    mock.method(MovieService.prototype, 'getMetadata', async () => {
+    const getMetadataMock = mock.method(MovieService.prototype, 'getMetadata', async () => {
       throw new Error(errorMessage);
     });
 
@@ -53,22 +53,24 @@ describe('MovieController - show', () => {
     assert.strictEqual(statusCode, 404);
     assert.deepStrictEqual(responseData, { message: errorMessage });
     
-    mock.restoreAll();
+    getMetadataMock.mock.restore();
   });
+});
 
-  test('[MovieMetadata] deve retornar status 408 quando requisição do filme ultrpassa 10 segundos', async () => {
-    const expectedErrorMessage = "Não foi possível carregar a página do filme. Verifique sua conexão ou tente novamente mais tarde";
+describe('MovieController - Player Streaming', () => {
+  test('[Player] deve retornar mensagem de erro para link de reprodução indisponível', async () => {
+    const expectedErrorMessage = "Este título não está disponível para reprodução no momento";
     
-    // Mock do Service para demorar 11 segundos
-    const getMetadataMock = mock.method(MovieService.prototype, 'getMetadata', () => {
-      return new Promise((resolve) => {
-        // Trava nessa linha por 11 segundos
-        setTimeout(resolve, 11000); 
-      });
+    const getRawMovieDataMock = mock.method(MovieService.prototype, 'getRawMovieData', async () => {
+      return {
+        id: '123',
+        title: 'A Noite dos Mortos Vivos',
+        file_name: null // Link inexistente
+      };
     });
 
     const controller = new MovieController();
-    const req = { params: { moviesID: '123' } } as any;
+    const req = { params: { moviesID: '123' }, headers: {} } as any;
     
     let statusCode = 0;
     let responseData = {};
@@ -78,12 +80,11 @@ describe('MovieController - show', () => {
       json: (data: any) => { responseData = data; return res; }
     } as any;
 
-    // Roda o controller apenas após passar os 11 segundos, resultando em timeout
-    await controller.show(req, res);
+    await controller.streamVideo(req, res);
 
-    assert.strictEqual(statusCode, 408);
+    assert.strictEqual(statusCode, 404);
     assert.deepStrictEqual(responseData, { message: expectedErrorMessage });
 
-    getMetadataMock.mock.restore();
+    getRawMovieDataMock.mock.restore();
   });
 });

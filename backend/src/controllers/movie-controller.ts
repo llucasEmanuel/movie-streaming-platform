@@ -24,10 +24,10 @@ export class MovieController {
       const movieService = new MovieService();
       const movie = await movieService.getRawMovieData(String(moviesID));
       
-      const videoUrl = movie.file_name; // ou url_movie
+      const videoUrl = movie.file_name;
 
       if (!videoUrl) {
-        return res.status(404).json({ message: "Video URL not registered" });
+        return res.status(404).json({ message: "Este título não está disponível para reprodução no momento" });
       }
 
       // O fetch do Node segue redirecionamentos automaticamente (follow redirects)
