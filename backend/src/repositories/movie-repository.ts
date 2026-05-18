@@ -18,7 +18,7 @@ export const deleteMovie = async (id: string) => {
   const movie = await prisma.movie.findUnique({ where: { id } });
 
   if (movie) {
-    await prisma.movie.update({ where: { id }, data: { isDeleted: false } });
+    await prisma.movie.update({ where: { id }, data: { isDeleted: true } });
     return true;
   }
   return false;
