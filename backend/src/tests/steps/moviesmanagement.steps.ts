@@ -247,8 +247,8 @@ When("eu removo o filme {string}", async function (filmeParaRemover: string) {
 Then(
   "eu não vejo o filme {string} no {string}",
   async function (filmeRemovido: string, localVisual: string) {
-    // Confirma que a API respondeu com sucesso - 200
-    expect(200).to.include(respostaApi.status);
+    // Confirma que a API respondeu com sucesso - 200 ou 204 - No content
+    expect([200, 204]).to.include(respostaApi.status);
 
     // Vai ao banco confirmar a exclusão
     const filmeNoBanco = await prisma.movie.findFirst({
