@@ -1,4 +1,7 @@
-import { createMovieService } from "../../../services/movie-service";
+import {
+  createMovieService,
+  deleteMovieService,
+} from "../../../services/movie-service";
 
 import * as movieRepository from "../../../repositories/movie-repository";
 
@@ -223,5 +226,54 @@ describe("Teste unitário - Create Movie", () => {
     expect(movieRepository.insertMovie).toHaveBeenCalledTimes(1);
     expect(movieRepository.insertMovie).toHaveBeenCalledWith(novoFilme);
     expect(resultado.id).toBe("uuid-123456789");
+  });
+});
+
+describe("Teste unitário - Delete Movie", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it("Deve lançar um erro se o ID não for informado (vazio)", async () => {
+    await expect(deleteMovieService("")).rejects.toThrow(
+      "ID do filme deve ser informado",
+    );
+    expect(movieRepository.deleteMovie).not.toHaveBeenCalled();
+  });
+
+  it("Deve lançar um erro se o ID for composto apenas por espaços em branco", async () => {
+    await expect(deleteMovieService("   ")).rejects.toThrow(
+      "ID do filme deve ser informado",
+    );
+    expect(movieRepository.deleteMovie).not.toHaveBeenCalled();
+  });
+
+  it("Deve lançar um erro se o filme não for encontrado no banco de dados", async () => {
+    //  repositório tentou deletar, mas não encontrou o filme
+    (movieRepository.deleteMovie as jest.Mock).mockResolvedValueOnce(null);
+
+    await expect(deleteMovieService("id-inexistente-123")).rejects.toThrow(
+      "Impossível excluir! Não existe esse filme na base de dados",
+    );
+
+    // Garante que a função do repositório foi chamada com o ID correto
+    expect(movieRepository.deleteMovie).toHaveBeenCalledTimes(1);
+    expect(movieRepository.deleteMovie).toHaveBeenCalledWith(
+      "id-inexistente-123",
+    );
+  });
+
+  it("Deve excluir o filme com sucesso quando o ID for válido e existir no banco", async () => {
+    // Simulando que o repositório encontrou e deletou o filme
+    const filmeDeletadoMock = { id: "id-valido-123", isDeleted: true };
+    (movieRepository.deleteMovie as jest.Mock).mockResolvedValueOnce(
+      filmeDeletadoMock,
+    );
+
+    // Como a service de deleção retorna nada, não deve lançar erros
+    await expect(deleteMovieService("id-valido-123")).resolves.not.toThrow();
+
+    expect(movieRepository.deleteMovie).toHaveBeenCalledTimes(1);
+    expect(movieRepository.deleteMovie).toHaveBeenCalledWith("id-valido-123");
   });
 });
