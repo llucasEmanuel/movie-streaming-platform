@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { router } from "./routes/movie-routes";
 
-const app = express();
+export const app = express();
 app.use(express.json());
 app.use("/", router);
 
