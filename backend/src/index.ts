@@ -9,6 +9,8 @@ app.get("/", (req: Request, res: Response) => {
   res.json({ mensagem: "API funcionando!" });
 });
 
-app.listen(3000, () => {
-  console.log("Servidor rodando em http://localhost:3000");
-});
+if (require.main === module) {
+  app.listen(3000, () => {
+    console.log("Servidor rodando em http://localhost:3000");
+  });
+}
