@@ -3,7 +3,7 @@ import {
   createMovieService,
   deleteMovieService,
   getMoviesService,
-  updateMovieService,
+  updateMoviesService,
 } from "../services/movie-service";
 import { MovieModel } from "../models/movie-model";
 import {
@@ -63,7 +63,7 @@ export const patchMovie = async (req: Request, res: Response) => {
   try {
     const id = String(req.params.id);
     const updates = req.body;
-    const movieUpdated = await updateMovieService(id, updates);
+    const movieUpdated = await updateMoviesService(id, updates);
     res.status(200).json(movieUpdated); // Retorna todas as informações referentes ao filme
   } catch (error: any) {
     if (error instanceof NotFoundError) {
