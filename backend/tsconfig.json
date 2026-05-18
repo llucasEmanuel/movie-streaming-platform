@@ -1,5 +1,5 @@
 {
-"compilerOptions": {
+  "compilerOptions": {
     "types": ["node"],
     "target": "es6",   
     "module": "commonjs",
@@ -15,6 +15,7 @@
     "node_modules", 
     "src/**/*.spec.ts",
     "features",
-    "tests"
+    "tests",
+    "../tests"
   ]
 }
