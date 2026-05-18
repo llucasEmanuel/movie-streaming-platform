@@ -104,28 +104,66 @@ export const deleteMovieService = async (id: string) => {
   }
 };
 
-export const updateMovieService = async (
+export const updateMoviesService = async (
   id: string,
   updates: Partial<MovieModel>,
 ) => {
-  // Verifica se há algum título antes de tentar fazer a atualização
+  //  Verifica se o ID original da rota foi fornecido
   if (!id || id.trim() === "") {
     throw new ValidationError("ID do filme deve ser informado");
   }
 
-  // Verificando se o filme já está cadastrado na plataforma
-  if (updates.title) {
-    const data = await getAllMovies();
-    const alreadyExists = data.some(
-      (movieInfo) => movieInfo.title === updates.title && movieInfo.id !== id,
+  // Impede a tentativa de alteração do ID via payload
+  if (updates.id && updates.id !== id) {
+    throw new ValidationError(
+      "Não é permitido alterar o ID de um filme existente",
+    );
+  }
+
+  // Impede que o título seja alterado para um texto vazio/em branco
+  if (updates.title !== undefined && updates.title.trim() === "") {
+    throw new ValidationError(
+      "O título do filme é obrigatório e não pode ficar em branco",
+    );
+  }
+
+  // Verifica se é desejado atualização na url_movie ou no título, para verificarmos se já tem algum filme no BD com esses dados de atualização
+  if (updates.title || updates.url_movie) {
+    const titleToCheck = updates.title || "";
+    const urlToCheck = updates.url_movie || "";
+
+    const conflictingMovie = await findMovieByTitleOrUrl(
+      titleToCheck,
+      urlToCheck,
     );
 
-    if (alreadyExists) {
-      throw new ConflictError(
-        "Não é possível fazer essa atualização. Já existe um filme com esse nome",
-      );
+    // Se encontrou um filme no banco E o ID desse filme for diferente do que estamos editando
+    if (conflictingMovie && conflictingMovie.id !== id) {
+      // Checa se o conflito foi no título
+      if (
+        updates.title &&
+        conflictingMovie.title.toLowerCase() === updates.title.toLowerCase()
+      ) {
+        throw new ConflictError(
+          "Não é possível fazer essa atualização. Já existe um filme com esse título",
+        );
+      }
+
+      // Checa se o conflito foi na URL
+      if (
+        updates.url_movie &&
+        conflictingMovie.url_movie.toLowerCase() ===
+          updates.url_movie.toLowerCase()
+      ) {
+        throw new ConflictError(
+          "Não é possível fazer essa atualização. Já existe um filme com essa URL",
+        );
+      }
     }
   }
+
+  // Garantindo que não haverá atualizações do ID
+  delete updates.id;
 
   const updatedMovie = await updateMovie(id, updates);
 
