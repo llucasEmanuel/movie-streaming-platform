@@ -11,7 +11,7 @@
         "esbenp.prettier-vscode",
         "firsttris.vscode-jest-runner",
         "ms-azuretools.vscode-docker",
-        "ckotzb.postgresql-client", // Sugestão: extensão para explorar o banco
+        "ckotzb.postgresql-client",
         "alexkrechik.cucumberautocomplete"
       ],
       "settings": {

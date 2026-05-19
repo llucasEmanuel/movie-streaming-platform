@@ -36,9 +36,6 @@ Given('eu não possuo histórico de visualização', async function () {
     await DBUtils.limparHistorico(currentUserId);
 });
 
-Given('eu estou na página {string}', function (_pagina) {
-    // Passo conceitual de navegação para testes de API
-});
 
 Given('eu assisti a {string} filmes do gênero {string} nos últimos {string} dias', async function (qtd, genero, dias) {
     await DBUtils.garantirEAssistirFilmes(currentUserId, qtd, genero);

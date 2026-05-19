@@ -42,4 +42,5 @@ model History {
   // Configurações de chaves estrangeiras (ligações entre as tabelas)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
 }

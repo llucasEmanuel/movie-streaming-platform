@@ -1,5 +1,5 @@
 {
-"compilerOptions": {
+  "compilerOptions": {
     "types": ["node"],
     "target": "es6",   
     "module": "commonjs",
@@ -17,3 +17,4 @@
     "../tests"
   ]
 }
+
