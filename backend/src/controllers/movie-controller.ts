@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MovieModel } from "../models/movie-model";
-import { 
+import {
   MovieService,
   createMovieService,
   deleteMovieService,
@@ -62,8 +62,8 @@ export const getMovies = async (req: Request, res: Response) => {
 
 export const deleteMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
-    await deleteMovieService(title);
+    const id = String(req.params.id);
+    await deleteMovieService(id);
     const allMovies = await getMoviesService();
     res.status(200).json(allMovies); // Será removido no futuro, mas apenas para verificar momentaneamente que a exclusão ocorreu bem
   } catch (error: any) {
@@ -81,9 +81,9 @@ export const deleteMovie = async (req: Request, res: Response) => {
 
 export const patchMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
+    const id = String(req.params.id);
     const updates = req.body;
-    const movieUpdated = await updateMovieService(title, updates);
+    const movieUpdated = await updateMovieService(id, updates);
     res.status(200).json(movieUpdated); // Retorna todas as informações referentes ao filme
   } catch (error: any) {
     if (error instanceof NotFoundError) {

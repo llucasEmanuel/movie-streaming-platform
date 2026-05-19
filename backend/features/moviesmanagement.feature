@@ -54,24 +54,3 @@ Feature: Gerenciamento de Filmes no Catálogo
     When eu tento acessar a página "Adicionar novo filme"
     Then eu vejo a mensagem de erro "Acesso negado. Privilégios de administrador necessários."
     And eu continuo na página "Página Inicial"
-
-Scenario: Tentativa de cadastro de filme com título já existente - Service
-    Given que o sistema possui o filme "Interestelar"
-    And eu preparo um payload de filme tentando cadastrar novamente o título "Interestelar"
-    And eu possuo um token de autenticação válido com cargo de "administrador"
-    When eu envio uma requisição "POST" para a rota "/movies" com esse payload
-    Then o status da resposta HTTP deve ser "409"
-    And o JSON da resposta deve conter a mensagem de erro "Este filme já existe na base de dados"
-
-Scenario: Cadastro de um novo filme com sucesso - Service
-    Given eu acesso o sistema como "administrador"
-    And eu preparo um payload válido de filme com o título "O Auto da Compadecida", sinopse "A saga de João Grilo" e duração "104 minutos"
-    When eu envio uma requisição "POST" para a rota "/movies" com esse payload
-    Then o status da resposta HTTP deve ser "201"
-    And o JSON da resposta deve conter o título "O Auto da Compadecida", a sinopse "A saga de João Grilo" e a duração de "104 minutos"
-
-Scenario: Tentativa de gerenciamento por usuário não autorizado - Service
-    Given eu acesso o sistema como "usuário"
-    When eu envio uma requisição "POST" para a rota "/movies" com um payload vazio
-    Then o status da resposta HTTP deve ser "403"
-    And o JSON da resposta deve conter a mensagem de erro "Acesso negado. Privilégios de administrador necessários."

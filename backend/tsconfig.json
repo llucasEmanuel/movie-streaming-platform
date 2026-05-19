@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "types": ["node"],
-    "target": "es6",   
+    "types": ["node", "jest"],
+    "target": "es6",
     "module": "commonjs",
     "rootDir": "./src",
     "outDir": "./dist",
@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-  }, 
+  },
   "exclude": [
     "prisma.config.ts", 
     "node_modules", 

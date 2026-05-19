@@ -6,13 +6,14 @@ import {
   deleteMovie,
   patchMovie,
 } from "../controllers/movie-controller";
+import { verificarAdmin } from "../middlewares/auth-middleware";
 
 const movieController = new MovieController();
 
 export const router = Router();
 
-router.post("/movies", postMovie);
 router.get("/movies", getMovies);
-router.patch("/movies/:title", patchMovie);
-router.delete("/movies/:title", deleteMovie);
-router.get("/movies/:moviesID", movieController.show)
+router.post("/movies", verificarAdmin, postMovie);
+router.patch("/movies/:id", verificarAdmin, patchMovie);
+router.delete("/movies/:id", verificarAdmin, deleteMovie);
+router.get("/movies/:moviesID", movieController.show);

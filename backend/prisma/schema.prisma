@@ -35,12 +35,22 @@ model User {
 
 model History {
   id        String   @id @default(uuid())
-  userId    String
-  movieId   String
+  title     String?  
+  url_movie String?
+  url_poster String?
+  synopsis  String?
+  genres    String[]
+  duration  Int?
+  isDeleted Boolean @default(false)
+  directors String[]
+  cast      String[]
+  createdAt DateTime @default(now())
+
+  userId    String?
+  movieId   String?
   watchedAt DateTime @default(now()) // Fundamental para a regra dos "últimos 7 dias"
 
   // Configurações de chaves estrangeiras (ligações entre as tabelas)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  movie     Movie    @relation(fields: [movieId], references: [id], onDelete: Cascade)
-
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }

@@ -13,18 +13,20 @@ POST http://localhost:3000/movies
 Content-Type: application/json
 
 {
-  "id": 5,
-  "title": "O Senhor dos Anéis",
-  "synopsis": "Testando",
-  "genres": ["Comedia", "Drama"],
-  "duration": 201,
-  "url_movie": "teste"
+  "title": "O Senhor dos Anéis: A Sociedade do Anel",
+  "synopsis": "Um jovem hobbit recebe a tarefa de destruir um anel maligno para salvar a Terra-Média.",
+  "genres": ["Fantasia", "Aventura", "Ação"],
+  "duration": 178,
+  "url_movie": "https://meustreaming.com/videos/lotr1.mp4",
+  "url_poster": "https://meustreaming.com/imagens/lotr1.jpg",
+  "directors": ["Peter Jackson"],
+  "cast": ["Elijah Wood", "Ian McKellen", "Orlando Bloom"]
 }
 
 ###
 
-### Atualizar Filme
-PATCH http://localhost:3000/movies/O Senhor dos Anéis
+### Atualizar Filme (Substitua COLE_O_ID_AQUI pelo id gigante gerado no GET/POST)
+PATCH http://localhost:3000/movies/576a8c1b-6610-465f-81c1-45a9f2405f6f
 Content-Type: application/json
 
 {
@@ -33,5 +35,5 @@ Content-Type: application/json
 
 ###
 
-### Deletar Filme
-DELETE http://localhost:3000/movies/O Senhor dos Anéis
+### Deletar Filme (Substitua COLE_O_ID_AQUI pelo id gigante gerado no GET/POST)
+DELETE http://localhost:3000/movies/576a8c1b-6610-465f-81c1-45a9f2405f6f
