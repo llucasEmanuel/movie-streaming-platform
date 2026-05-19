@@ -1,5 +1,4 @@
 import { MovieModel } from "../models/movie-model";
-import {
 import { MovieRepository } from "../repositories/movie-repository";
 import {
   deleteMovie,
@@ -28,7 +27,7 @@ export class MovieService {
       synopsis: movie.synopsis || "N/A",
       genres: movie.genres || "N/A",
       duration: movie.duration || "N/A",
-      director: movie.director || "N/A",
+      director: movie.directors || "N/A",
       cast: movie.cast || "N/A"
     };
   }
@@ -170,7 +169,7 @@ export const updateMovieService = async (
       if (
         updates.url_movie &&
         conflictingMovie.url_movie.toLowerCase() ===
-          updates.url_movie.toLowerCase()
+        updates.url_movie.toLowerCase()
       ) {
         throw new ConflictError(
           "Não é possível fazer essa atualização. Já existe um filme com essa URL",
