@@ -1,17 +1,32 @@
 import { MovieModel } from "../models/movie-model";
 import { prisma } from "../database/prisma";
+import { PrismaClient } from "../generated/prisma";
+import { prisma as defaultPrisma } from "../database/prisma-client";
+
 // Camada responsável pela interação com o banco de dados
 
+export class MovieRepository {
+  constructor(private prismaClient: PrismaClient = defaultPrisma) {}
+
+  async findById(id: string) {
+    return await this.prismaClient.movie.findUnique({ where: { id } });
+  }
+
+  async save(data: any) {
+    return await this.prismaClient.movie.create({ data });
+  }
+}
+
 export const getAllMovies = async (): Promise<MovieModel[]> => {
-  return (await prisma.movie.findMany()).filter((movie) => !movie.isDeleted);
+  return (await prisma.movie.findMany()).filter((movie) => !movie.isDeleted) as unknown as MovieModel[];
 };
 
 export const insertMovie = async (
   movie: Omit<MovieModel, "id" | "createdAt" | "isDeleted">,
 ) => {
   return await prisma.movie.create({
-    data: movie,
-  });
+    data: movie as any,
+  }) as unknown as MovieModel;
 };
 
 export const deleteMovie = async (id: string) => {
@@ -30,8 +45,8 @@ export const updateMovie = async (id: string, updates: Partial<MovieModel>) => {
   if (movie) {
     return await prisma.movie.update({
       where: { id },
-      data: updates,
-    });
+      data: updates as any,
+    }) as unknown as MovieModel;
   }
   return null;
 };
@@ -54,5 +69,5 @@ export const findMovieByTitleOrUrl = async (
         },
       ],
     },
-  });
+  }) as unknown as MovieModel | null;
 };

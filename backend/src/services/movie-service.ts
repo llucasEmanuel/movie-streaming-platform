@@ -1,5 +1,7 @@
 import { MovieModel } from "../models/movie-model";
 import {
+import { MovieRepository } from "../repositories/movie-repository";
+import {
   deleteMovie,
   getAllMovies,
   insertMovie,
@@ -13,6 +15,25 @@ import {
   ValidationError,
 } from "../errors/errors";
 
+export class MovieService {
+  private repository = new MovieRepository();
+
+  async getMetadata(id: string) {
+    const movie = await this.repository.findById(id);
+
+    if (!movie) throw new NotFoundError("Filme não encontrado");
+    return {
+      id: movie.id,
+      title: movie.title || "No title",
+      synopsis: movie.synopsis || "N/A",
+      genres: movie.genres || "N/A",
+      duration: movie.duration || "N/A",
+      director: movie.director || "N/A",
+      cast: movie.cast || "N/A"
+    };
+  }
+}
+
 // Por enquanto, todas as buscas estão ocorrendo pelo título do filme, mas irá mudar no futuro.
 
 export const createMovieService = async (
@@ -22,7 +43,6 @@ export const createMovieService = async (
   const { title, synopsis, genres, duration, url_movie, url_poster } = movie;
 
   if (genres.length === 0) {
-    //
     throw new BadRequestError("Necessário preencher os gêneros");
   }
 
@@ -57,7 +77,6 @@ export const createMovieService = async (
   }
 
   // Verifica se a duração foi preenchida
-
   if (!duration) {
     throw new BadRequestError("A duração do filme é obrigatória");
   }
@@ -69,7 +88,6 @@ export const createMovieService = async (
   }
 
   // Verifica se há sinopse
-
   if (!synopsis) {
     throw new BadRequestError("A sinopse do filme é obrigatória");
   }
@@ -79,7 +97,6 @@ export const createMovieService = async (
   if (alreadyExists) {
     throw new ConflictError("Este filme já existe na base de dados");
   }
-
   // Verificar se a requisição veio completa, se sim, chamo o repositorie pra fazer a adição do filme no json e response created. Se não, retorno response badRequest()
 
   // Arrays cast e directors são opcionais
@@ -104,7 +121,7 @@ export const deleteMovieService = async (id: string) => {
   }
 };
 
-export const updateMoviesService = async (
+export const updateMovieService = async (
   id: string,
   updates: Partial<MovieModel>,
 ) => {

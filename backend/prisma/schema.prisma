@@ -9,15 +9,48 @@ datasource db {
 }
 
 model Movie {
+  id          String    @id @default(uuid())
+  title       String
+  file_name   String?
+  synopsis    String?
+  genres      String    // Ex: "Ação", "Terror", "Comédia", "Documentário"
+  isPopular   Boolean   @default(false) // Fundamental para usuário novo ou sem histórico
+  duration    String?
+  director    String?
+  cast        String?
+  createdAt   DateTime  @default(now())
+  history     History[] // Relacionamento: Um filme pode estar no histórico de vários usuários
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  name      String?
+  password  String?           // Se faz opcional devido ao cadastro de usuário via Google
+  googleId  String? @unique   // opcional pois pode ser feito o cadastro tanto por meio do registro de email e senha como via Google
+  avatarUrl String?           // Esse campo serve para caso o usuário queria ter uma foto de perfil, salva-se o link do URL de onde a foto é guardada ao invés da imagem em significa
+  createdAt DateTime  @default(now())   // Serve para registrar o momento que o usuário realizou o cadastro
+  history   History[] // Relacionamento: Um usuário tem muitos registros no histórico
+}
+
+model History {
   id        String   @id @default(uuid())
-  title     String  
-  url_movie String
-  url_poster String
-  synopsis  String
+  title     String?  
+  url_movie String?
+  url_poster String?
+  synopsis  String?
   genres    String[]
-  duration  Int
+  duration  Int?
   isDeleted Boolean @default(false)
-  directors  String[]
+  directors String[]
   cast      String[]
   createdAt DateTime @default(now())
+
+  userId    String?
+  movieId   String?
+  watchedAt DateTime @default(now()) // Fundamental para a regra dos "últimos 7 dias"
+
+  // Configurações de chaves estrangeiras (ligações entre as tabelas)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  movie     Movie?   @relation(fields: [movieId], references: [id], onDelete: Cascade)
 }
