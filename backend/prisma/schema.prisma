@@ -21,11 +21,12 @@ model Movie {
 }
 
 model User {
-  id        String  @id @default(uuid())  // Hash que irá diferenciar cada usuário
+  id        String  @id @default(uuid())  
   email     String  @unique
   name      String? 
-  password  String?           // Se faz opcional devido ao cadastro de usuário via Google
-  googleId  String? @unique   // opcional pois pode ser feito o cadastro tanto por meio do registro de email e senha como via Google
-  avatarUrl String?           // Esse campo serve para caso o usuário queria ter uma foto de perfil, salva-se o link do URL de onde a foto é guardada ao invés da imagem em significa
-  createdAt DateTime  @default(now())   // Serve para registrar o momento que o usuário realizou o cadastro
+  password  String?           
+  googleId  String? @unique   
+  avatarUrl String?           
+  createdAt DateTime  @default(now())   
 }
+
