@@ -12,6 +12,7 @@ const api = axios.create({
 let userData: any = {};
 let response: any;
 
+// Limpa o usuário de teste antes de cada cenário para evitar erro de e-mail duplicado
 Before(async () => {
     await prisma.user.deleteMany({ where: { email: "exemplo@test.com" } });
     userData = {};
@@ -159,6 +160,7 @@ Then('deve aparecer uma mensagem de aviso {string}', function (aviso) {
     const corpoResposta = JSON.stringify(response.data);
     assert.ok(corpoResposta.includes("obrigatórios") || corpoResposta.includes("inválida") || response.status === 400);
 });
+
 Then('uma nova conta de usuário deve ser criada para {string}', async function (email) {
     const user = await prisma.user.findUnique({ where: { email } });
     assert.ok(user, `Usuário com email ${email} não foi encontrado no banco.`);

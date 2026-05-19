@@ -7,4 +7,3 @@ router.post('/register', register);
 router.post('/auth/google', googleAuth);
 
 export default router;
-
