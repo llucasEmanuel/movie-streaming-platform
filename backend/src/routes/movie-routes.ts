@@ -15,4 +15,6 @@ router.post("/movies", postMovie);
 router.get("/movies", getMovies);
 router.patch("/movies/:title", patchMovie);
 router.delete("/movies/:title", deleteMovie);
+
 router.get("/movies/:moviesID", movieController.show)
+router.get("/movies/:moviesID/video", movieController.streamVideo);

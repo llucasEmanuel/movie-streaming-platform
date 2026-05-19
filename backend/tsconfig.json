@@ -11,10 +11,11 @@
     "emitDecoratorMetadata": true
   }, 
   "exclude": [
-    "prisma.config.ts", 
+    "prisma.config.ts",
     "node_modules", 
-    "tests", 
+    "src/**/*.spec.ts",
+    "features",
+    "tests",
     "../tests"
   ]
 }
-
