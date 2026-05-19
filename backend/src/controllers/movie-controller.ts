@@ -16,7 +16,7 @@ import {
 export const postMovie = async (req: Request, res: Response) => {
   try {
     // Informações do filme novo que será inserido na plataforma viajam no corpo da nossa requisição
-    const movie: MovieModel = req.body; // Por hora, o ID do filme cadastrado ainda está na requisição, apenas para testes
+    const movie: MovieModel = req.body;
     const newMovie = await createMovieService(movie);
 
     res.status(201).json(newMovie); // Retorna o filme para mostrar que ele foi criado
