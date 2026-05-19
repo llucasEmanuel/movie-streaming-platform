@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma";
 import { prisma as defaultPrisma } from "../database/prisma-client";
 import { MovieModel } from "../models/movie-model";
 
