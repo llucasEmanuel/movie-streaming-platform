@@ -3,15 +3,14 @@ import assert from 'assert';
 import { mock } from 'node:test';
 import { MovieController } from '../../src/controllers/movie-controller';
 import { MovieService } from '../../src/services/movie-service';
+import { sharedState } from './shared-state';
 
 let controller: MovieController;
-let req: any = { params: {} };
-let statusCode = 0;
-let responseData: any = {};
+let req: any = { params: {}, headers: {} };
 
 const res: any = {
-  status: (code: number) => { statusCode = code; return res; },
-  json: (data: any) => { responseData = data; return res; }
+  status: (code: number) => { sharedState.statusCode = code; return res; },
+  json: (data: any) => { sharedState.responseData = data; return res; },
 };
 
 // --- CENÁRIO: VALIDAR EXIBIÇÃO DE METADADOS ---
@@ -21,8 +20,7 @@ Given('eu acesso o sistema como {string}', function (role) {
 
 When('eu seleciono o filme {string}', async function (movieTitle) {
   req.params.moviesID = 'mocked-id';
-  
-  // Mapeia respostas lógicas simulando o comportamento de negócio do Service
+
   if (movieTitle === "Metropolis") {
     mock.method(MovieService.prototype, 'getMetadata', async () => ({
       id: 'mocked-id',
@@ -54,18 +52,16 @@ Then('eu vejo a página {string} do filme {string}', function (pageName, movieTi
 });
 
 Then('os campos devem estar preenchidos adequadamente:', function (dataTable) {
-  const expectedRows = dataTable.hashes(); 
-  // expectedRows conterá uma lista de objetos [{ campo: 'título', valor: 'Metropolis' }, ...]
-  
+  const expectedRows = dataTable.hashes();
+
   expectedRows.forEach((row: any) => {
-    // Normaliza acentuações para cruzar com as propriedades mapeadas no mock
     const fieldMap: any = { 'título': 'title', 'gêneros': 'generos', 'duração': 'duracao' };
     const fieldKey = fieldMap[row.campo] || row.campo;
-    
-    assert.strictEqual(responseData[fieldKey], row.valor);
+
+    assert.strictEqual(sharedState.responseData[fieldKey], row.valor);
   });
-  
-  mock.restoreAll(); // Limpa as interceptações após as validações
+
+  mock.restoreAll();
 });
 
 Then('eu vejo a opção {string}', function (optionName) {
@@ -75,26 +71,30 @@ Then('eu vejo a opção {string}', function (optionName) {
 // --- CENÁRIO: TIMEOUT DE METADADOS ---
 Given('o servidor de metadados está instável ou inalcançável', function () {
   controller = new MovieController();
-  
+
   mock.method(MovieService.prototype, 'getMetadata', async () => {
     throw new Error("TIMEOUT_EXCEEDED");
   });
 });
 
 When('o tempo de carregamento excede {string}', async function (timeString) {
-  // Apenas dispara o fluxo caso seja a requisição de metadados (10s)
   if (timeString === "10 segundos") {
     req.params.moviesID = 'id-lento';
     await controller.show(req, res);
   }
+  if (timeString === "30 segundos") {
+    controller = new MovieController();
+    req.params.moviesID = '789';
+    await controller.streamVideo(req, res);
+  }
 });
 
 Then('o carregamento de metadados é interrompido', function () {
-  assert.strictEqual(statusCode, 408);
+  assert.strictEqual(sharedState.statusCode, 408);
 });
 
 Then('eu vejo a mensagem de erro {string}', function (expectedMessage) {
-  assert.strictEqual(responseData.message, expectedMessage);
+  assert.strictEqual(sharedState.responseData.message, expectedMessage);
   mock.restoreAll();
 });
 

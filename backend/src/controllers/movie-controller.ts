@@ -65,7 +65,12 @@ export class MovieController {
         res.status(500).send("Unable to read movie stream");
       }
 
-    } catch (error) {
+    } catch (error:any) {
+      if (error.message === "STREAM_TIMEOUT") {
+        return res.status(408).json({ 
+          message: "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde" 
+        });
+      }
       console.error("Streaming error:", error);
       return res.status(404).json({ message: "Movie not found" });
     }
