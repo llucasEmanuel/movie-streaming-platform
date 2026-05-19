@@ -20,7 +20,6 @@ Before(async function () {
 Given("eu acesso o sistema como {string}", async function (cargo: string) {
   const secret = process.env.JWT_SECRET || "sua-chave-secreta-do-projeto";
 
-  // O payload recebe o cargo exato que veio do Gherkin ("administrador")
   const payload = {
     id: "user-teste-123",
     role: cargo,
