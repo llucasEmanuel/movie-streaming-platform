@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { MovieModel } from "../models/movie-model";
-import { 
+import {
   MovieService,
   createMovieService,
   deleteMovieService,
@@ -48,13 +48,21 @@ export const postMovie = async (req: Request, res: Response) => {
     if (error instanceof ConflictError) {
       return res.status(409).json({ message: error.message });
     }
+    return res.status(500).json({ message: "Erro interno no servidor", error: error.message });
   }
 };
 
 export const getMovies = async (req: Request, res: Response) => {
   try {
-    const allMovies = await getMoviesService();
-    res.status(200).json(allMovies); // Retorna todos os filmes
+    // Captura os parâmetros digitados na URL
+    const search = req.query.search as string | undefined;
+    const genre = req.query.genre as string | undefined;
+
+    // Passa as variáveis para a camada de Serviço
+    const allMovies = await getMoviesService(search, genre);
+
+    // Retorna os filmes filtrados
+    res.status(200).json(allMovies); 
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
@@ -62,8 +70,8 @@ export const getMovies = async (req: Request, res: Response) => {
 
 export const deleteMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
-    await deleteMovieService(title);
+    const id = String(req.params.id);
+    await deleteMovieService(id);
     const allMovies = await getMoviesService();
     res.status(200).json(allMovies); // Será removido no futuro, mas apenas para verificar momentaneamente que a exclusão ocorreu bem
   } catch (error: any) {
@@ -81,9 +89,9 @@ export const deleteMovie = async (req: Request, res: Response) => {
 
 export const patchMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
+    const id = String(req.params.id);
     const updates = req.body;
-    const movieUpdated = await updateMovieService(title, updates);
+    const movieUpdated = await updateMovieService(id, updates);
     res.status(200).json(movieUpdated); // Retorna todas as informações referentes ao filme
   } catch (error: any) {
     if (error instanceof NotFoundError) {
@@ -97,4 +105,3 @@ export const patchMovie = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro inesperado" });
   }
 };
-

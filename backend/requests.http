@@ -35,3 +35,65 @@ Content-Type: application/json
 
 ### Deletar Filme
 DELETE http://localhost:3000/movies/O Senhor dos Anéis
+
+
+### Cadastrar Filme 
+POST http://localhost:3000/movies
+Content-Type: application/json
+
+{
+  "title": "Metropolis",
+  "synopsis": "Uma obra-prima da ficção científica expressionista.",
+  "url_movie": "https://archive.org/download/metropolis/metropolis.mp4",
+  "url_poster": "https://archive.org/download/metropolis/poster.jpg",
+  "genres": ["Ficção Científica"],
+  "duration": 153,
+  "directors": ["Fritz Lang"],
+  "cast": ["Alfred Abel", "Brigitte Helm"]
+}
+
+###
+
+### Cadastrar Filme
+POST http://localhost:3000/movies
+Content-Type: application/json
+
+{
+  "title": "O Rei da Montanha",
+  "synopsis": "Um guerreiro busca recuperar o trono perdido em uma jornada cheia de combates.",
+  "url_movie": "https://archive.org/download/rei-montanha/filme.mp4",
+  "url_poster": "https://archive.org/download/rei-montanha/poster.jpg",
+  "genres": ["Ação", "Aventura"],
+  "duration": 125,
+  "directors": ["Peter Jackson"],
+  "cast": ["Elijah Wood"]
+}
+
+### Abre a página inicial limpa (sem filtro)
+# Retorna todos os filmes disponíveis na plataforma
+GET http://localhost:3000/movies
+
+
+### Busca por título bem-sucedida
+# Retorna o filme "Metropolis"
+GET http://localhost:3000/movies?search=meTropOlis
+
+
+### Busca por termo parcial
+# Retorna filmes que contenham "metro"
+GET http://localhost:3000/movies?search=metro
+
+
+### Busca sem resultado encontrado
+# Deve retornar um array vazio: []
+GET http://localhost:3000/movies?search=aeurhdo
+
+
+### Filtrar filmes por um único gênero
+# Retorna filmes classificados como "Ficção Científica"
+GET http://localhost:3000/movies?genre=Ficção Científica
+
+
+### Scenario: Busca e Filtro juntos
+# Retorna filmes do gênero "ação" que contenham "rei" no título/elenco
+GET http://localhost:3000/movies?search=rei&genre=ação
