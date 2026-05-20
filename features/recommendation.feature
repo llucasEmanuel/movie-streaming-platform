@@ -14,7 +14,7 @@ Scenario: Exibir recomendações padrão para novo usuário
 Scenario Outline: Priorizar recomendações com base no gênero mais assistido
     Given eu acesso o sistema como "usuário"
     And eu assisti a "6" filmes do gênero "<tipo>" nos últimos "7" dias
-    And eu estou na pagina "Principal"
+    And eu estou na página "Principal"
     When eu acesso a página "Recomendados"
     Then a página "Recomendados" exibe a playlist "<recomendacao>" entre as 3 primeiras seções
     And a playlist "<recomendacao>" contém os filmes do gênero "<tipo>"
@@ -30,17 +30,17 @@ Scenario: Atualizar recomendações após nova interação do usuário
     And eu assisti a "2" filmes do gênero "Ação" nos últimos "7" dias
     And eu assisti a "4" filmes do gênero "Documentário" nos últimos "7" dias
     When eu assistir a um novo filme do gênero "Documentário"
-    And eu acessar a seção "Recomendados"
-    Then a página "Recomendados" exibe a playlist "Recomendações de Documentários" acima da playlist "Ação"
-    And a playlist "Recomendações de Documentários" contém os filmes do gênero "Documentário"
+    And eu acesso a seção "Recomendados"
+    Then a página "Recomendados" exibe a playlist "Recomendações de Documentário" acima da playlist "Ação"
+    And a playlist "Recomendações de Documentário" contém os filmes do gênero "Documentário"
 
 Scenario: Remover personalização após limpeza do histórico
     Given eu acesso o sistema como "usuário"
-    And possuo no histórico o filme "Vingadores"
-    And o página "Recomendados" exibe a playlist "Porque você assistiu Vingadores"
+    And eu possuo no histórico o filme "Vingadores"
+    And a página "Recomendados" exibe a playlist "Porque você assistiu Vingadores"
     When eu seleciono a opção "Apagar histórico completo"
     And eu acesso a página "Recomendados"
-    Then o página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
+    Then a página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
     And a página "Recomendados" exibe a playlist "Lançamentos e Populares"
     And a página "Recomendados" não exibe seções personalizadas baseadas em histórico
 

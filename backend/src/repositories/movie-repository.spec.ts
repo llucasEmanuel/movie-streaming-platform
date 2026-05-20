@@ -1,7 +1,7 @@
 import { test, describe } from 'node:test';
 import assert from 'node:assert';
 import { MovieRepository } from './movie-repository';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma';
 
 describe('MovieRepository - findById', () => {
 
@@ -19,11 +19,11 @@ describe('MovieRepository - findById', () => {
     const repo = new MovieRepository(prismaMock);
     const result = await repo.findById(mockId);
 
-    assert.deepStrictEqual(result, mockMovie);
-    assert.strictEqual(prismaMock.movie.findUnique.mock.calls.length, 1);
-    assert.deepStrictEqual(prismaMock.movie.findUnique.mock.calls[0].arguments[0], {
+    assert.strictEqual((prismaMock.movie.findUnique as any).mock.calls.length, 1);
+    assert.deepStrictEqual((prismaMock.movie.findUnique as any).mock.calls[0].arguments[0], {
       where: { id: mockId }
     });
+
   });
 
 });

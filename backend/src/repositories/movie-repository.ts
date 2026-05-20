@@ -1,3 +1,5 @@
+import { PrismaClient } from "@prisma/client";
+import { prisma as defaultPrisma } from "../database/prisma-client";
 import { MovieModel } from "../models/movie-model";
 import { PrismaClient } from "../generated/prisma";
 import { prisma } from "../database/prisma-client"; // <-- Única importação do prisma
