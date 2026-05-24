@@ -4,12 +4,16 @@
   "description": "Repository created for the Software and Systems Engineering (ESS) course project.",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js"
+    "test": "cucumber-js",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "dev": "concurrently --kill-others --names \"BACKEND,FRONTEND\" --prefix-colors \"blue,magenta\" \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@cucumber/cucumber": "^12.8.2"
+    "@cucumber/cucumber": "^12.8.2",
+    "concurrently": "^9.2.1"
   }
 }
