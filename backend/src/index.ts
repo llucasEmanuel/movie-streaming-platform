@@ -2,8 +2,10 @@ import "dotenv/config";
 import express, { Request, Response } from 'express';
 import userRoutes from './routes/routes'; 
 import { router as movieRoutes } from './routes/movie-routes';
+import cors from 'cors'
 
 const app = express();
+app.use(cors())
 
 app.use(express.json());
 
