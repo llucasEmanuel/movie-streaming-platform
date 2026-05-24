@@ -5,6 +5,9 @@ services:
       dockerfile: .devcontainer/Dockerfile
     volumes:
       - ..:/workspaces/movie_streaming_platform:cached
+    ports:  
+      - "3000:3000" # Porta do Backend
+      - "5173:5173" # Porta do Frontend (React/Vite)
     command: sleep infinity
     depends_on:
       - db
