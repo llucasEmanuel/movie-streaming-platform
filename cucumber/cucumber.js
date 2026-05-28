@@ -1,8 +1,7 @@
 module.exports = {
-  default: {
-    paths: ["features/gerenciar_playlists.feature"],
-    requireModule: ["tsx/cjs"],
-    require: ["tests/step_definitions/**/*.ts"],
-    format: ["progress"]
-  }
+  default: [
+    "features/gerenciar_playlists_servico.feature",
+    "--require-module tsx/cjs",
+    "--require tests/step_definitions/gerenciar_playlists_servico.steps.ts",
+  ].join(" "),
 };
