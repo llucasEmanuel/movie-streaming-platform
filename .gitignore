@@ -1,7 +1,7 @@
 .git/
 
 # Variáveis de ambiente
-backend/node_modules/
+node_modules/
 
 # Variáveis de ambiente
 .env

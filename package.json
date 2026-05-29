@@ -1,0 +1,15 @@
+{
+  "name": "movie-streaming-platform",
+  "version": "1.0.0",
+  "description": "Repository created for the Software and Systems Engineering (ESS) course project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.8.2"
+  }
+}

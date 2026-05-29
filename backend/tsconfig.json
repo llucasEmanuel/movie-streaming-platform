@@ -1,5 +1,5 @@
 {
-"compilerOptions": {
+  "compilerOptions": {
     "types": ["node"],
     "target": "es6",   
     "module": "commonjs",
@@ -10,5 +10,12 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   }, 
-  "exclude": ["prisma.config.ts", "node_modules"]
+  "exclude": [
+    "prisma.config.ts",
+    "node_modules", 
+    "src/**/*.spec.ts",
+    "features",
+    "tests",
+    "../tests"
+  ]
 }
