@@ -1,12 +1,17 @@
 // src/repositories/playlist-repository.ts
 
-import { CreatePlaylistModel, PlaylistModel, UpdatePlaylistModel } from "../models/playlist-model";
+import {
+  CreatePlaylistModel,
+  PlaylistModel,
+  UpdatePlaylistModel,
+} from "../models/playlist-model";
+
 import { prisma } from "../database/prisma";
 
 // Camada responsável pela interação com o banco de dados
 
-// usado quando o usuário deseja visualizar todas as suas playlists
-export const getPlaylistsByUserId = async ( //busca todas as playlists de um usuário específico
+// Usado quando o usuário deseja visualizar todas as suas playlists
+export const getPlaylistsByUserId = async (
   userId: string,
 ): Promise<PlaylistModel[]> => {
   return await prisma.playlist.findMany({
@@ -19,8 +24,8 @@ export const getPlaylistsByUserId = async ( //busca todas as playlists de um usu
   });
 };
 
-// Usado para buscar uma playlist específica por ID para excluir ou editar
-export const getPlaylistById = async ( // Busca uma playlist específica por ID
+// Usado para buscar uma playlist específica por ID para excluir, editar ou modificar filmes
+export const getPlaylistById = async (
   id: string,
 ): Promise<PlaylistModel | null> => {
   return await prisma.playlist.findUnique({
@@ -30,8 +35,8 @@ export const getPlaylistById = async ( // Busca uma playlist específica por ID
   });
 };
 
-// Usado para verificar se já existe uma playlist com o mesmo nome para o mesmo usuário antes de criar uma nova
-export const getPlaylistByNameAndUserId = async ( // Busca uma playlist específica por nome e ID do usuário
+// Usado para buscar uma playlist específica por nome e usuário
+export const getPlaylistByNameAndUserId = async (
   name: string,
   userId: string,
 ): Promise<PlaylistModel | null> => {
@@ -44,37 +49,40 @@ export const getPlaylistByNameAndUserId = async ( // Busca uma playlist específ
 };
 
 // Usado quando o usuário deseja criar uma nova playlist
-export const insertPlaylist = async ( // Insere uma nova playlist no banco de dados
+export const insertPlaylist = async (
   playlist: CreatePlaylistModel,
 ): Promise<PlaylistModel> => {
   return await prisma.playlist.create({
-    data: playlist,
+    data: {
+      name: playlist.name,
+      userId: playlist.userId,
+    },
   });
 };
 
 // Usado quando o usuário deseja excluir uma playlist existente
-export const deletePlaylist = async (id: string): Promise<boolean> => { // Exclui uma playlist do banco de dados
+export const deletePlaylist = async (id: string): Promise<boolean> => {
   const playlist = await prisma.playlist.findUnique({
     where: {
       id,
     },
   });
 
-  if (playlist) {
-    await prisma.playlist.delete({
-      where: {
-        id,
-      },
-    });
-
-    return true;
+  if (!playlist) {
+    return false;
   }
 
-  return false;
+  await prisma.playlist.delete({
+    where: {
+      id,
+    },
+  });
+
+  return true;
 };
 
 // Usado quando o usuário deseja editar uma playlist existente
-export const updatePlaylist = async ( // Atualiza uma playlist existente no banco de dados
+export const updatePlaylist = async (
   id: string,
   updates: UpdatePlaylistModel,
 ): Promise<PlaylistModel | null> => {
@@ -84,14 +92,42 @@ export const updatePlaylist = async ( // Atualiza uma playlist existente no banc
     },
   });
 
-  if (playlist) {
-    return await prisma.playlist.update({
-      where: {
-        id,
-      },
-      data: updates,
-    });
+  if (!playlist) {
+    return null;
   }
 
-  return null;
+  return await prisma.playlist.update({
+    where: {
+      id,
+    },
+    data: {
+      name: updates.name,
+    },
+  });
 };
+
+// Usado quando o usuário deseja adicionar ou remover filmes de uma playlist
+export const updatePlaylistMovies = async (
+  id: string,
+  movies: string[],
+): Promise<PlaylistModel | null> => {
+  const playlist = await prisma.playlist.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!playlist) {
+    return null;
+  }
+
+  return await prisma.playlist.update({
+    where: {
+      id,
+    },
+    data: {
+      movies,
+    },
+  });
+};
+

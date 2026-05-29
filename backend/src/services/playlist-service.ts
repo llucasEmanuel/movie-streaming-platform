@@ -1,8 +1,10 @@
 // src/services/playlist-service.ts
 
 import {
+  AddMovieToPlaylistModel,
   CreatePlaylistModel,
   PlaylistModel,
+  RemoveMovieFromPlaylistModel,
   UpdatePlaylistModel,
 } from "../models/playlist-model";
 
@@ -13,6 +15,7 @@ import {
   getPlaylistsByUserId,
   insertPlaylist,
   updatePlaylist,
+  updatePlaylistMovies,
 } from "../repositories/playlist-repository";
 
 import {
@@ -30,29 +33,26 @@ export const createPlaylistService = async (
 ): Promise<PlaylistModel> => {
   const { name, userId } = playlist;
 
-  // Verifica se o usuário foi informado
   if (!userId || userId.trim() === "") {
     throw new BadRequestError("ID do usuário deve ser informado");
   }
 
-  // Verifica se o nome da playlist foi informado
   if (!name || name.trim() === "") {
     throw new BadRequestError("O nome da playlist é obrigatório");
   }
 
   const playlistName = name.trim();
+  const user = userId.trim();
 
-  // Verifica se o usuário já possui uma playlist com esse nome
-  const alreadyExists = await getPlaylistByNameAndUserId(playlistName, userId);
+  const alreadyExists = await getPlaylistByNameAndUserId(playlistName, user);
 
   if (alreadyExists) {
     throw new ConflictError("Já existe uma playlist com esse nome");
   }
 
-  // Cria a playlist no banco de dados
   const createdPlaylist = await insertPlaylist({
     name: playlistName,
-    userId,
+    userId: user,
   });
 
   return createdPlaylist;
@@ -62,32 +62,26 @@ export const createPlaylistService = async (
 export const getPlaylistsByUserIdService = async (
   userId: string,
 ): Promise<PlaylistModel[]> => {
-  // Verifica se o usuário foi informado
   if (!userId || userId.trim() === "") {
     throw new ValidationError("ID do usuário deve ser informado");
   }
 
-  // Busca todas as playlists do usuário no banco de dados
-  return await getPlaylistsByUserId(userId);
+  return await getPlaylistsByUserId(userId.trim());
 };
 
 // Usado quando o usuário deseja excluir uma playlist existente
 export const deletePlaylistService = async (id: string): Promise<void> => {
-  // Verifica se o ID da playlist foi informado
   if (!id || id.trim() === "") {
     throw new ValidationError("ID da playlist deve ser informado");
   }
 
-  // Busca a playlist antes de tentar excluir
-  const playlist = await getPlaylistById(id);
+  const playlist = await getPlaylistById(id.trim());
 
-  // Se a playlist não existir, retorna erro
   if (!playlist) {
     throw new NotFoundError("Playlist não encontrada");
   }
 
-  // Exclui a playlist no banco de dados
-  await deletePlaylist(id);
+  await deletePlaylist(id.trim());
 };
 
 // Usado quando o usuário deseja editar o nome de uma playlist existente
@@ -95,46 +89,133 @@ export const updatePlaylistService = async (
   id: string,
   updates: UpdatePlaylistModel,
 ): Promise<PlaylistModel> => {
-  // Verifica se o ID da playlist foi informado
   if (!id || id.trim() === "") {
     throw new ValidationError("ID da playlist deve ser informado");
   }
 
-  // Verifica se o novo nome da playlist foi informado
   if (!updates.name || updates.name.trim() === "") {
     throw new BadRequestError("O nome da playlist é obrigatório");
   }
 
-  // Busca a playlist que será editada
-  const playlist = await getPlaylistById(id);
+  const playlist = await getPlaylistById(id.trim());
 
-  // Se a playlist não existir, retorna erro
   if (!playlist) {
     throw new NotFoundError("Playlist não encontrada");
   }
 
   const playlistName = updates.name.trim();
 
-  // Verifica se o usuário já possui uma playlist com esse novo nome
   const alreadyExists = await getPlaylistByNameAndUserId(
     playlistName,
     playlist.userId,
   );
 
-  // Permite manter o mesmo nome, mas impede usar o nome de outra playlist do mesmo usuário
-  if (alreadyExists && alreadyExists.id !== id) {
+  if (alreadyExists && alreadyExists.id !== id.trim()) {
     throw new ConflictError("Já existe uma playlist com esse nome");
   }
 
-  // Atualiza a playlist no banco de dados
-  const updatedPlaylist = await updatePlaylist(id, {
+  const updatedPlaylist = await updatePlaylist(id.trim(), {
     name: playlistName,
   });
 
-  // Segurança extra caso a playlist deixe de existir durante a atualização
   if (!updatedPlaylist) {
     throw new NotFoundError("Não foi possível atualizar. Playlist não encontrada");
   }
 
   return updatedPlaylist;
 };
+
+// Usado quando o usuário deseja adicionar um filme a uma playlist
+export const addMovieToPlaylistService = async (
+  data: AddMovieToPlaylistModel,
+): Promise<PlaylistModel> => {
+  const { userId, playlistName, movieName } = data;
+
+  if (!userId || userId.trim() === "") {
+    throw new BadRequestError("ID do usuário deve ser informado");
+  }
+
+  if (!playlistName || playlistName.trim() === "") {
+    throw new BadRequestError("O nome da playlist é obrigatório");
+  }
+
+  if (!movieName || movieName.trim() === "") {
+    throw new BadRequestError("O nome do filme é obrigatório");
+  }
+
+  const user = userId.trim();
+  const playlistTitle = playlistName.trim();
+  const movieTitle = movieName.trim();
+
+  const playlist = await getPlaylistByNameAndUserId(playlistTitle, user);
+
+  if (!playlist) {
+    throw new NotFoundError("Playlist não encontrada");
+  }
+
+  const movies = playlist.movies ?? [];
+
+  if (movies.includes(movieTitle)) {
+    throw new ConflictError("Filme já está na playlist");
+  }
+
+  const updatedPlaylist = await updatePlaylistMovies(playlist.id, [
+    ...movies,
+    movieTitle,
+  ]);
+
+  if (!updatedPlaylist) {
+    throw new NotFoundError("Não foi possível atualizar. Playlist não encontrada");
+  }
+
+  return updatedPlaylist;
+};
+
+// Usado quando o usuário deseja remover um filme de uma playlist
+export const removeMovieFromPlaylistService = async (
+  data: RemoveMovieFromPlaylistModel,
+): Promise<PlaylistModel> => {
+  const { userId, playlistName, movieName } = data;
+
+  if (!userId || userId.trim() === "") {
+    throw new BadRequestError("ID do usuário deve ser informado");
+  }
+
+  if (!playlistName || playlistName.trim() === "") {
+    throw new BadRequestError("O nome da playlist é obrigatório");
+  }
+
+  if (!movieName || movieName.trim() === "") {
+    throw new BadRequestError("O nome do filme é obrigatório");
+  }
+
+  const user = userId.trim();
+  const playlistTitle = playlistName.trim();
+  const movieTitle = movieName.trim();
+
+  const playlist = await getPlaylistByNameAndUserId(playlistTitle, user);
+
+  if (!playlist) {
+    throw new NotFoundError("Playlist não encontrada");
+  }
+
+  const movies = playlist.movies ?? [];
+
+  if (!movies.includes(movieTitle)) {
+    throw new NotFoundError("Filme não encontrado na playlist");
+  }
+
+  const updatedMovies = movies.filter((movie) => movie !== movieTitle);
+
+  const updatedPlaylist = await updatePlaylistMovies(
+    playlist.id,
+    updatedMovies,
+  );
+
+  if (!updatedPlaylist) {
+    throw new NotFoundError("Não foi possível atualizar. Playlist não encontrada");
+  }
+
+  return updatedPlaylist;
+};
+

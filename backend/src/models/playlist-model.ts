@@ -4,6 +4,7 @@ export interface PlaylistModel {
   id: string;
   name: string;
   userId: string;
+  movies: string[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,3 +17,16 @@ export interface CreatePlaylistModel {
 export interface UpdatePlaylistModel {
   name: string;
 }
+
+export interface AddMovieToPlaylistModel {
+  userId: string;
+  playlistName: string;
+  movieName: string;
+}
+
+export interface RemoveMovieFromPlaylistModel {
+  userId: string;
+  playlistName: string;
+  movieName: string;
+}
+

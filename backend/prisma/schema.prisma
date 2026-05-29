@@ -24,8 +24,11 @@ model Playlist {
   id        String   @id @default(uuid())
   name      String
   userId    String
+  movies    String[] @default([])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, name])
 }
+
+
