@@ -18,3 +18,5 @@ router.delete("/movies/:title", deleteMovie);
 
 router.get("/movies/:moviesID", movieController.show)
 router.get("/movies/:moviesID/video", movieController.streamVideo);
+
+router.get("/movies/:moviesID/download", movieController.downloadMovie);

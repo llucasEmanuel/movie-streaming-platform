@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { MovieModel } from "../models/movie-model";
+import { validate as isValidUUID } from 'uuid';
 import {
   MovieService,
   createMovieService,
@@ -109,6 +110,52 @@ export class MovieController {
 
       // Se foi outro erro, mantém o comportamento padrão
       return res.status(404).json({ message: error.message });
+    }
+  }
+
+  async downloadMovie(req: Request, res: Response) {
+
+    console.log("Parametros recebidos", req.params)
+
+    const moviesID = req.params.moviesID as string;
+
+    if (!isValidUUID(moviesID)) {
+      return res.status(400).json({ message: "O formato do UUID é inválido." });
+    }
+
+    try {
+      const movieService = new MovieService();
+      // Pega os dados brutos (onde está a URL)
+      const movie = await movieService.getRawMovieData(moviesID);
+      
+      // Supondo que no seu Prisma/Model o nome seja url_movie
+      const videoUrl = movie.file_name; 
+
+      if (!videoUrl) {
+        return res.status(404).json({ message: "URL do filme não encontrada." });
+      }
+
+      const response = await fetch(videoUrl);
+      if (!response.ok) throw new Error("Erro ao conectar com Archive.org");
+
+      // Define o nome do arquivo para o usuário final
+      const fileName = `${movie.title.replace(/\s+/g, '_')}.mp4`;
+
+      res.writeHead(200, {
+        'Content-Type': 'video/mp4',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Length': response.headers.get('content-length') || '',
+      });
+
+      if (response.body) {
+        // Usando o helper do Node para maior performance
+        const { Readable } = await import('node:stream');
+        Readable.fromWeb(response.body as any).pipe(res);
+      }
+
+    } catch (error: any) {
+      console.error("Download Error:", error);
+      return res.status(error.status || 500).json({ message: error.message });
     }
   }
 }

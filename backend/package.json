@@ -12,7 +12,7 @@
     "test:integration": "node --import tsx --test src/**/*.integration.spec.ts",
     "test:e2e": "node --import tsx --test src/**/*.e2e.spec.ts",
     "test:cucumber": "cucumber-js ../features/userSignUp.feature ../features/recommendation.feature --require-module ts-node/register --require tests/step_definitions/**/*.ts",
-    "test:cucumber:lessl": "cucumber-js -p lessl --tags '@player or @metadata'"  
+    "test:cucumber:lessl": "cucumber-js -p lessl --tags '@player or @metadata'"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +25,8 @@
     "express": "^5.2.1",
     "google-auth-library": "^10.6.2",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.9.0",
