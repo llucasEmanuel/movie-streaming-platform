@@ -1,6 +1,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import bcrypt from 'bcrypt';
 import * as userRepository from '../repositories/user-repository';
+import { findUserById, deleteUser } from '../repositories/user-repository';
 
 const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID || "mock_client_id");
 
@@ -99,4 +100,14 @@ export const authenticateGoogleUser = async (token: string, bodyMockData: any) =
     }
 
     return user;
+};
+
+export const deleteUserAccount = async (userId: string): Promise<void> => {
+    const user = await findUserById(userId);
+    
+    if (!user) {
+        throw new Error('Usuário não encontrado.');
+    }
+
+    await deleteUser(userId);
 };

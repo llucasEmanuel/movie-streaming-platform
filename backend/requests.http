@@ -36,6 +36,60 @@ Content-Type: application/json
 ### Deletar Filme
 DELETE http://localhost:3000/movies/O Senhor dos Anéis
 
+###
+
+### Listar Playlists de um Usuário
+GET http://localhost:3000/users/user-123/playlists
+
+###
+
+### Criar Nova Playlist
+POST http://localhost:3000/playlists
+Content-Type: application/json
+
+{
+  "name": "Maratonar nas férias",
+  "userId": "user-123"
+}
+
+###
+
+### Criar Playlist com Nome Repetido
+POST http://localhost:3000/playlists
+Content-Type: application/json
+
+{
+  "name": "Maratonar nas férias",
+  "userId": "user-123"
+}
+
+###
+
+### Criar Playlist sem Nome
+POST http://localhost:3000/playlists
+Content-Type: application/json
+
+{
+  "name": "",
+  "userId": "user-123"
+}
+
+###
+
+### Atualizar Nome da Playlist
+PATCH http://localhost:3000/playlists/COLOQUE_AQUI_O_ID_DA_PLAYLIST
+Content-Type: application/json
+
+{
+  "name": "Maratonar no feriadão"
+}
+
+###
+
+### Deletar Playlist
+DELETE http://localhost:3000/playlists/COLOQUE_AQUI_O_ID_DA_PLAYLIST
+
+###
 
 ### Cadastrar Filme 
 POST http://localhost:3000/movies
@@ -69,31 +123,38 @@ Content-Type: application/json
   "cast": ["Elijah Wood"]
 }
 
-### Abre a página inicial limpa (sem filtro)
+###
+
+### Abre a página inicial limpa sem filtro
 # Retorna todos os filmes disponíveis na plataforma
 GET http://localhost:3000/movies
 
+###
 
 ### Busca por título bem-sucedida
 # Retorna o filme "Metropolis"
 GET http://localhost:3000/movies?search=meTropOlis
 
+###
 
 ### Busca por termo parcial
 # Retorna filmes que contenham "metro"
 GET http://localhost:3000/movies?search=metro
 
+###
 
 ### Busca sem resultado encontrado
 # Deve retornar um array vazio: []
 GET http://localhost:3000/movies?search=aeurhdo
 
+###
 
 ### Filtrar filmes por um único gênero
 # Retorna filmes classificados como "Ficção Científica"
 GET http://localhost:3000/movies?genre=Ficção Científica
 
+###
 
-### Scenario: Busca e Filtro juntos
+### Busca e filtro juntos
 # Retorna filmes do gênero "ação" que contenham "rei" no título/elenco
 GET http://localhost:3000/movies?search=rei&genre=ação

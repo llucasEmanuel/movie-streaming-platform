@@ -79,5 +79,34 @@ export const DBUtils = {
             orderBy: { watchedAt: 'desc' } // Pega o inserido recentemente
         });
         return historico ? historico.movieId : null;
+    },
+
+    async assistirMesmoFilmeRepetido(userId: string, titulo: string, genero: string, vezes: number) {
+        let filme = await prisma.movie.findFirst({ where: { title: titulo } });
+        
+        if (!filme) {
+            filme = await prisma.movie.create({
+                data: { 
+                    title: titulo, 
+                    genres: genero, 
+                    isPopular: false 
+                }
+            });
+        }
+
+        // Insere o mesmo movieId várias vezes no histórico do usuário
+        for (let i = 0; i < vezes; i++) {
+            await prisma.history.create({
+                data: { 
+                    userId, 
+                    movieId: filme.id, 
+                    watchedAt: new Date() 
+                }
+            });
+        }
+        
+        return filme;
     }
+
 };
+

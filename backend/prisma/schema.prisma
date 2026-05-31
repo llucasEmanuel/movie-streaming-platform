@@ -22,14 +22,25 @@ model Movie {
   history   History[] // Relacionamento: Um filme pode estar no histórico de vários usuários
 }
 
+model Playlist {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  movies    String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+}
+
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
+  id        String   @id @default(uuid())
+  email     String   @unique
   name      String?
-  password  String?           // Se faz opcional devido ao cadastro de usuário via Google
-  googleId  String? @unique   // opcional pois pode ser feito o cadastro tanto por meio do registro de email e senha como via Google
-  avatarUrl String?           // Esse campo serve para caso o usuário queria ter uma foto de perfil
-  createdAt DateTime  @default(now())   // Serve para registrar o momento que o usuário realizou o cadastro
+  password  String?  // Se faz opcional devido ao cadastro de usuário via Google
+  googleId  String?  @unique // opcional pois pode ser feito o cadastro tanto por meio do registro de email e senha como via Google
+  avatarUrl String?  // Esse campo serve para caso o usuário queria ter uma foto de perfil
+  createdAt DateTime @default(now()) // Serve para registrar o momento que o usuário realizou o cadastro
   history   History[] // Relacionamento: Um usuário tem muitos registros no histórico
 }
 

@@ -4,6 +4,7 @@ import { mock } from 'node:test';
 import { MovieController } from '../../src/controllers/movie-controller';
 import { MovieService } from '../../src/services/movie-service';
 import { sharedState } from './shared-state';
+import { DBUtils } from "../../src/utils/db-utils";
 
 let controller: MovieController;
 let req: any = { params: {}, headers: {} };
@@ -111,8 +112,15 @@ Given('eu estou na página {string} do filme {string}', function (pageName, movi
 });
 
 When('eu seleciono a opção {string}', async function (optionName) {
-  if (optionName === "Assistir") {
-    await controller.streamVideo(req, res);
+  switch(optionName){
+    case "Assistir":
+      await controller.streamVideo(req, res);
+      break;
+    case "Apagar histórico completo":
+      await DBUtils.limparHistorico(sharedState.currentUserId);
+      break;
+    default:
+      throw new Error(`Opção não suportada: ${optionName}`);
   }
 });
 
