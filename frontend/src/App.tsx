@@ -1,38 +1,30 @@
-import { useEffect, useState } from 'react';
-import { MovieCard } from './components/MovieCard'; // Importando o novo arquivo
-import './App.css';
-import type { Movie } from   './types';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { MovieDetail } from './pages/MovieDetail';
 import cinema_logo from './assets/cinema_logo.png';
+import './App.css';
 
 function App() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/movies') // Sua rota do back que retorna o array
-      .then(res => {
-        if (!res.ok) throw new Error('Erro ao buscar filmes');
-        return res.json();
-      })
-      .then(data => setMovies(data))
-      .catch(err => setError(err.message));
-  }, []);
-
   return (
-    <div className="container">
-      <header>
-        <img src={cinema_logo} width='300'></img>
-      </header>
+    <Router>
+      <div className="app">
+        <header className="app-header">
+          <img src={cinema_logo} alt="Cinema Logo" width="300" />
+        </header>
 
-      {error && <p className="error">❌ {error}</p>}
+        <main className="app-main">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/movie/:movieId" element={<MovieDetail />} />
+          </Routes>
+        </main>
 
-      <div className="movie-grid">
-        {movies.map(movie => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
+        <footer className="app-footer">
+          <p>&copy; 2026 Movie Streaming Platform. Todos os direitos reservados.</p>
+        </footer>
       </div>
-    </div>
+    </Router>
   );
 }
 
-export default App; // O export default garante que o Fast Refresh funcione aqui
+export default App;
