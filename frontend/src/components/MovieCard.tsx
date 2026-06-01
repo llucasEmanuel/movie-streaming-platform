@@ -7,7 +7,11 @@ export function MovieCard({ movie }: { movie: Movie }) {
         <h3>{movie.title}</h3>
         <div>{movie.duration} min</div>
         <br></br>
-        <h4>{movie.genres.join(', ')}</h4>
+        <span>
+          {Array.isArray(movie.genres) 
+            ? movie.genres.join(', ') 
+            : movie.genres || 'Sem gênero'}
+        </span>
         <br></br>
         <span>{movie.synopsis}</span>
       </div>

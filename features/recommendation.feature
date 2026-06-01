@@ -14,7 +14,7 @@ Scenario: Exibir recomendações padrão para novo usuário
 Scenario Outline: Priorizar recomendações com base no gênero mais assistido
     Given eu acesso o sistema como "usuário"
     And eu assisti a "6" filmes do gênero "<tipo>" nos últimos "7" dias
-    And eu estou na pagina "Principal"
+    And eu estou na página "Principal"
     When eu acesso a página "Recomendados"
     Then a página "Recomendados" exibe a playlist "<recomendacao>" entre as 3 primeiras seções
     And a playlist "<recomendacao>" contém os filmes do gênero "<tipo>"
@@ -30,17 +30,17 @@ Scenario: Atualizar recomendações após nova interação do usuário
     And eu assisti a "2" filmes do gênero "Ação" nos últimos "7" dias
     And eu assisti a "4" filmes do gênero "Documentário" nos últimos "7" dias
     When eu assistir a um novo filme do gênero "Documentário"
-    And eu acessar a seção "Recomendados"
-    Then a página "Recomendados" exibe a playlist "Recomendações de Documentários" acima da playlist "Ação"
-    And a playlist "Recomendações de Documentários" contém os filmes do gênero "Documentário"
+    And eu acesso a seção "Recomendados"
+    Then a página "Recomendados" exibe a playlist "Recomendações de Documentário" acima da playlist "Ação"
+    And a playlist "Recomendações de Documentário" contém os filmes do gênero "Documentário"
 
 Scenario: Remover personalização após limpeza do histórico
     Given eu acesso o sistema como "usuário"
-    And possuo no histórico o filme "Vingadores"
-    And o página "Recomendados" exibe a playlist "Porque você assistiu Vingadores"
+    And eu possuo no histórico o filme "Vingadores"
+    And a página "Recomendados" exibe a playlist "Porque você assistiu Vingadores"
     When eu seleciono a opção "Apagar histórico completo"
     And eu acesso a página "Recomendados"
-    Then o página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
+    Then a página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
     And a página "Recomendados" exibe a playlist "Lançamentos e Populares"
     And a página "Recomendados" não exibe seções personalizadas baseadas em histórico
 
@@ -51,6 +51,7 @@ Scenario: Não exibir recomendações de gênero quando não há dados suficient
     When eu acesso a página "Recomendados"
     Then a página "Recomendados" não exibe a playlist "Recomendações de Terror"
     And a página "Recomendados" exibe a mensagem "Assista mais conteúdos para melhorar suas recomendações"
+    And a página "Recomendados" exibe os filmes do catálogo geral
 
 Scenario Outline: Gerar recomendações baseadas em filme específico assistido
     Given eu acesso o sistema como "usuário"
@@ -92,3 +93,32 @@ Scenario: Gerar recomendações após atingir o mínimo de filmes no gênero
     And eu acesso a página "Recomendados"
     Then a página "Recomendados" exibe a playlist "Recomendações de Terror"
     And a playlist "Recomendações de Terror" contém os filmes do gênero "Terror"
+
+Scenario: Gerar recomendações de gênero com histórico suficiente
+    Given eu acesso o sistema como "usuário"
+    And eu possuo "3" filmes assistidos do gênero "Terror" nos últimos "7" dias
+    When o serviço calcula as recomendações de gênero para o usuário "usuário"
+    Then o serviço retorna a seção de título "Recomendações de Terror"
+    And a lista de filmes recomendados não deve ser vazia
+
+Scenario: Aplicar fallback do catálogo por falta de dados suficientes
+    Given eu acesso o sistema como "usuário"
+    And eu possuo "1" filme assistido do gênero "Terror" nos últimos "7" dias
+    And a regra de negócio exige no mínimo "3" filmes do mesmo gênero para gerar recomendações
+    When o serviço calcula as recomendações de gênero para o usuário "usuário"
+    Then o serviço retorna a mensagem "Assista mais conteúdos para melhorar suas recomendações"
+    And o serviço preenche a lista com os filmes do catálogo geral como fallback
+
+Scenario: Sugerir lançamentos para novos usuários sem histórico
+    Given eu acesso o sistema como "usuário"
+    And eu não possuo histórico de visualização
+    When o serviço calcula as recomendações de gênero para o usuário "usuário"
+    Then o serviço retorna a seção de título "Lançamentos e Populares"
+    And a lista de filmes recomendados contém os destaques da plataforma   
+
+Scenario: Contabilizar o mesmo filme assistido repetidamente no histórico
+    Given eu acesso o sistema como "usuário"
+    And eu assisti ao filme "Invocação do Mal" do gênero "Terror" por "4" vezes nos últimos "7" dias
+    When o serviço calcula as recomendações de gênero para o usuário "usuário"
+    Then o serviço contabiliza apenas "1" filme único para a regra de mínimo de dados
+    And o serviço retorna a mensagem "Assista mais conteúdos para melhorar suas recomendações"

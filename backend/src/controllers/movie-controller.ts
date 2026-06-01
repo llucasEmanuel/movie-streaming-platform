@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { MovieModel } from "../models/movie-model";
-import { 
+import { validate as isValidUUID } from 'uuid';
+import {
   MovieService,
   createMovieService,
   deleteMovieService,
@@ -15,22 +16,148 @@ import {
 } from "../errors/errors";
 
 export class MovieController {
-    async show(req: Request, res: Response) {
-        const { moviesID } = req.params;
 
-        // Verifica se o ID realmente é uma string única
-        if (typeof moviesID !== "string") {
-            return res.status(400).json({ message: "Invalid movie ID." });
-        }
+  async streamVideo(req: Request, res: Response) {
+    const { moviesID } = req.params;
+    const range = req.headers.range || "bytes=0-";
 
-        try {
-            const movieService = new MovieService();
-            const metadata = await movieService.getMetadata(moviesID);
-            return res.json(metadata);
-        } catch (error: any) {
-            return res.status(404).json({ message: error.message });
+    try {
+      const movieService = new MovieService();
+      const movie = await movieService.getRawMovieData(String(moviesID));
+      
+      const videoUrl = movie.file_name;
+
+      if (!videoUrl) {
+        return res.status(404).json({ message: "Este título não está disponível para reprodução no momento" });
+      }
+
+      // O fetch do Node segue redirecionamentos automaticamente (follow redirects)
+      const response = await fetch(videoUrl, {
+        headers: {
+          'Range': range
         }
+      });
+
+      // Repassa os cabeçalhos do Internet Archive para o navegador
+      res.writeHead(response.status, {
+        'Content-Type': response.headers.get('content-type') || 'video/mp4',
+        'Content-Range': response.headers.get('content-range') || '',
+        'Accept-Ranges': 'bytes',
+        'Content-Length': response.headers.get('content-length') || '',
+      });
+
+      // Transforma o body do fetch em um stream do Node e faz o pipe para a resposta
+      if (response.body) {
+        const reader = response.body.getReader();
+        
+        // Função para ler o stream do vídeo
+        const push = async () => {
+          const { done, value } = await reader.read();
+          if (done) {
+            res.end();
+            return;
+          }
+          res.write(Buffer.from(value));
+          push();
+        };
+        
+        push();
+      } else {
+        res.status(500).send("Unable to read movie stream");
+      }
+
+    } catch (error:any) {
+      if (error.message === "STREAM_TIMEOUT") {
+        return res.status(408).json({ 
+          message: "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde" 
+        });
+      }
+      console.error("Streaming error:", error);
+      return res.status(404).json({ message: "Movie not found" });
     }
+  }
+
+  async show(req: Request, res: Response) {
+    const { moviesID } = req.params;
+
+    if (typeof moviesID !== "string") {
+      return res.status(400).json({ message: "Invalid movie ID." });
+    }
+
+    try {
+      const movieService = new MovieService();
+
+      // Promise que rejeita automaticamente após 10 segundos
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT_EXCEEDED")), 10000)
+      );
+
+      // Promise.race executa as duas funções ao mesmo tempo e ganha a que terminar primeiro
+      const metadata = await Promise.race([
+        movieService.getMetadata(moviesID),
+        timeoutPromise
+      ]);
+
+      return res.json(metadata);
+
+    } catch (error: any) {
+      // Se o timeout ganhou a corrida, capturamos o erro aqui
+      if (error.message === "TIMEOUT_EXCEEDED") {
+        return res.status(408).json({ 
+          message: "Não foi possível carregar a página do filme. Verifique sua conexão ou tente novamente mais tarde" 
+        });
+      }
+
+      // Se foi outro erro, mantém o comportamento padrão
+      return res.status(404).json({ message: error.message });
+    }
+  }
+
+  async downloadMovie(req: Request, res: Response) {
+
+    console.log("Parametros recebidos", req.params)
+
+    const moviesID = req.params.moviesID as string;
+
+    if (!isValidUUID(moviesID)) {
+      return res.status(400).json({ message: "O formato do UUID é inválido." });
+    }
+
+    try {
+      const movieService = new MovieService();
+      // Pega os dados brutos (onde está a URL)
+      const movie = await movieService.getRawMovieData(moviesID);
+      
+      // Supondo que no seu Prisma/Model o nome seja url_movie
+      const videoUrl = movie.file_name; 
+
+      if (!videoUrl) {
+        return res.status(404).json({ message: "URL do filme não encontrada." });
+      }
+
+      const response = await fetch(videoUrl);
+      if (!response.ok) throw new Error("Erro ao conectar com Archive.org");
+
+      // Define o nome do arquivo para o usuário final
+      const fileName = `${movie.title.replace(/\s+/g, '_')}.mp4`;
+
+      res.writeHead(200, {
+        'Content-Type': 'video/mp4',
+        'Content-Disposition': `attachment; filename="${fileName}"`,
+        'Content-Length': response.headers.get('content-length') || '',
+      });
+
+      if (response.body) {
+        // Usando o helper do Node para maior performance
+        const { Readable } = await import('node:stream');
+        Readable.fromWeb(response.body as any).pipe(res);
+      }
+
+    } catch (error: any) {
+      console.error("Download Error:", error);
+      return res.status(error.status || 500).json({ message: error.message });
+    }
+  }
 }
 
 export const postMovie = async (req: Request, res: Response) => {
@@ -48,13 +175,21 @@ export const postMovie = async (req: Request, res: Response) => {
     if (error instanceof ConflictError) {
       return res.status(409).json({ message: error.message });
     }
+    return res.status(500).json({ message: "Erro interno no servidor", error: error.message });
   }
 };
 
 export const getMovies = async (req: Request, res: Response) => {
   try {
-    const allMovies = await getMoviesService();
-    res.status(200).json(allMovies); // Retorna todos os filmes
+    // Captura os parâmetros digitados na URL
+    const search = req.query.search as string | undefined;
+    const genre = req.query.genre as string | undefined;
+
+    // Passa as variáveis para a camada de Serviço
+    const allMovies = await getMoviesService(search, genre);
+
+    // Retorna os filmes filtrados
+    res.status(200).json(allMovies); 
   } catch (error: any) {
     res.status(400).json({ message: error.message });
   }
@@ -62,8 +197,8 @@ export const getMovies = async (req: Request, res: Response) => {
 
 export const deleteMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
-    await deleteMovieService(title);
+    const id = String(req.params.id);
+    await deleteMovieService(id);
     const allMovies = await getMoviesService();
     res.status(200).json(allMovies); // Será removido no futuro, mas apenas para verificar momentaneamente que a exclusão ocorreu bem
   } catch (error: any) {
@@ -81,9 +216,9 @@ export const deleteMovie = async (req: Request, res: Response) => {
 
 export const patchMovie = async (req: Request, res: Response) => {
   try {
-    const title = String(req.params.title);
+    const id = String(req.params.id);
     const updates = req.body;
-    const movieUpdated = await updateMovieService(title, updates);
+    const movieUpdated = await updateMovieService(id, updates);
     res.status(200).json(movieUpdated); // Retorna todas as informações referentes ao filme
   } catch (error: any) {
     if (error instanceof NotFoundError) {
@@ -97,4 +232,3 @@ export const patchMovie = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Erro inesperado" });
   }
 };
-

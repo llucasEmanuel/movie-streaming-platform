@@ -64,7 +64,7 @@ Scenario: Tentativa de cadastro com campos em branco
     And a mensagem de erro deve indicar "Todos os campos são obrigatórios"
 
 @seguranca @api
-Scenario: Tentativa de cadastro com senha excedendo o limite máximo (Prevenção de DoS)
+Scenario: Tentativa de cadastro com senha excedendo o limite máximo 
     When eu envio uma requisição POST para "/register" com uma "password" de 1000 caracteres
     Then o status da resposta deve ser 400
     And a mensagem de erro deve indicar "tamanho de senha excede o limite permitido"
