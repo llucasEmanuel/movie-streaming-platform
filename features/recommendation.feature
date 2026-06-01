@@ -30,7 +30,7 @@ Scenario: Atualizar recomendações após nova interação do usuário
     And eu assisti a "2" filmes do gênero "Ação" nos últimos "7" dias
     And eu assisti a "4" filmes do gênero "Documentário" nos últimos "7" dias
     When eu assistir a um novo filme do gênero "Documentário"
-    And eu acesso a seção "Recomendados"
+    And eu acesso a página "Recomendados"
     Then a página "Recomendados" exibe a playlist "Recomendações de Documentário" acima da playlist "Ação"
     And a playlist "Recomendações de Documentário" contém os filmes do gênero "Documentário"
 
@@ -79,7 +79,7 @@ Scenario: Atualizar seções após remoção parcial do histórico
     And a página "Recomendados" exibe a playlist "Porque você assistiu Titanic"
 
 Scenario: Restringir acesso para usuário não autenticado
-    Given eu não está logado na plataforma
+    Given eu não estou logado na plataforma
     When eu acesso a página "Principal"
     Then o sistema exibe a mensagem "Faça login para acessar o conteúdo"
     And o sistema não exibe "Páginas"

@@ -33,7 +33,7 @@ Before(async () => {
 
 // --- GIVENS (Contextos) ---
 
-Given('eu não está logado na plataforma', function () {
+Given('eu não estou logado na plataforma', function () {
     sharedState.currentUserId = ""; 
 });
 
@@ -95,16 +95,10 @@ When('eu acesso a página {string}', async function (pagina) {
         return;
     }
 
-    // Se o teste diz que está acessando "Recomendados", batemos na rota principal de gêneros
-    // que é onde ficam as travas de "Assista mais conteúdos..."
-    if (pagina === "Recomendados") {
-        response = await api.get(`/recommendations/genres/${sharedState.currentUserId}`, config);
-    } 
+   if (pagina === "Recomendados") {
+        response = await api.get('/recommendations/', config);
+    }
     
-});
-
-When('eu acesso a seção {string}', async function (secao) {
-    response = await api.get(`/recommendations/genres/${sharedState.currentUserId}`, config);
 });
 
 When('eu assistir a um novo filme do gênero {string}', async function (genero) {
@@ -121,7 +115,9 @@ When('eu removo o filme {string} do histórico', async function (nomeFilme) {
 });
 
 When('eu atualizo a página {string}', async function (pag) {
-    response = await api.get(`/recommendations/genres/${sharedState.currentUserId}`, config);
+    if (pag === "Recomendados") {
+        response = await api.get('/recommendations/', config);
+    }
 });
 
 When('o serviço calcula as recomendações de gênero para o usuário {string}', async function (_role) {
@@ -133,61 +129,76 @@ When('o serviço calcula as recomendações de gênero para o usuário {string}'
 
 Then('a página {string} deve exibir a playlist {string} em destaque na página', function (pag, tituloEsperado) {
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.data.sectionTitle, tituloEsperado);
+
+    const secaoEncontrada = response.data.find((s: any) => s.sectionTitle === tituloEsperado);
+    assert.ok(secaoEncontrada, `A playlist '${tituloEsperado}' deveria estar visível na página.`);
 });
 
 Then('não deve ser exibida nenhuma seção de recomendações baseada em gostos pessoais', function () {
-    assert.notStrictEqual(response.data.sectionTitle, "Recomendações de Gênero");
+    const temGenero = response.data.some((s: any) => s.sectionTitle?.startsWith("Recomendações de"));
+    assert.strictEqual(temGenero, false, "O sistema exibiu recomendações de gênero para um usuário sem histórico!");
 });
 
 Then('a página {string} exibe a playlist {string} entre as 3 primeiras seções', function (pag, playlistEsperada) {
     assert.strictEqual(response.status, 200);
-    assert.strictEqual(response.data.sectionTitle, playlistEsperada);
+    const secaoEncontrada = response.data.find((s: any) => s.sectionTitle === playlistEsperada);
+    assert.ok(secaoEncontrada, `A playlist '${playlistEsperada}' não foi encontrada na página.`);
 });
 
 Then('a playlist {string} contém os filmes do gênero {string}', function (playlist, genero) {
-    if (response.data.movies && response.data.movies.length > 0) {
-        assert.strictEqual(response.data.movies[0].genres, genero);
+    const secao = response.data.find((s: any) => s.sectionTitle === playlist);
+    if (secao?.movies && secao.movies.length > 0) {
+        assert.strictEqual(secao.movies[0].genres, genero);
     }
 });
 
 Then('a página {string} exibe a playlist {string} acima da playlist {string}', function (pag, lista1, lista2) {
-    assert.strictEqual(response.data.sectionTitle, lista1);
-});
-
-Then('a página {string} não exibe a playlist {string}', function (pag, lista) {
-    if (response.data.message) {
-        assert.ok(true);
+    assert.strictEqual(response.status, 200);
+    
+    const index1 = response.data.findIndex((s: any) => s.sectionTitle === lista1 || s.sectionTitle?.includes(lista1));
+    const index2 = response.data.findIndex((s: any) => s.sectionTitle === lista2 || s.sectionTitle?.includes(lista2));
+    
+    if (index2 === -1) {
+        assert.strictEqual(index1, 0, `A playlist ${lista1} deveria estar no topo por ter maior prioridade.`);
     } else {
-        assert.notStrictEqual(response.data.sectionTitle, lista);
+        assert.ok(index1 < index2, `A playlist ${lista1} deveria aparecer antes de ${lista2}.`);
     }
 });
 
+Then('a página {string} não exibe a playlist {string}', function (pag, lista) {
+    const secaoEncontrada = response.data.find((s: any) => s.sectionTitle === lista);
+    assert.ok(!secaoEncontrada, `A playlist '${lista}' não deveria estar sendo exibida na página.`);
+});
+
 Then('a página {string} exibe os filmes do catálogo geral', function (_pag) {
-    // 1. Garante que a propriedade movies veio na resposta da API
-    assert.ok(Array.isArray(response?.data?.movies), "A propriedade 'movies' deveria ser um array.");
+   assert.strictEqual(response.status, 200);
     
-    // 2. Garante que o array NÃO está vazio (ou seja, o backend enviou os filmes de fallback)
-    assert.ok(response.data.movies.length > 0, "O catálogo geral de filmes não foi exibido.");
+    // Procura em qualquer uma das seções retornadas um objeto que possua a lista de filmes
+    const secaoComFilmes = response.data.find((s: any) => Array.isArray(s.movies));
+    
+    assert.ok(secaoComFilmes, "Não foi encontrada nenhuma seção contendo uma lista de filmes.");
+    assert.ok(secaoComFilmes.movies.length > 0, "O catálogo geral de filmes veio vazio.");
 });
 
 Then('a página {string} exibe a playlist {string}', async function (pag, listaEsperada) {
-    if (listaEsperada.includes("Porque você assistiu")) {
-        const movieId = await DBUtils.obterUltimoMovieIdDoHistorico(sharedState.currentUserId);
-        if (movieId) {
-            response = await api.get(`/recommendations/similar/${movieId}`, config);
-        }
-    } 
+    if (!response) {
+        response = await api.get('/recommendations/', config);
+    }
 
-    assert.strictEqual(response.data.sectionTitle, listaEsperada);
+    assert.strictEqual(response.status, 200);
+    const secaoEncontrada = response.data.find((s: any) => s.sectionTitle === listaEsperada);
+    assert.ok(secaoEncontrada, `A playlist '${listaEsperada}' não foi encontrada na página.`);
 });
 
 Then('a página {string} não exibe seções personalizadas baseadas em histórico', function (pag) {
-    assert.strictEqual(response.data.sectionTitle, "Lançamentos e Populares");
+    const apenasPopulares = response.data.every((s: any) => s.sectionTitle === "Lançamentos e Populares");
+    assert.strictEqual(apenasPopulares, true, "Seções personalizadas vazaram para o usuário sem dados.");
 });
 
 Then('a página {string} exibe a mensagem {string}', function (pag, mensagemEsperada) {
-    assert.strictEqual(response.data.message, mensagemEsperada);
+    const secaoComMensagem = response.data.find((s: any) => s.message === mensagemEsperada);
+    
+    assert.ok(secaoComMensagem, `A mensagem '${mensagemEsperada}' não foi encontrada em nenhuma seção.`);
 });
 
 Then('a playlist {string} contém o filme {string}', function (playlist, filme) {
