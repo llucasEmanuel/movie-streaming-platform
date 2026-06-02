@@ -13,28 +13,36 @@ POST http://localhost:3000/movies
 Content-Type: application/json
 
 {
-  "id": 5,
   "title": "O Senhor dos Anéis",
   "synopsis": "Testando",
-  "genres": ["Comedia", "Drama"],
-  "duration": 201,
-  "url_movie": "teste"
+  "genres": "Comédia, Drama",
+  "duration": "201",
+  "url_movie": "https://archive.org/download/senhor-dos-aneis/senhor_dos_aneis.mp4",
+  "url_poster": "https://archive.org/download/senhor-dos-aneis/poster.jpg"
 }
 
 ###
 
 ### Atualizar Filme
-PATCH http://localhost:3000/movies/O Senhor dos Anéis
+PATCH http://localhost:3000/movies/9a099296-2dc9-411e-bbb4-fc2ec0f4f439
 Content-Type: application/json
 
 {
-  "duration": 300
+  "duration": "300"
 }
 
-###
+### Atualizar Filme - "Desexcluir" o filme
+PATCH http://localhost:3000/movies/9a099296-2dc9-411e-bbb4-fc2ec0f4f439
+Content-Type: application/json
+
+{
+  "isDeleted": false
+}
+
+
 
 ### Deletar Filme
-DELETE http://localhost:3000/movies/O Senhor dos Anéis
+DELETE http://localhost:3000/movies/9a099296-2dc9-411e-bbb4-fc2ec0f4f439
 
 ###
 
@@ -100,10 +108,10 @@ Content-Type: application/json
   "synopsis": "Uma obra-prima da ficção científica expressionista.",
   "url_movie": "https://archive.org/download/metropolis/metropolis.mp4",
   "url_poster": "https://archive.org/download/metropolis/poster.jpg",
-  "genres": ["Ficção Científica"],
-  "duration": 153,
-  "directors": ["Fritz Lang"],
-  "cast": ["Alfred Abel", "Brigitte Helm"]
+  "genres": "Ficção Científica",
+  "duration": "153",
+  "director": "Fritz Lang",
+  "cast": "Alfred Abel, Brigitte Helm"
 }
 
 ###
@@ -117,10 +125,10 @@ Content-Type: application/json
   "synopsis": "Um guerreiro busca recuperar o trono perdido em uma jornada cheia de combates.",
   "url_movie": "https://archive.org/download/rei-montanha/filme.mp4",
   "url_poster": "https://archive.org/download/rei-montanha/poster.jpg",
-  "genres": ["Ação", "Aventura"],
-  "duration": 125,
-  "directors": ["Peter Jackson"],
-  "cast": ["Elijah Wood"]
+  "genres": "Ação, Aventura",
+  "duration": "125",
+  "director": "Peter Jackson",
+  "cast": "Elijah Wood"
 }
 
 ###
