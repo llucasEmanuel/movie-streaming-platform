@@ -15,6 +15,7 @@ model Movie {
   synopsis  String?
   genres    String    // Ex: "Ação", "Terror", "Comédia", "Documentário"
   isPopular Boolean   @default(false) // Fundamental para usuário novo ou sem histórico
+  isDeleted Boolean?
   duration  String?
   director  String?
   cast      String?
