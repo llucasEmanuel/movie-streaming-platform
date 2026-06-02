@@ -39,5 +39,13 @@ module.exports = {
     ],
     require: ['tests/step_definitions/*.ts'],
     requireModule: ['ts-node/register']
+  },
+
+  movies: {
+    paths: ['../features/moviesmanagement.feature'],
+    require: ['tests/step_definitions/moviesmanagement-service.steps.ts'],
+    requireModule: ['ts-node/register'],
+    format: ['summary', 'progress-bar'],
+    publishQuiet: true
   }
 };
