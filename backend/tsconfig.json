@@ -10,10 +10,15 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
+  "include": ["src/**/*"],
   "exclude": [
-    "prisma.config.ts",
     "node_modules",
     "src/**/*.spec.ts",
-    "features"
+    "tests",
+    "dist",
+    "jest.config.ts",
+    "*.config.ts",
+    "features",
+    "prisma.config.ts"
   ]
 }
