@@ -5,8 +5,8 @@
 }
 
 .btn-back {
-  background-color: #333;
-  color: #fff;
+  background-color: #FFC107;
+  color: #000;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -14,17 +14,18 @@
   font-size: 16px;
   margin-bottom: 20px;
   transition: background-color 0.3s ease;
+  font-weight: bold;
 }
 
 .btn-back:hover {
-  background-color: #555;
+  background-color: #FFD700;
 }
 
 .loading {
   text-align: center;
   padding: 50px;
   font-size: 18px;
-  color: #666;
+  color: #b0b0b0;
 }
 
 .error-container {
@@ -33,25 +34,60 @@
 }
 
 .error {
-  color: #d32f2f;
+  color: #FFD700;
   font-size: 18px;
   margin-bottom: 20px;
 }
 
 .movie-content {
-  background-color: #f5f5f5;
+  background-color: #2a2a2a;
   border-radius: 8px;
   padding: 30px;
 }
 
 .movie-header {
-  margin-bottom: 30px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.movie-poster-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.movie-poster-detail {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+  border: 2px solid #FFC107;
+}
+
+.movie-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-play,
+.btn-download {
+  width: 100%;
 }
 
 .movie-header h1 {
   font-size: 32px;
-  margin: 0 0 20px 0;
-  color: #333;
+  margin: 0 0 12px 0;
+  color: #FFC107;
 }
 
 .action-buttons {
@@ -71,29 +107,33 @@
 }
 
 .btn-play {
-  background-color: #dc2626;
-  color: white;
+  background-color: #FFC107;
+  color: #000;
+  font-weight: bold;
 }
 
 .btn-play:hover {
-  background-color: #991b1b;
+  background-color: #FFD700;
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
 }
 
 .btn-download {
-  background-color: #2563eb;
-  color: white;
+  background-color: #1a1a1a;
+  color: #FFC107;
+  border: 2px solid #FFC107;
+  font-weight: bold;
 }
 
 .btn-download:hover {
-  background-color: #1e40af;
+  background-color: #FFC107;
+  color: #000;
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.5);
 }
 
 .movie-info {
-  margin-top: 30px;
+  margin-top: 18px;
 }
 
 .info-section {
@@ -103,7 +143,7 @@
 .info-section h3 {
   font-size: 20px;
   margin: 0 0 10px 0;
-  color: #333;
+  color: #FFC107;
   text-transform: uppercase;
   font-weight: bold;
 }
@@ -111,7 +151,7 @@
 .info-section p {
   font-size: 16px;
   line-height: 1.6;
-  color: #666;
+  color: #c0c0c0;
 }
 
 .info-grid {
@@ -121,23 +161,24 @@
 }
 
 .info-item {
-  background-color: white;
+  background-color: #1a1a1a;
   padding: 15px;
   border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
+  border-left: 3px solid #FFC107;
 }
 
 .info-item label {
   display: block;
   font-weight: bold;
-  color: #333;
+  color: #FFC107;
   margin-bottom: 8px;
   font-size: 14px;
   text-transform: uppercase;
 }
 
 .info-item p {
-  color: #666;
+  color: #c0c0c0;
   font-size: 15px;
   margin: 0;
 }
@@ -155,7 +196,7 @@
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #FFC107;
   color: #000;
   border: none;
   padding: 8px 12px;
@@ -164,10 +205,11 @@
   font-size: 16px;
   z-index: 10;
   transition: background-color 0.2s ease;
+  font-weight: bold;
 }
 
 .btn-close-video:hover {
-  background-color: rgba(255, 255, 255, 1);
+  background-color: #FFD700;
 }
 
 .video-player {
@@ -185,6 +227,10 @@
 
   .movie-content {
     padding: 15px;
+  }
+
+  .movie-header {
+    grid-template-columns: 1fr;
   }
 
   .movie-header h1 {

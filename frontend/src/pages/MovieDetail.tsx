@@ -88,6 +88,7 @@ export function MovieDetail() {
 
   return (
     <div className="movie-detail">
+      <title>CInema: Public Domain Streaming</title>
       <button onClick={() => navigate('/')} className="btn-back">
         ← Voltar
       </button>
@@ -110,42 +111,48 @@ export function MovieDetail() {
       ) : (
         <div className="movie-content">
           <div className="movie-header">
-            <h1>{movie.title}</h1>
-            <div className="action-buttons">
-              <button onClick={handlePlayVideo} className="btn-play">
-                ▶ Assistir
-              </button>
-              <button onClick={handleDownload} className="btn-download">
-                ⬇ Download
-              </button>
-            </div>
-          </div>
-
-          <div className="movie-info">
-            <div className="info-section">
-              <h3>Sinopse</h3>
-              <p>{movie.synopsis || 'Sinopse não disponível'}</p>
+            <div className="movie-poster-column">
+              {movie.img_url && (
+                <img src={movie.img_url} alt={movie.title} className="movie-poster-detail" />
+              )}
+              <div className="action-buttons">
+                <button onClick={handlePlayVideo} className="btn-play">
+                  ▶ Assistir
+                </button>
+                <button onClick={handleDownload} className="btn-download">
+                  ⬇ Download
+                </button>
+              </div>
             </div>
 
-            <div className="info-grid">
-              <div className="info-item">
-                <label>Gêneros</label>
-                <p>{movie.genres || 'Não informado'}</p>
-              </div>
+            <div className="movie-details-column">
+              <h1>{movie.title}</h1>
+              <div className="movie-info">
+                <div className="info-section">
+                  <p>{movie.synopsis || 'Sinopse não disponível'}</p>
+                </div>
 
-              <div className="info-item">
-                <label>Duração</label>
-                <p>{movie.duration || 'Não informado'}</p>
-              </div>
+                <div className="info-grid">
+                  <div className="info-item">
+                    <label>Gêneros</label>
+                    <p>{movie.genres || 'Não informado'}</p>
+                  </div>
 
-              <div className="info-item">
-                <label>Diretor</label>
-                <p>{movie.director || 'Não informado'}</p>
-              </div>
+                  <div className="info-item">
+                    <label>Duração</label>
+                    <p>{movie.duration || 'Não informado'}</p>
+                  </div>
 
-              <div className="info-item">
-                <label>Elenco</label>
-                <p>{movie.cast || 'Não informado'}</p>
+                  <div className="info-item">
+                    <label>Diretor</label>
+                    <p>{movie.director || 'Não informado'}</p>
+                  </div>
+
+                  <div className="info-item">
+                    <label>Elenco</label>
+                    <p>{movie.cast || 'Não informado'}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

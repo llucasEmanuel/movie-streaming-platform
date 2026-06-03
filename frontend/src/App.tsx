@@ -20,7 +20,7 @@ function App() {
         </main>
 
         <footer className="app-footer">
-          <p>&copy; 2026 Movie Streaming Platform. Todos os direitos reservados.</p>
+          <p>&copy; 2026 CInema. Todos os direitos reservados.</p>
         </footer>
       </div>
     </Router>

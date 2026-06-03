@@ -2,6 +2,7 @@ export interface Movie {
   id: string;
   title: string;
   file_name?: string;
+  img_url?: string;
   synopsis?: string;
   genres: string;
   isPopular: boolean;
@@ -14,6 +15,7 @@ export interface Movie {
 export interface MovieMetadata {
   id: string;
   title: string;
+  img_url?: string;
   synopsis: string;
   genres: string;
   duration: string;

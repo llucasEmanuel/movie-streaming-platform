@@ -1,12 +1,12 @@
 :root {
-  --text: #333;
-  --text-h: #000;
-  --bg: #fff;
-  --border: #ddd;
-  --code-bg: #f4f3ec;
-  --accent: #dc2626;
-  --accent-bg: rgba(220, 38, 38, 0.1);
-  --accent-border: rgba(220, 38, 38, 0.5);
+  --text: #e0e0e0;
+  --text-h: #fff;
+  --bg: #1a1a1a;
+  --border: #333;
+  --code-bg: #2a2a2a;
+  --accent: #FFC107;
+  --accent-bg: rgba(255, 193, 7, 0.1);
+  --accent-border: rgba(255, 193, 7, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
@@ -43,8 +43,8 @@ body {
 }
 
 body {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: #1a1a1a;
+  color: #e0e0e0;
   font-family: var(--sans);
 }
 
@@ -69,7 +69,7 @@ a {
 }
 
 a:hover {
-  color: #991b1b;
+  color: #FFD700;
 }
 
 /* Video element styles */
@@ -84,16 +84,16 @@ video {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #2a2a2a;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #888;
+  background: #FFC107;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #FFD700;
 }
 }
 

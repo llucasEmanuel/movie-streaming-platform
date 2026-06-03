@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { movieService, ApiError } from '../services/movieService';
+import { MovieCard } from '../components/MovieCard';
 import type { Movie } from '../types';
 import './Home.css';
 
@@ -49,6 +50,7 @@ export function Home() {
   return (
     <div className="home">
       {error && <p className="error">❌ {error}</p>}
+      <title>CInema: Public Domain Streaming</title>
 
       <div className="movies-grid">
         {movies.length === 0 ? (
@@ -57,21 +59,11 @@ export function Home() {
           movies.map((movie) => (
             <div
               key={movie.id}
-              className="movie-card"
               onClick={() => handleMovieClick(movie.id)}
               role="button"
               tabIndex={0}
             >
-              <div className="movie-card-content">
-                <h3>{movie.title}</h3>
-                <p className="genres">{movie.genres}</p>
-                <p className="synopsis">
-                  {movie.synopsis
-                    ? movie.synopsis.substring(0, 100) + '...'
-                    : 'Sem descrição'}
-                </p>
-                {movie.isPopular && <span className="popular-badge">Popular</span>}
-              </div>
+              <MovieCard movie={movie} />
             </div>
           ))
         )}
