@@ -21,10 +21,15 @@ export const DBUtils = {
 
     // Garante que um filme único exista no banco
     async garantirFilmeUnico(nomeFilme: string) {
-        let filme = await prisma.movie.findFirst({ where: { title: nomeFilme } });
+        let filme = await prisma.movie.findFirst({ 
+            where: { 
+                title: nomeFilme,
+                isDeleted:{not:true}
+            } 
+        });
         if (!filme) {
             filme = await prisma.movie.create({ 
-                data: { title: nomeFilme, genres: "Geral", isPopular: false } 
+                data: { title: nomeFilme, genres: "Geral", isPopular: false, isDeleted: false } 
             });
         }
         return filme;
@@ -33,11 +38,16 @@ export const DBUtils = {
     // Cria filmes e insere no histórico para simular visualizações por gênero
     async garantirEAssistirFilmes(userId: string, qtd: string, genero: string) {
         const limite = parseInt(qtd);
-        let filmes = await prisma.movie.findMany({ where: { genres: genero } });
+        let filmes = await prisma.movie.findMany({ 
+            where: { 
+                genres: genero,
+                isDeleted:{not:true}
+            } 
+        });
         
         while (filmes.length < limite) {
             const novoFilme = await prisma.movie.create({
-                data: { title: `Filme Autogerado ${genero} ${filmes.length + 1}`, genres: genero, isPopular: true }
+                data: { title: `Filme Autogerado ${genero} ${filmes.length + 1}`, genres: genero, isPopular: true , isDeleted: false}
             });
             filmes.push(novoFilme);
         }
@@ -66,7 +76,12 @@ export const DBUtils = {
 
     // Remove um filme específico do histórico do usuário
     async removerFilmeDoHistorico(userId: string, nomeFilme: string) {
-        const filme = await prisma.movie.findFirst({ where: { title: nomeFilme } });
+        const filme = await prisma.movie.findFirst({ 
+            where: { 
+                title: nomeFilme,
+                isDeleted:{not:true} 
+            } 
+        });
         if (filme) {
             await prisma.history.deleteMany({ where: { userId, movieId: filme.id } });
         }
@@ -82,14 +97,20 @@ export const DBUtils = {
     },
 
     async assistirMesmoFilmeRepetido(userId: string, titulo: string, genero: string, vezes: number) {
-        let filme = await prisma.movie.findFirst({ where: { title: titulo } });
+        let filme = await prisma.movie.findFirst({ 
+            where: { 
+                title: titulo, 
+                isDeleted:{not:true}
+            }
+        });
         
         if (!filme) {
             filme = await prisma.movie.create({
                 data: { 
                     title: titulo, 
                     genres: genero, 
-                    isPopular: false 
+                    isPopular: false,
+                    isDeleted: false
                 }
             });
         }

@@ -41,7 +41,10 @@ export class RecommendationService {
   // LÓGICA PARA A ROTA /recommendations/trending
   async getTrendingMovies() {
     const filmesPopulares = await prisma.movie.findMany({
-      where: { isPopular: true },
+      where: { 
+        isPopular: true,
+        isDeleted:{not:true} 
+      },
       take: 10,
     });
 
@@ -66,7 +69,13 @@ export class RecommendationService {
 
     // Se não tem histórico recente, sugere os lançamentos e populares
     if (historicoRecente.length === 0) {
-      const filmesPopulares = await prisma.movie.findMany({ where: { isPopular: true }, take: 10 });
+      const filmesPopulares = await prisma.movie.findMany({ 
+        where: { 
+          isPopular: true,
+          isDeleted:{not:true} 
+        }, 
+        take: 10 
+      });
       return {
         sectionTitle: "Lançamentos e Populares",
         movies: filmesPopulares,
@@ -96,7 +105,10 @@ export class RecommendationService {
 
     // Regra dos 3 filmes mínimos
     if (maiorContagem < 3) {
-      const todosOsFilmes = await prisma.movie.findMany({ take: 10 }); // Pega os 10 primeiros como sugestão
+      const todosOsFilmes = await prisma.movie.findMany({ 
+        where: { isDeleted:{not:true}},
+        take: 10 // Pega os 10 primeiros como sugestão
+      }); 
       return {
         message: "Assista mais conteúdos para melhorar suas recomendações",
         movies: todosOsFilmes,
@@ -107,7 +119,8 @@ export class RecommendationService {
     const recomendacoesGenero = await prisma.movie.findMany({
       where: {
         genres: generoFavorito,
-        id: { notIn: idsFilmesAssistidos }
+        id: { notIn: idsFilmesAssistidos },
+        isDeleted:{not:true}
       },
       take: 5
     });
@@ -127,7 +140,14 @@ export class RecommendationService {
 
     // Se o filme sumiu ou o ID é inválido, aplica o plano B de retornar filmes populares
     if (!filmeAtual) {
-    const filmesPopulares = await prisma.movie.findMany({ where: { isPopular: true }, take: 10 });
+    const filmesPopulares = await prisma.movie.findMany({ 
+      where: { 
+        isPopular: true,
+        isDeleted:{not:true},
+      },
+      take: 10
+    });
+    
     return {
       sectionTitle: "Você também pode gostar", // Um título genérico seguro
       movies: filmesPopulares
@@ -140,7 +160,8 @@ export class RecommendationService {
         genres: filmeAtual.genres,
         id: {
           not: movieId // "not" diz ao Prisma: traga todos MENOS este ID
-        }
+        },
+        isDeleted:{not:true}
       },
       take: 10 // Limita a barra lateral em até 5 recomendações
     });

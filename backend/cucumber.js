@@ -37,7 +37,8 @@ module.exports = {
       '../features/recommendation.feature',
       '../features/gerenciar_playlists_servico.feature',
       '../features/user_login_service.feature',
-      '../features/userDeletion.feature'
+      '../features/userDeletion.feature',
+      '../features/moviesmanagement.feature'
     ],
     require: ['tests/step_definitions/*.ts'],
     requireModule: ['ts-node/register']
