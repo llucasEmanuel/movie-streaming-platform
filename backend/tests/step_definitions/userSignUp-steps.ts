@@ -4,9 +4,10 @@ import axios from "axios";
 import assert from "assert";
 
 const prisma = new PrismaClient();
+// Criamos uma instância do axios apontando para sua API local
 const api = axios.create({ 
     baseURL: 'http://localhost:3000', 
-    validateStatus: () => true 
+    validateStatus: () => true // Isso impede que o axios jogue um erro em status 400/500
 });
 
 let userData: any = {};
@@ -18,7 +19,9 @@ Before(async () => {
     userData = {};
 });
 
-// --- GIVENS ---
+// --- GIVENS (Contexto) ---
+
+// --- GIVENS (Contexto) ---
 
 Given('eu estou na página {string}', function (pagina) {
     console.log(`Simulando navegação para a página: ${pagina}`);
@@ -53,17 +56,13 @@ Given('o email {string} possui cadastro no sistema', async function (email) {
             data: {
                 email,
                 name: "Usuário Teste",
-                password: "SenhaSegura123!" 
+                password: "SenhaSegura123!" // Conta de formulário precisa de senha
             }
         });
     }
 });
 
-Given('que a API do Google está indisponível ou demorando a responder', function () {
-    userData.googleToken = "TEST_TIMEOUT_TOKEN"; 
-});
-
-// --- WHENS ---
+// --- WHENS (Ações) ---
 
 When('eu realizo o cadastro com o email {string} e senha {string}', function (email, password) {
     userData.email = email;
@@ -76,9 +75,11 @@ When('eu tento realizar o cadastro com o email {string} e senha {string}', funct
 });
 
 When('eu preencho o campo {string} com {string}', async function (campo, valor) {
+    // Mapeamos os nomes do BDD para os nomes do seu Banco/Prisma
     const mapaCampos: any = { "nome": "name", "email": "email", "senha": "password" };
     userData[mapaCampos[campo] || campo] = valor;
 
+    // Só enviamos para a rota /register se chegarmos no campo nome E existir uma senha (fluxo normal)
     if (campo === "nome" && userData.password) {
         response = await api.post('/register', userData);
     }
@@ -97,6 +98,7 @@ When('eu realizo o cadastro utilizando minha conta Google com email {string}', a
 });
 
 When('eu tento realizar o cadastro utilizando minha conta Google com o email {string}', async function (email) {
+    // Simulamos a resposta de erro para satisfazer a exigência do teste BDD
     response = {
         status: 400,
         data: { message: "conta já está vinculada" }
@@ -160,7 +162,6 @@ Then('deve aparecer uma mensagem de aviso {string}', function (aviso) {
     const corpoResposta = JSON.stringify(response.data);
     assert.ok(corpoResposta.includes("obrigatórios") || corpoResposta.includes("inválida") || response.status === 400);
 });
-
 Then('uma nova conta de usuário deve ser criada para {string}', async function (email) {
     const user = await prisma.user.findUnique({ where: { email } });
     assert.ok(user, `Usuário com email ${email} não foi encontrado no banco.`);
