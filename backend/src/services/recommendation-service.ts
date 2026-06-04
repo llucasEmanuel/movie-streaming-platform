@@ -55,13 +55,12 @@ export class RecommendationService {
 
   // LÓGICA PARA A ROTA /recommendations/genres/:userId
   async getGenreRecommendations(userId: string) {
-    const seteDiasAtras = new Date();
-    seteDiasAtras.setDate(seteDiasAtras.getDate() - DIAS_HISTORICO_RECENTE);
+    const dataLimite = this.calcularDataLimite(DIAS_HISTORICO_RECENTE);
 
     const historicoRecente = await prisma.history.findMany({
       where: {
         userId: userId,
-        watchedAt: { gte: seteDiasAtras }
+        watchedAt: { gte: dataLimite }
       },
       include: { movie: true }
     });
@@ -173,6 +172,12 @@ export class RecommendationService {
     }
 
     return { generoFavorito, maiorContagem };
+  }
+
+  private calcularDataLimite(dias: number): Date {
+    const data = new Date();
+    data.setDate(data.getDate() - dias);
+    return data;
   }
 
 }
