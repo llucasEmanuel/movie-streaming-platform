@@ -45,17 +45,11 @@ export class RecommendationService {
 
   // LÓGICA PARA A ROTA /recommendations/trending
   async getTrendingMovies() {
-    const filmesPopulares = await prisma.movie.findMany({
-      where: { 
-        isPopular: true,
-        isDeleted:{not:true} 
-      },
-      take: LIMITE_FILMES
-    });
+    const filmesPopulares = await this.fetchPopularMovies();
 
     return {
       sectionTitle: "Lançamentos e Populares",
-      movies: filmesPopulares,
+      movies: filmesPopulares
     };
   }
 
@@ -74,13 +68,7 @@ export class RecommendationService {
 
     // Se não tem histórico recente, sugere os lançamentos e populares
     if (historicoRecente.length === 0) {
-      const filmesPopulares = await prisma.movie.findMany({ 
-        where: { 
-          isPopular: true,
-          isDeleted:{not:true} 
-        }, 
-        take: LIMITE_FILMES 
-      });
+      const filmesPopulares = await this.fetchPopularMovies();
       return {
         sectionTitle: "Lançamentos e Populares",
         movies: filmesPopulares,
@@ -145,13 +133,7 @@ export class RecommendationService {
 
     // Se o filme sumiu ou o ID é inválido, aplica o plano B de retornar filmes populares
     if (!filmeAtual) {
-    const filmesPopulares = await prisma.movie.findMany({ 
-      where: { 
-        isPopular: true,
-        isDeleted:{not:true},
-      },
-      take: LIMITE_FILMES
-    });
+    const filmesPopulares = await this.fetchPopularMovies();
     
     return {
       sectionTitle: "Você também pode gostar", // Um título genérico seguro
@@ -175,6 +157,16 @@ export class RecommendationService {
       sectionTitle: `Porque você assistiu ${filmeAtual.title}`,
       movies: filmesSimilares
     };
+  }
+
+  private async fetchPopularMovies() {
+    return await prisma.movie.findMany({
+      where: { 
+        isPopular: true,
+        isDeleted: { not: true } 
+      },
+      take: LIMITE_FILMES
+    });
   }
 
 }
