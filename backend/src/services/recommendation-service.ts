@@ -76,25 +76,7 @@ export class RecommendationService {
       };
     }
 
-    const contagemGeneros: Record<string, number> = {};
-    const filmesContados = new Set<string>();
-
-    historicoRecente.forEach(registro => {
-      if (!filmesContados.has(registro.movieId)) {
-        filmesContados.add(registro.movieId);
-        const genero = registro.movie.genres;
-        contagemGeneros[genero] = (contagemGeneros[genero] || 0) + 1;
-      }
-    });
-
-    let generoFavorito = "";
-    let maiorContagem = 0;
-    for (const [genero, quantidade] of Object.entries(contagemGeneros)) {
-      if (quantidade > maiorContagem) {
-        maiorContagem = quantidade;
-        generoFavorito = genero;
-      }
-    }
+    const { generoFavorito, maiorContagem } = this.identificarGeneroFavorito(historicoRecente);
 
     // Regra dos 3 filmes mínimos
     if (maiorContagem < MINIMO_FILMES_PARA_RECOMENDAR) {
@@ -167,6 +149,30 @@ export class RecommendationService {
       },
       take: LIMITE_FILMES
     });
+  }
+
+  private identificarGeneroFavorito(historico: any[]) {
+    const contagemGeneros: Record<string, number> = {};
+    const filmesContados = new Set<string>();
+
+    historico.forEach(registro => {
+      if (!filmesContados.has(registro.movieId)) {
+        filmesContados.add(registro.movieId);
+        const genero = registro.movie.genres;
+        contagemGeneros[genero] = (contagemGeneros[genero] || 0) + 1;
+      }
+    });
+
+    let generoFavorito = "";
+    let maiorContagem = 0;
+    for (const [genero, quantidade] of Object.entries(contagemGeneros)) {
+      if (quantidade > maiorContagem) {
+        maiorContagem = quantidade;
+        generoFavorito = genero;
+      }
+    }
+
+    return { generoFavorito, maiorContagem };
   }
 
 }
