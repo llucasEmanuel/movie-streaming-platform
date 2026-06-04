@@ -22,7 +22,8 @@
     "test:signup": "NODE_ENV=test cucumber-js --require-module ts-node/register --require tests/step_definitions/**/*.ts --tags \"@test-signup\"",
     "test:signupservice": "NODE_ENV=test cucumber-js ../features/userSignUp.feature --require-module ts-node/register --require tests/step_definitions/**/*.ts --tags \"@test-signup-service\"",
     "test:cucumber:implemented": "cucumber-js -p implemented",
-    "test:movies": "NODE_ENV=test cucumber-js -p movies"
+    "test:movies": "NODE_ENV=test cucumber-js -p movies",
+    "db:seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",
