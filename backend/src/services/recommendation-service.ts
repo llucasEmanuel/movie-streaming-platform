@@ -2,6 +2,11 @@ import { PrismaClient } from '../generated/prisma';
 
 const prisma = new PrismaClient();
 
+// CONSTANTES ADICIONADAS
+const DIAS_HISTORICO_RECENTE = 7;
+const MINIMO_FILMES_PARA_RECOMENDAR = 3;
+const LIMITE_FILMES= 10;
+
 export class RecommendationService {
   
   // LÓGICA PARA A ROTA /recommendations/
@@ -45,7 +50,7 @@ export class RecommendationService {
         isPopular: true,
         isDeleted:{not:true} 
       },
-      take: 10,
+      take: LIMITE_FILMES
     });
 
     return {
@@ -57,7 +62,7 @@ export class RecommendationService {
   // LÓGICA PARA A ROTA /recommendations/genres/:userId
   async getGenreRecommendations(userId: string) {
     const seteDiasAtras = new Date();
-    seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+    seteDiasAtras.setDate(seteDiasAtras.getDate() - DIAS_HISTORICO_RECENTE);
 
     const historicoRecente = await prisma.history.findMany({
       where: {
@@ -74,7 +79,7 @@ export class RecommendationService {
           isPopular: true,
           isDeleted:{not:true} 
         }, 
-        take: 10 
+        take: LIMITE_FILMES 
       });
       return {
         sectionTitle: "Lançamentos e Populares",
@@ -104,10 +109,10 @@ export class RecommendationService {
     }
 
     // Regra dos 3 filmes mínimos
-    if (maiorContagem < 3) {
+    if (maiorContagem < MINIMO_FILMES_PARA_RECOMENDAR) {
       const todosOsFilmes = await prisma.movie.findMany({ 
         where: { isDeleted:{not:true}},
-        take: 10 // Pega os 10 primeiros como sugestão
+        take: LIMITE_FILMES
       }); 
       return {
         message: "Assista mais conteúdos para melhorar suas recomendações",
@@ -122,7 +127,7 @@ export class RecommendationService {
         id: { notIn: idsFilmesAssistidos },
         isDeleted:{not:true}
       },
-      take: 5
+      take: LIMITE_FILMES
     });
 
     return {
@@ -145,7 +150,7 @@ export class RecommendationService {
         isPopular: true,
         isDeleted:{not:true},
       },
-      take: 10
+      take: LIMITE_FILMES
     });
     
     return {
@@ -163,7 +168,7 @@ export class RecommendationService {
         },
         isDeleted:{not:true}
       },
-      take: 10 // Limita a barra lateral em até 5 recomendações
+      take: LIMITE_FILMES
     });
 
     return {
