@@ -15,3 +15,10 @@ export interface Playlist {
   createdAt: string;
   updatedAt: string;
 }
+
+export type PageMessageType = "success" | "error" | "info";
+
+export interface PageMessage {
+  type: PageMessageType;
+  text: string;
+}

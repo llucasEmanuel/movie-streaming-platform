@@ -7,7 +7,7 @@ interface MovieCardProps {
 
 export function MovieCard({ movie, onAddToPlaylist }: MovieCardProps) {
   return (
-    <div className="movie-card">
+    <article className="movie-card">
       {movie.url_movie ? (
         <img src={movie.url_movie} alt={movie.title} />
       ) : (
@@ -39,6 +39,6 @@ export function MovieCard({ movie, onAddToPlaylist }: MovieCardProps) {
           </button>
         )}
       </div>
-    </div>
+    </article>
   );
 }

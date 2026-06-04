@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
-import type { Playlist } from "../../types";
+import type { PageMessage, Playlist } from "../../types";
 import {
   createPlaylist,
   deletePlaylist,
@@ -11,13 +11,6 @@ import "./MinhasPlaylistsPage.css";
 
 const USER_NAME = "Victoria";
 const USER_ID = "Victoria";
-
-type MessageType = "success" | "error" | "info";
-
-interface PageMessage {
-  type: MessageType;
-  text: string;
-}
 
 interface MinhasPlaylistsPageProps {
   onGoToHome: () => void;
@@ -436,17 +429,6 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
             </section>
           )}
         </main>
-
-        <footer className="playlist-footer">
-          <p>© 2024 Cinema Filmes Antigos. Todos os direitos reservados.</p>
-
-          <div>
-            <span>Acervo Bibliográfico v2.0</span>
-            <a href="#">Termos</a>
-            <a href="#">Privacidade</a>
-            <a href="#">Suporte</a>
-          </div>
-        </footer>
       </div>
 
       {isModalOpen && (

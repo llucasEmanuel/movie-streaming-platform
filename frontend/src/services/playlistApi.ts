@@ -2,7 +2,7 @@ import type { Playlist } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
 
-async function parseResponse(response: Response) {
+async function parseResponse<T>(response: Response): Promise<T> {
   const data = await response.json();
 
   if (!response.ok) {
