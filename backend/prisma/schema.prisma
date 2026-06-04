@@ -50,6 +50,12 @@ model History {
   userId    String
   movieId   String
   watchedAt DateTime @default(now()) // Fundamental para a regra dos "últimos 7 dias"
+  duration      Int
+  last_position Int      @default(0)
+  is_completed  Boolean  @default(false)
+  is_hidden     Boolean  @default(false)
+
+  @@unique([userId, movieId, watchedAt])
 
   // Configurações de chaves estrangeiras (ligações entre as tabelas)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
