@@ -59,3 +59,6 @@ When o sistema recebe a solicitação de upload de um novo vídeo
 Then o sistema rejeita a solicitação de publicação
 And o sistema não armazena o vídeo nem seus metadados
 And o sistema retorna uma mensagem informando que o limite de armazenamento do vídeo foi excedido
+
+Scenario: rejeitar publicação de vídeo por formatação inadequada
+Given ...

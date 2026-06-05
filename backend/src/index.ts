@@ -6,6 +6,7 @@ import userRoutes from "./routes/routes";
 import { router as movieRoutes } from "./routes/movie-routes";
 import { router as playlistRouter } from "./routes/playlist-route";
 import historyRoutes from './routes/history-routes';
+import { router as accountRouter } from "./routes/account-routes";
 
 const app = express();
 app.use(cors())
@@ -13,8 +14,13 @@ app.use(cors())
 // Middleware para aceitar JSON no body das requisições
 app.use(express.json());
 
-// Registrando as rotas de usuários 
+// Registrando as rotas de usuários
+app.use("/", userRoutes);
 app.use("/api", userRoutes);
+
+// Registrando as rotas de contas
+app.use("/accounts", accountRouter);
+app.use("/api/accounts", accountRouter);
 
 // Registrando as rotas de filmes
 app.use("/", movieRoutes);

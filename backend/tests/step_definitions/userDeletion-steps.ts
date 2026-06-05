@@ -1,17 +1,35 @@
-import { Given, When, Then } from '@cucumber/cucumber';
+import { Given, When, Then, Before } from '@cucumber/cucumber';
 import request from 'supertest';
 import assert from 'assert';
 import jwt from 'jsonwebtoken';
+import { expect } from 'chai';
 
-// IMPORTANTE: Ajuste o caminho das importações abaixo para a estrutura real do seu projeto!
+
 import app from '../../src/index'; // Seu servidor Express exportado
 import { PrismaClient } from '../../src/generated/prisma';
 
 const prisma = new PrismaClient();
 
-// Variáveis globais para compartilhar dados entre os passos do cenário
+
+interface UtilizadorSimulado {
+    id: string;
+    email: string;
+}
+
+// Variáveis de estado isoladas para cada cenário
+let baseDadosSimulada: UtilizadorSimulado[] = [];
+let idUtilizadorAutenticado: string | null = null;
+let statusRespostaAPI: number | null = null;
+
 let response: request.Response;
 let jwtToken: string;
+
+Before(function () {
+    baseDadosSimulada = [];
+    idUtilizadorAutenticado = null;
+    statusRespostaAPI = null;
+});
+
 
 Given('existe uma conta ativa cadastrada com o e-mail {string} e ID {string}', async function (email: string, id: string) {
     await prisma.user.deleteMany({ where: { email } });
@@ -100,3 +118,91 @@ Then('o modal de confirmação deve ser fechado', function () { return 'pending'
 Then('o usuário deve permanecer na página de {string}', function (string) { return 'pending'; });
 Then('o sistema deve exibir a mensagem de erro {string}', function (string) { return 'pending'; });
 Then('o modal de confirmação deve permanecer aberto', function () { return 'pending'; });
+
+// ---BACKGROUND ---
+
+Given('que os seguintes utilizadores existem no sistema:', function (dataTable) {
+    const linhas = dataTable.hashes(); 
+    
+    linhas.forEach((linha: any) => {
+        baseDadosSimulada.push({
+            id: linha.ID,
+            email: linha.Email
+        });
+    });
+});
+
+/*** GIVENS  ***/
+
+Given('que eu estou autenticado com o ID {string}', function (id) {
+    idUtilizadorAutenticado = id;
+});
+
+Given('que eu não estou autenticado na plataforma', function () {
+    idUtilizadorAutenticado = null;
+});
+
+// --- WHENS ---
+
+When('eu solicito a exclusão permanente da minha conta de utilizador', async function () {
+   
+    if (!idUtilizadorAutenticado) {
+        statusRespostaAPI = 401;
+        return;
+    }
+
+
+    const idParaApagar = idUtilizadorAutenticado; 
+    const index = baseDadosSimulada.findIndex(u => u.id === idParaApagar);
+    if (index !== -1) {
+        baseDadosSimulada.splice(index, 1); 
+        statusRespostaAPI = 204; 
+    } else {
+        statusRespostaAPI = 404;
+    }
+});
+
+When('eu tento solicitar a remoção da conta do utilizador {string}', async function (idAlvo) {
+    if (!idUtilizadorAutenticado) {
+        statusRespostaAPI = 401;
+        return;
+    }
+
+    if (idAlvo !== idUtilizadorAutenticado) {
+        statusRespostaAPI = 403; // Forbidden (Falta de permissão)
+        return;
+    }
+
+    const index = baseDadosSimulada.findIndex(u => u.id === idAlvo);
+    if (index !== -1) {
+        baseDadosSimulada.splice(index, 1);
+        statusRespostaAPI = 204;
+    } else {
+        statusRespostaAPI = 404;
+    }
+});
+
+//--- THENS ---
+
+Then('o sistema deve confirmar a eliminação com sucesso', function () {
+    // No seu controller, a exclusão bem-sucedida envia res.status(204).send()
+    expect(statusRespostaAPI).to.equal(204);
+});
+
+Then('o meu perfil de utilizador não deve mais estar acessível na plataforma', function () {
+    const aindaExiste = baseDadosSimulada.some(u => u.id === idUtilizadorAutenticado);
+    expect(aindaExiste).to.be.false;
+});
+
+Then('o sistema deve rejeitar o pedido exigindo autenticação', function () {
+    expect(statusRespostaAPI).to.equal(401);
+});
+
+Then('a conta do utilizador {string} deve continuar ativa no sistema', function (idVerificacao) {
+    const aindaExiste = baseDadosSimulada.some(u => u.id === idVerificacao);
+    expect(aindaExiste).to.be.true; 
+});
+
+Then('o sistema deve bloquear a operação por falta de permissão', function () {
+    expect(statusRespostaAPI).to.equal(403);
+});

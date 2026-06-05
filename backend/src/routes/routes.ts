@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { userLoginRouter } from './user_login-routes';
-import { register, googleLogin, deleteMe, checkAuthToken } from '../controllers/authController';
+import { register, googleLogin, deleteMe } from '../controllers/authController';
+import {  checkAuthToken } from '../middlewares/authMiddleware';
 
 const router = Router();
 

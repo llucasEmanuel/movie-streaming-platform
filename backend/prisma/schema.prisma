@@ -43,6 +43,7 @@ model User {
   avatarUrl String?  // Esse campo serve para caso o usuário queria ter uma foto de perfil
   createdAt DateTime @default(now()) // Serve para registrar o momento que o usuário realizou o cadastro
   history   History[] // Relacionamento: Um usuário tem muitos registros no histórico
+  role      String   @default("usuario")  // cargo do usuário
 }
 
 model History {

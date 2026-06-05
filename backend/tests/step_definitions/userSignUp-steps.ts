@@ -12,16 +12,18 @@ const api = axios.create({
 
 let userData: any = {};
 let response: any;
+let externalServiceStatus = 'online';
 
-// Limpa o usuário de teste antes de cada cenário para evitar erro de e-mail duplicado
+// Limpa o usuário de teste antes de cada cenário para garantir isolamento
 Before(async () => {
     await prisma.user.deleteMany({ where: { email: "exemplo@test.com" } });
     userData = {};
+    response = null;
 });
 
-// --- GIVENS (Contexto) ---
+// --- Testes GUI ---
 
-// --- GIVENS (Contexto) ---
+// --- GIVENS ---
 
 Given('eu estou na página {string}', function (pagina) {
     console.log(`Simulando navegação para a página: ${pagina}`);
@@ -29,24 +31,11 @@ Given('eu estou na página {string}', function (pagina) {
 
 Given('o email {string} não possui cadastro no sistema', async function (email) {
     const user = await prisma.user.findUnique({ where: { email } });
-    assert.strictEqual(user, null, "O usuário já existe no banco!");
+    assert.strictEqual(user, null, "O usuário já existe no banco e o teste exigia o contrário!");
 });
 
 Given('o email {string} do Google não possui cadastro no sistema', async function (email) {
     await prisma.user.deleteMany({ where: { email } });
-});
-
-Given('o email {string} do Google possui cadastro no sistema', async function (email) {
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) {
-        await prisma.user.create({
-            data: {
-                email,
-                name: "Usuário Teste",
-                googleId: "id-falso-12345"
-            }
-        });
-    }
 });
 
 Given('o email {string} possui cadastro no sistema', async function (email) {
@@ -56,13 +45,26 @@ Given('o email {string} possui cadastro no sistema', async function (email) {
             data: {
                 email,
                 name: "Usuário Teste",
-                password: "SenhaSegura123!" // Conta de formulário precisa de senha
+                password: "SenhaSegura123!" 
             }
         });
     }
 });
 
-// --- WHENS (Ações) ---
+Given('o email {string} do Google possui cadastro no sistema', async function (email) {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+        await prisma.user.create({
+            data: {
+                email,
+                name: "Usuário Teste",
+                googleId: "id-falso-12345" 
+            }
+        });
+    }
+});
+
+// --- WHENS ---
 
 When('eu realizo o cadastro com o email {string} e senha {string}', function (email, password) {
     userData.email = email;
@@ -75,96 +77,49 @@ When('eu tento realizar o cadastro com o email {string} e senha {string}', funct
 });
 
 When('eu preencho o campo {string} com {string}', async function (campo, valor) {
-    // Mapeamos os nomes do BDD para os nomes do seu Banco/Prisma
     const mapaCampos: any = { "nome": "name", "email": "email", "senha": "password" };
     userData[mapaCampos[campo] || campo] = valor;
 
-    // Só enviamos para a rota /register se chegarmos no campo nome E existir uma senha (fluxo normal)
     if (campo === "nome" && userData.password) {
-        response = await api.post('/register', userData);
+        response = await api.post('/api/register', userData);
     }
 });
 
 When('eu realizo o cadastro utilizando minha conta Google com email {string}', async function (email) {
     try {
-        response = await axios.post('http://localhost:3000/auth/google', {
+        response = await api.post('/api/auth/google', {
             token: "TEST_VALID_TOKEN",
             mockEmail: email,
             mockName: "João" 
         });
     } catch (error: any) {
+        console.log("ERRO AXIOS:", error.message);
         response = error.response;
     }
 });
 
 When('eu tento realizar o cadastro utilizando minha conta Google com o email {string}', async function (email) {
-    // Simulamos a resposta de erro para satisfazer a exigência do teste BDD
-    response = {
-        status: 400,
-        data: { message: "conta já está vinculada" }
-    };
+    response = await api.post('/api/auth/google', {
+        token: "TEST_VALID_TOKEN",
+        mockEmail: email
+    });
 });
 
 When('eu defino o nome de usuário {string}', function (nome) {
     return 'passed';
 });
 
-When('eu envio uma requisição POST para {string} com os dados:', async function (endpoint, dataTable) {
-    const payload = dataTable.hashes()[0];
-    response = await api.post(endpoint, payload);
-});
+// --- THENS  ---
 
-When('eu envio uma requisição POST para {string} com uma "password" de {int} caracteres', async function (endpoint, length) {
-    const senhaGigante = "a".repeat(length);
-    response = await api.post(endpoint, {
-        name: "Teste DoS",
-        email: "dos@test.com",
-        password: senhaGigante
-    });
-});
-
-When('eu envio uma requisição POST para {string} com o campo email contendo:', async function (endpoint, docString) {
-    const jsonInjetado = JSON.parse(docString);
-    response = await api.post(endpoint, {
-        name: "Hacker",
-        email: jsonInjetado, 
-        password: "senhaSegura123"
-    });
-});
-
-When('eu envio uma requisição POST para {string} com um token válido', async function (endpoint) {
-    const token = userData.googleToken || "TEST_VALID_TOKEN";
-    response = await api.post(endpoint, { 
-        token, 
-        mockEmail: "novo_google@test.com", 
-        mockName: "Google Mock" 
-    });
-});
-
-When('eu envio uma requisição POST para {string} com um token manipulado', async function (endpoint) {
-    response = await api.post(endpoint, { token: "TOKEN_FORJADO_INVALIDO" });
-});
-
-// --- THENS ---
-
-Then('eu vejo a mensagem de sucesso {string}', function (mensagem) {
-    const corpoResposta = JSON.stringify(response.data);
-    assert.ok(corpoResposta.includes("sucesso") || corpoResposta.includes(mensagem));
-});
-
-Then('aparece uma mensagem de aviso {string}', function (aviso) {
-    const corpoResposta = JSON.stringify(response.data);
-    const encontrou = corpoResposta.includes("uso") || corpoResposta.includes("vinculada");
-    assert.ok(encontrou, `Erro esperado não encontrado. Recebi: ${corpoResposta}`);
-});
-
-Then('deve aparecer uma mensagem de aviso {string}', function (aviso) {
-    const corpoResposta = JSON.stringify(response.data);
-    assert.ok(corpoResposta.includes("obrigatórios") || corpoResposta.includes("inválida") || response.status === 400);
-});
 Then('uma nova conta de usuário deve ser criada para {string}', async function (email) {
     const user = await prisma.user.findUnique({ where: { email } });
-    assert.ok(user, `Usuário com email ${email} não foi encontrado no banco.`);
+    
+    if (!user) {
+        console.log("STATUS DA API:", response?.status);
+        console.log("RESPOSTA DA API:", response?.data);
+    }
+
+    assert.ok(user, `A conta de usuário com email ${email} não foi inserida no banco de dados.`);
 });
 
 Then('eu sou autenticado automaticamente no sistema', function () {
@@ -173,72 +128,189 @@ Then('eu sou autenticado automaticamente no sistema', function () {
     
     assert.ok(
         response && (response.status === 200 || response.status === 201 || response.data.token || response.data.auth === true),
-        `A autenticação falhou! O backend retornou Status: ${statusRecebido} com a resposta: ${msgErro}`
+        `A autenticação falhou! Status: ${statusRecebido}. Resposta: ${msgErro}`
     );
+});
+
+Then('eu vejo a mensagem de sucesso {string}', function (mensagem) {
+    const corpoResposta = JSON.stringify(response.data);
+    assert.ok(
+        corpoResposta.includes("sucesso") || corpoResposta.includes(mensagem),
+        `Esperava a mensagem "${mensagem}", mas recebi: ${corpoResposta}`
+    );
+});
+
+Then('aparece uma mensagem de aviso {string}', function (aviso) {
+    const corpoResposta = response?.data ? JSON.stringify(response.data) : "";
+    const encontrou = corpoResposta.includes("uso") || corpoResposta.includes("vinculada") || corpoResposta.includes(aviso);
+    
+    assert.ok(encontrou, `Mensagem de aviso "${aviso}" não encontrada. Resposta do backend: ${corpoResposta}`);
+});
+
+Then('deve aparecer uma mensagem de aviso {string}', function (aviso) {
+    const corpoResposta = response?.data ? JSON.stringify(response.data) : "";
+    const erroNoStatusOuMensagem = corpoResposta.includes("obrigatórios") || corpoResposta.includes("inválida") || response.status === 400;
+    
+    assert.ok(erroNoStatusOuMensagem, `Aviso de erro não disparado conforme esperado. Resposta: ${corpoResposta}`);
 });
 
 Then('eu devo ser direcionado a página {string}', function (pagina) {
-    assert.ok(response.status >= 400 || response.data.redirect === pagina || response.status === 302);
+    assert.ok(
+        response.status >= 400 || response.data.redirect === pagina || response.status === 302,
+        `Não houve indicativo de redirecionamento para a página ${pagina}. Status: ${response?.status}`
+    );
 });
 
 Then('eu devo permanecer na página {string}', function (pagina) {
-    assert.strictEqual(response.status, 400, "A API deveria ter retornado erro 400 para senha curta");
-});
-
-Then('o status da resposta deve ser {int}', function (statusCode) {
     assert.strictEqual(
         response.status, 
-        statusCode, 
-        `Esperava status ${statusCode}, mas recebeu ${response.status}. Corpo da resposta: ${JSON.stringify(response.data)}`
+        400, 
+        `A API deveria ter retornado status 400 para manter o utilizador na página ${pagina}`
     );
 });
 
-Then('a mensagem de erro deve indicar {string}', function (msgErro) {
-    const corpoResposta = JSON.stringify(response.data);
+Then('o sistema deve reconhecer a conta', function () {
+    const statusRecebido = response ? response.status : "Indefinido";
+    
+    assert.strictEqual(
+        response.status, 
+        200, 
+        `Esperava que a API reconhecesse a conta com status 200, mas retornou ${statusRecebido}`
+    );
+    
+    assert.strictEqual(
+        response.data.authenticated, 
+        true, 
+        "A resposta do sistema não confirmou a autenticação da conta."
+    );
+    
     assert.ok(
-        corpoResposta.includes(msgErro), 
-        `Esperava erro contendo "${msgErro}", mas recebeu: ${corpoResposta}`
+        response.data.user && response.data.user.email, 
+        "Os dados do utilizador não vieram na resposta da API."
     );
 });
 
-Then('a mensagem de erro deve ser {string}', function (msgErro) {
-    const corpoResposta = JSON.stringify(response.data);
-    assert.ok(
-        corpoResposta.includes(msgErro), 
-        `Esperava erro contendo "${msgErro}", mas recebeu: ${corpoResposta}`
-    );
+// --- Testes Serviços ---
+Given('que eu sou um visitante tentando criar uma conta', function () { return 'passed'; });
+Given('eu estou a visualizar o formulário de novos utilizadores', function () { return 'passed'; });
+Given('que a plataforma está com as defesas de segurança activas', function () { return 'passed'; });
+Given('o sistema valida rigorosamente todas as entradas de dados contra ameaças', function () { return 'passed'; });
+Given('eu sou um utilizador que prefere a autenticação social', function () { return 'passed'; });
+Given('que a plataforma valida rigorosamente os tokens de provedores externos', function () { return 'passed'; });
+Given('eu sou um utilizador tentando aceder a uma área restrita', function () { return 'passed'; });
+
+Given('que o serviço externo do {string} está temporariamente indisponível', function (provedor) {
+    externalServiceStatus = 'offline';
 });
 
-Then('o banco de dados não deve sofrer alterações', async function () {
-    const user = await prisma.user.findFirst({ where: { email: "luiz_sem_arroba.com" } });
-    assert.strictEqual(user, null, "Falha de segurança: o banco de dados salvou dados inválidos!");
-});
+// --- WHENS  ---
 
-Then('a API não deve vazar informações do banco de dados na resposta', function () {
-    const respostaString = JSON.stringify(response.data).toLowerCase();
-    const vazouSql = respostaString.includes("prisma") || respostaString.includes("sql") || respostaString.includes("database");
-    assert.strictEqual(vazouSql, false, "A API está vazando informações críticas do banco de dados!");
-});
+When('eu tento registar-me fornecendo os dados de teste:', async function (dataTable) {
+    const payload: any = {};
+    
+    for (const row of dataTable.hashes()) {
+        let valor = row.Valor || ""; // Evita undefined em campos em branco
 
-Then('o status da resposta deve ser {int} \\(ou {int}\\/{int})', function (status1, status2, status3) {
-    const statusValidos = [status1, status2, status3];
-    assert.ok(
-        statusValidos.includes(response.status), 
-        `Status ${response.status} não é um erro de servidor (500, 502 ou 504).`
-    );
-});
-
-Then('a aplicação não deve "quebrar"', async function () {
-    try {
-        await api.get('/um-endpoint-qualquer'); 
-        assert.ok(true);
-    } catch (error: any) {
-        if (error.code === 'ECONNREFUSED') {
-            assert.fail("O servidor crashou e parou de responder a novas requisições!");
+        // Truque inteligente: Substituir a string de teste "longa_1000" por 1000 caracteres reais
+        if (valor === "longa_1000") {
+            valor = "a".repeat(1000);
         }
+
+        if (row.Campo === "Nome") payload.name = valor;
+        if (row.Campo === "Email") payload.email = valor;
+        if (row.Campo === "Senha") payload.password = valor;
     }
+
+    response = await api.post('/api/register', payload);
 });
 
-Then('o serviço "verifyIdToken" deve rejeitar a assinatura', function () {
-    assert.ok(response.data.error, "A assinatura do token não foi rejeitada!");
+When('um utilizador malicioso tenta registar-se preenchendo o campo de e-mail com o seguinte código:', async function (docString) {
+    const jsonInjetado = JSON.parse(docString);
+    
+    response = await api.post('/api/register', {
+        name: "Hacker",
+        email: jsonInjetado, 
+        password: "senhaSegura123!"
+    });
+});
+
+When('eu tento enviar uma solicitação de login com o token {string} do provedor {string}', async function (token, provedor) {
+    // Enviamos a flag de simulação de falha para o backend caso o serviço esteja offline
+    response = await api.post('/api/auth/google', {
+        token: token,
+        simulateOutage: externalServiceStatus === 'offline' 
+    });
+
+    // Resetamos o status para evitar que este estado vaze para outros testes
+    externalServiceStatus = 'online';
+});
+
+// --- THENS  ---
+
+Then('o meu registo deve ser rejeitado pelo sistema', function () {
+    assert.ok(
+        response.status >= 400, 
+        `O sistema deveria ter rejeitado o registo (status >= 400), mas retornou ${response.status}`
+    );
+});
+
+Then('a mensagem de erro deve indicar {string}', function (mensagemEsperada) {
+    const corpoResposta = JSON.stringify(response.data);
+    assert.ok(
+        corpoResposta.includes(mensagemEsperada),
+        `Esperava o erro "${mensagemEsperada}", mas a API retornou: ${corpoResposta}`
+    );
+});
+
+Then('o sistema deve bloquear a tentativa imediatamente com segurança', function () {
+    assert.ok(
+        response.status >= 400, 
+        "Alerta Crítico: O sistema não bloqueou a tentativa de injeção NoSQL/SQL!"
+    );
+});
+
+Then('nenhuma informação ou estrutura interna da base de dados deve ser exposta', function () {
+    const respostaString = JSON.stringify(response.data).toLowerCase();
+    
+    // Valida se o backend devolveu os erros em bruto do banco de dados 
+    const vazouInfo = respostaString.includes("prisma") || 
+                      respostaString.includes("sql") || 
+                      respostaString.includes("database") || 
+                      respostaString.includes("mongo");
+                      
+    assert.strictEqual(
+        vazouInfo, 
+        false, 
+        "A aplicação não deve expor detalhes internos da base de dados nas respostas!"
+    );
+});
+
+Then('a aplicação deve lidar com a falha externa de forma resiliente', function () {
+    assert.ok(
+        response.status === 500 || response.status === 502 || response.status === 503,
+        `A API deveria ter retornado um erro de serviço (5xx), mas retornou ${response.status}`
+    );
+});
+
+Then('eu devo ver a mensagem de erro {string}', function (mensagemEsperada) {
+    const corpoResposta = response?.data ? JSON.stringify(response.data) : "Sem resposta";
+    assert.ok(
+        corpoResposta.includes(mensagemEsperada), 
+        `Aviso "${mensagemEsperada}" não foi encontrado.`
+    );
+});
+
+Then('o sistema deve negar o meu acesso imediatamente', function () {
+    assert.ok(
+        response.status === 400 || response.status === 401, 
+        `O acesso de um token inválido não foi negado como esperado. Status atual: ${response.status}`
+    );
+});
+
+Then('o erro apresentado deve indicar que o {string}', function (mensagemEsperada) {
+    const corpoResposta = response?.data ? JSON.stringify(response.data) : "";
+    assert.ok(
+        corpoResposta.includes(mensagemEsperada), 
+        `Erro "${mensagemEsperada}" ausente na resposta de segurança.`
+    );
 });
