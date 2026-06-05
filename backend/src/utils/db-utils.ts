@@ -70,7 +70,14 @@ export const DBUtils = {
     // Assiste apenas até o limite exigido pelo teste
     for (let i = 0; i < limite; i++) {
         await prisma.history.create({
-            data: { userId, movieId: filmes[i].id, watchedAt: new Date() }
+            data: { 
+                userId, 
+                movieId: filmes[i].id, 
+                watchedAt: new Date(),
+                is_completed: true, // Garante que o service vai considerar o filme como assistido por completo
+                is_hidden: false,    // Garante que o filme não está escondido
+                last_position: 0 
+            }
         });
     }
 
@@ -83,7 +90,7 @@ export const DBUtils = {
     // Adiciona um filme específico diretamente ao histórico do usuário
     async adicionarAoHistorico(userId: string, filmeId: string) {
         await prisma.history.create({
-            data: { userId, movieId: filmeId, watchedAt: new Date() }
+            data: { userId, movieId: filmeId, watchedAt: new Date(),is_completed: true,is_hidden: false}
         });
     },
 
@@ -142,7 +149,10 @@ export const DBUtils = {
                 data: { 
                     userId, 
                     movieId: filme.id, 
-                    watchedAt: new Date() 
+                    watchedAt: new Date(),
+                    is_completed: true,
+                    is_hidden: false,
+                    last_position: 0 
                 }
             });
         }

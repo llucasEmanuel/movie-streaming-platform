@@ -12,7 +12,11 @@ export class RecommendationService {
   // LÓGICA PARA A ROTA /recommendations/
   async getAllRecommendations(userId: string) {
     const ultimoRegistro = await prisma.history.findFirst({
-      where: { userId: userId },
+      where: { 
+        userId: userId,
+        is_completed: true, 
+        is_hidden: false
+       },
       orderBy: { watchedAt: 'desc' },
     });
 
@@ -60,7 +64,9 @@ export class RecommendationService {
     const historicoRecente = await prisma.history.findMany({
       where: {
         userId: userId,
-        watchedAt: { gte: dataLimite }
+        watchedAt: { gte: dataLimite },
+        is_completed: true,
+        is_hidden: false
       },
       include: { movie: true }
     });
