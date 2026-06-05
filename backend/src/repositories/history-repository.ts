@@ -35,7 +35,6 @@ class HistoryRepository {
                 // Se não existir hoje, cria uma nova
                 userId: data.id_user,
                 movieId: data.id_movie,
-                duration: data.duration,
                 watchedAt: new Date(data.watched_at),
                 last_position: data.last_position,
                 is_completed: data.is_completed,
