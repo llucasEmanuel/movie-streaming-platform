@@ -8,11 +8,26 @@ type CurrentPage = "home" | "playlists";
 function App() {
   const [currentPage, setCurrentPage] = useState<CurrentPage>("home");
 
+  const currentUser = {
+    id: "Victoria",
+    name: "Victoria",
+  };
+
   if (currentPage === "playlists") {
-    return <MinhasPlaylistsPage onGoToHome={() => setCurrentPage("home")} />;
+    return (
+      <MinhasPlaylistsPage
+        userId={currentUser.id}
+        onGoToHome={() => setCurrentPage("home")}
+      />
+    );
   }
 
-  return <HomePage onGoToPlaylists={() => setCurrentPage("playlists")} />;
+  return (
+    <HomePage
+      userId={currentUser.id}
+      onGoToPlaylists={() => setCurrentPage("playlists")}
+    />
+  );
 }
 
 export default App;

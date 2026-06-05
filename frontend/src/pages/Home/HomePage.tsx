@@ -9,13 +9,12 @@ import {
 import type { Movie, PageMessage, Playlist } from "../../types";
 import "./HomePage.css";
 
-const USER_ID = "Victoria";
-
 interface HomePageProps {
+  userId: string;
   onGoToPlaylists: () => void;
 }
 
-export function HomePage({ onGoToPlaylists }: HomePageProps) {
+export function HomePage({ userId, onGoToPlaylists }: HomePageProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,7 +57,7 @@ export function HomePage({ onGoToPlaylists }: HomePageProps) {
       setIsPlaylistModalOpen(true);
       setIsLoadingPlaylists(true);
 
-      const data = await getPlaylistsByUserId(USER_ID);
+      const data = await getPlaylistsByUserId(userId);
 
       setAvailablePlaylists(data.playlists);
 
@@ -95,7 +94,7 @@ export function HomePage({ onGoToPlaylists }: HomePageProps) {
 
     try {
       const data = await addMovieToPlaylist({
-        userId: USER_ID,
+        userId,
         playlistName,
         movieName: selectedMovie.title,
       });

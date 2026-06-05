@@ -1,4 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import type { PageMessage, Playlist } from "../../types";
 import {
   createPlaylist,
@@ -9,14 +10,15 @@ import {
 } from "../../services/playlistApi";
 import "./MinhasPlaylistsPage.css";
 
-const USER_NAME = "Victoria";
-const USER_ID = "Victoria";
-
 interface MinhasPlaylistsPageProps {
+  userId: string;
   onGoToHome: () => void;
 }
 
-export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
+export function MinhasPlaylistsPage({
+  userId,
+  onGoToHome,
+}: MinhasPlaylistsPageProps) {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +41,7 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
     try {
       setLoading(true);
 
-      const data = await getPlaylistsByUserId(USER_ID);
+      const data = await getPlaylistsByUserId(userId);
 
       setPlaylists(data.playlists);
 
@@ -66,7 +68,7 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
 
   useEffect(() => {
     loadPlaylists();
-  }, []);
+  }, [userId]);
 
   function openCreateModal() {
     setEditingPlaylist(null);
@@ -120,7 +122,7 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
       } else {
         const data = await createPlaylist({
           name: trimmedName,
-          userId: USER_ID,
+          userId,
         });
 
         setPlaylists((currentPlaylists) => [data.playlist, ...currentPlaylists]);
@@ -181,7 +183,7 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
   async function handleRemoveMovie(playlist: Playlist, movieName: string) {
     try {
       const data = await removeMovieFromPlaylist({
-        userId: USER_ID,
+        userId,
         playlistName: playlist.name,
         movieName,
       });
@@ -231,15 +233,6 @@ export function MinhasPlaylistsPage({ onGoToHome }: MinhasPlaylistsPageProps) {
             Minhas Playlists
           </button>
         </nav>
-
-        <div className="playlist-user">
-          <div className="playlist-avatar">V</div>
-
-          <div>
-            <strong>{USER_NAME}</strong>
-            <p>Usuário autenticado</p>
-          </div>
-        </div>
       </aside>
 
       <div className="playlist-main">
