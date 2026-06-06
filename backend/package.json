@@ -31,7 +31,7 @@
     "@prisma/client": "^6.19.3",
     "dotenv": "^17.4.2",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.0",
     "@types/node": "^25.9.0"
   },
   "devDependencies": {
