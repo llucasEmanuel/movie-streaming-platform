@@ -9,8 +9,8 @@ interface MovieCardProps {
 export function MovieCard({ movie, onAddToPlaylist, onSelectMovie }: MovieCardProps) {
   return (
     <article className="movie-card" onClick={() => onSelectMovie?.(movie)}>
-      {movie.url_movie ? (
-        <img src={movie.url_movie} alt={movie.title} />
+      {movie.img_url || movie.url_movie ? (
+        <img src={movie.img_url ?? movie.url_movie} alt={movie.title} />
       ) : (
         <div className="movie-card-placeholder">🎬</div>
       )}
@@ -18,7 +18,7 @@ export function MovieCard({ movie, onAddToPlaylist, onSelectMovie }: MovieCardPr
       <div className="movie-info">
         <h2>{movie.title}</h2>
 
-        {movie.synopsis && <p>{movie.synopsis}</p>}
+        {/*{movie.synopsis && <p>{movie.synopsis}</p>}*/}
 
         <p>
           <strong>Duração:</strong> {movie.duration} min

@@ -44,7 +44,7 @@
 }
 
 .details-video-player {
-  max-width: 1200px;
+  max-width: 1400px;
   min-height: calc(100vh - 120px);
   margin: 0 auto;
   display: flex;
@@ -57,8 +57,9 @@
 
 .details-video {
   width: 100%;
-  max-width: 980px;
+  max-width: 1180px;
   aspect-ratio: 16 / 9;
+  min-height: 620px;
   background: #000;
   border-radius: 20px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);

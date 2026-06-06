@@ -86,8 +86,8 @@ export function MovieDetailsPage({
       ) : (
         <div className="details-container">
           <div className="details-poster">
-            {movie.url_movie ? (
-              <img src={movie.url_movie} alt={movie.title} />
+            {movie.img_url || movie.url_movie ? (
+              <img src={movie.img_url ?? movie.url_movie} alt={movie.title} />
             ) : (
               <div className="details-poster-placeholder">🎬</div>
             )}
