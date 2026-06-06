@@ -1,5 +1,5 @@
 import { MovieModel } from "../models/movie-model";
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "../generated/prisma";
 import { prisma } from "../database/prisma-client"; // <-- Única importação do prisma
 
 // Camada responsável pela interação com o banco de dados

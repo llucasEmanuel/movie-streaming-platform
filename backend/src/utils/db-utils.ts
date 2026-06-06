@@ -1,6 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from "../database/prisma-client";
 
 export const DBUtils = {
     // Busca um usuário pelo e-mail ou o cria se não existir

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npx prisma generate && tsc && node ./scripts/copy-generated-prisma.js",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:cucumber",
