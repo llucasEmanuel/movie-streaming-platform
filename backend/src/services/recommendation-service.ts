@@ -77,7 +77,7 @@ export class RecommendationService {
     const contagemGeneros: Record<string, number> = {};
     const filmesContados = new Set<string>();
 
-    historicoRecente.forEach(registro => {
+    historicoRecente.forEach((registro: any) => {
       if (!filmesContados.has(registro.movieId)) {
         filmesContados.add(registro.movieId);
         const genero = registro.movie.genres;
@@ -103,7 +103,7 @@ export class RecommendationService {
       };
     }
 
-    const idsFilmesAssistidos = historicoRecente.map(h => h.movieId);
+    const idsFilmesAssistidos = historicoRecente.map((h: any) => h.movieId);
     const recomendacoesGenero = await prisma.movie.findMany({
       where: {
         genres: generoFavorito,
