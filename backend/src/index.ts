@@ -10,7 +10,7 @@ const app = express();
 // Middleware para aceitar JSON no body das requisições
 app.use(express.json());
 
-// Registrando as rotas de usuários 
+// Registrando as rotas de usuários
 app.use("/api", userRoutes);
 
 // Registrando as rotas de filmes
@@ -29,8 +29,9 @@ app.get("/", (req: Request, res: Response) => {
 
 // Iniciando o servidor APENAS se não estivermos em ambiente de teste
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(3000, () => {
-    console.log("Servidor rodando em http://localhost:3000");
+  const port = process.env.PORT ?? 3000;
+  app.listen(Number(port), () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
   });
 }
 
