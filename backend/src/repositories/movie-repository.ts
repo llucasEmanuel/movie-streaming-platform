@@ -1,5 +1,5 @@
 import { MovieModel } from "../models/movie-model";
-import { PrismaClient } from "../generated/prisma";
+import type { PrismaClient } from "../generated/prisma";
 import { prisma } from "../database/prisma-client"; // <-- Única importação do prisma
 
 // Camada responsável pela interação com o banco de dados
@@ -31,7 +31,7 @@ export const getAllMovies = async (search?: string, genre?: string): Promise<Mov
 
   // Filtra a lista na memória
   return allMovies.filter((movie: any) => {
-    
+
     // Filtro Ícone de Gênero
     let matchesGenre = true;
     if (genreLower) {
@@ -59,14 +59,14 @@ export const insertMovie = async (movie: any) => {
       title: movie.title,
       synopsis: movie.synopsis,
       // Fazendo a ponte do nome do front para o nome do banco
-      file_name: movie.url_movie, 
-      
+      file_name: movie.url_movie,
+
       // O banco espera strings, mas o front manda arrays/números, então convertemos:
       duration: movie.duration ? String(movie.duration) : null,
       genres: Array.isArray(movie.genres) ? movie.genres.join(", ") : movie.genres,
       director: Array.isArray(movie.directors) ? movie.directors.join(", ") : movie.directors,
       cast: Array.isArray(movie.cast) ? movie.cast.join(", ") : movie.cast
-      
+
       // url_poster é ignorado aqui pois a tabela não tem essa coluna configurada
     }
   });

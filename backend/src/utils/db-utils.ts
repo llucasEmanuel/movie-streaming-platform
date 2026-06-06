@@ -1,6 +1,4 @@
-import { PrismaClient } from "../generated/prisma";
-
-const prisma = new PrismaClient();
+import { prisma } from "../database/prisma-client";
 
 export const DBUtils = {
     // Busca um usuário pelo e-mail ou o cria se não existir
@@ -23,8 +21,8 @@ export const DBUtils = {
     async garantirFilmeUnico(nomeFilme: string) {
         let filme = await prisma.movie.findFirst({ where: { title: nomeFilme } });
         if (!filme) {
-            filme = await prisma.movie.create({ 
-                data: { title: nomeFilme, genres: "Geral", isPopular: false } 
+            filme = await prisma.movie.create({
+                data: { title: nomeFilme, genres: "Geral", isPopular: false }
             });
         }
         return filme;
@@ -34,14 +32,14 @@ export const DBUtils = {
     async garantirEAssistirFilmes(userId: string, qtd: string, genero: string) {
         const limite = parseInt(qtd);
         let filmes = await prisma.movie.findMany({ where: { genres: genero } });
-        
+
         while (filmes.length < limite) {
             const novoFilme = await prisma.movie.create({
                 data: { title: `Filme Autogerado ${genero} ${filmes.length + 1}`, genres: genero, isPopular: true }
             });
             filmes.push(novoFilme);
         }
-        
+
         for (let i = 0; i < limite; i++) {
             await prisma.history.create({
                 data: { userId, movieId: filmes[i].id, watchedAt: new Date() }
@@ -83,13 +81,13 @@ export const DBUtils = {
 
     async assistirMesmoFilmeRepetido(userId: string, titulo: string, genero: string, vezes: number) {
         let filme = await prisma.movie.findFirst({ where: { title: titulo } });
-        
+
         if (!filme) {
             filme = await prisma.movie.create({
-                data: { 
-                    title: titulo, 
-                    genres: genero, 
-                    isPopular: false 
+                data: {
+                    title: titulo,
+                    genres: genero,
+                    isPopular: false
                 }
             });
         }
@@ -97,14 +95,14 @@ export const DBUtils = {
         // Insere o mesmo movieId várias vezes no histórico do usuário
         for (let i = 0; i < vezes; i++) {
             await prisma.history.create({
-                data: { 
-                    userId, 
-                    movieId: filme.id, 
-                    watchedAt: new Date() 
+                data: {
+                    userId,
+                    movieId: filme.id,
+                    watchedAt: new Date()
                 }
             });
         }
-        
+
         return filme;
     }
 

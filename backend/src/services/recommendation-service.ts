@@ -1,9 +1,7 @@
-import { PrismaClient } from '../generated/prisma';
-
-const prisma = new PrismaClient();
+import { prisma } from '../database/prisma-client';
 
 export class RecommendationService {
-  
+
   // LÓGICA PARA A ROTA /recommendations/
   async getAllRecommendations(userId: string) {
     const ultimoRegistro = await prisma.history.findFirst({
@@ -20,7 +18,7 @@ export class RecommendationService {
 
     // 1. Sempre adiciona a seção de gêneros (personalizada ou fallback)
     if (generosResult) secoes.push(generosResult);
-    
+
     // 2.SÓ ADICIONA A SEÇÃO DE SIMILARES SE O USUÁRIO REALMENTE TIVER HISTÓRICO!
     if (ultimoRegistro) {
       const similarResult = await this.getSimilarMovies(ultimoRegistro.movieId);
@@ -29,7 +27,7 @@ export class RecommendationService {
         secoes.push(similarResult);
       }
     }
-    
+
     // 3. Sempre adiciona os populares no final
     if (trendingResult && generosResult?.sectionTitle !== "Lançamentos e Populares"){
       secoes.push(trendingResult);
@@ -77,7 +75,7 @@ export class RecommendationService {
     const contagemGeneros: Record<string, number> = {};
     const filmesContados = new Set<string>();
 
-    historicoRecente.forEach(registro => {
+    historicoRecente.forEach((registro: any) => {
       if (!filmesContados.has(registro.movieId)) {
         filmesContados.add(registro.movieId);
         const genero = registro.movie.genres;
@@ -103,7 +101,7 @@ export class RecommendationService {
       };
     }
 
-    const idsFilmesAssistidos = historicoRecente.map(h => h.movieId);
+    const idsFilmesAssistidos = historicoRecente.map((h: any) => h.movieId);
     const recomendacoesGenero = await prisma.movie.findMany({
       where: {
         genres: generoFavorito,

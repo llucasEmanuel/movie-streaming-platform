@@ -1,5 +1,3 @@
 // src/database/prisma.ts
 
-import { PrismaClient } from "../generated/prisma";
-
-export const prisma = new PrismaClient();
+export { prisma } from "./prisma-client";
