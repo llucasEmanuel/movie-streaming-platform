@@ -10,13 +10,14 @@ const apiClient = axios.create({
 
 // Classe para gerenciar erros de API
 export class ApiError extends Error {
-  constructor(
-    public statusCode: number,
-    message: string,
-    public details?: unknown
-  ) {
+  statusCode: number;
+  details?: unknown;
+
+  constructor(statusCode: number, message: string, details?: unknown) {
     super(message);
     this.name = 'ApiError';
+    this.statusCode = statusCode;
+    this.details = details;
   }
 }
 
@@ -64,21 +65,18 @@ export const movieService = {
   },
 
   /**
-   * Faz o download do vídeo
+   * Faz o download do vídeo usando o comportamento nativo do navegador.
    */
   async downloadMovie(movieId: string): Promise<void> {
-    try {
-      const downloadUrl = this.getDownloadUrl(movieId);
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.target = '_blank';
-      link.rel = 'noopener noreferrer';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      throw handleApiError(error);
-    }
+    const downloadUrl = this.getDownloadUrl(movieId);
+
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   },
 
   /**

@@ -4,7 +4,7 @@ export interface Movie {
   url_movie?: string;
   img_url?: string;
   synopsis?: string;
-  genres: string;
+  genres: string | string[];
   isPopular: boolean;
   duration?: string;
   director?: string;
@@ -17,7 +17,7 @@ export interface MovieMetadata {
   title: string;
   img_url?: string;
   synopsis: string;
-  genres: string;
+  genres: string | string[];
   duration: string;
   director: string;
   cast: string;

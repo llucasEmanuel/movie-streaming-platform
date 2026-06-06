@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Movie } from "../../types";
+import { movieService } from "../../services/movieService";
 import "./MovieDetailsPage.css";
 
 interface MovieDetailsPageProps {
@@ -14,7 +15,7 @@ export function MovieDetailsPage({
   onGoToHome,
 }: MovieDetailsPageProps) {
   const [isWatching, setIsWatching] = useState(false);
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   async function handleWatch() {
     try {
@@ -51,24 +52,17 @@ export function MovieDetailsPage({
 
   async function handleDownload() {
     try {
-      // Simulação de download
-      setDownloadProgress(0);
+      setIsDownloading(true);
 
-      const interval = setInterval(() => {
-        setDownloadProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            alert(`✅ Download concluído: ${movie.title}`);
-            setDownloadProgress(0);
-            return 0;
-          }
-          return prev + Math.random() * 30;
-        });
-      }, 500);
+      await movieService.downloadMovie(movie.id);
+
+      alert(`✅ Download iniciado: ${movie.title}`);
     } catch (error) {
       alert(
         error instanceof Error ? error.message : "Erro ao fazer download"
       );
+    } finally {
+      setIsDownloading(false);
     }
   }
 
@@ -136,22 +130,11 @@ export function MovieDetailsPage({
             <button
               className="details-button details-button-download"
               onClick={handleDownload}
-              disabled={downloadProgress > 0 && downloadProgress < 100}
+              disabled={isDownloading}
             >
-              {downloadProgress > 0 && downloadProgress < 100
-                ? `📥 Baixando ${Math.round(downloadProgress)}%`
-                : "📥 Fazer Download"}
+              {isDownloading ? "📥 Iniciando download..." : "📥 Fazer Download"}
             </button>
           </div>
-
-          {downloadProgress > 0 && downloadProgress < 100 && (
-            <div className="details-progress">
-              <div
-                className="details-progress-bar"
-                style={{ width: `${downloadProgress}%` }}
-              ></div>
-            </div>
-          )}
         </div>
       </div>
     </div>

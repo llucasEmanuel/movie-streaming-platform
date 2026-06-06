@@ -103,7 +103,7 @@ export function MovieDetail() {
             controls
             autoPlay
             className="video-player"
-            src={movieService.getVideoStreamUrl(movieId)}
+            src={movieId ? movieService.getVideoStreamUrl(movieId) : ''}
           >
             Seu navegador não suporta vídeo HTML5
           </video>
