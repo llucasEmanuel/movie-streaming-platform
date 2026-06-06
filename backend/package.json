@@ -15,7 +15,7 @@
     "test:cucumber:lessl": "cucumber-js -p lessl --tags '@player or @metadata'",
     "test:delete": "NODE_ENV=test cucumber-js --require-module ts-node/register --require tests/step_definitions/**/*.ts --tags @test-delete",
     "test:gui": "NODE_ENV=test cucumber-js --require-module ts-node/register --require tests/step_definitions/**/*.ts --tags \"@gui\"",
-    "test:cucumber:implemented": "cucumber-js -p implemented"  
+    "test:cucumber:implemented": "cucumber-js -p implemented"
   },
   "keywords": [],
   "author": "",
@@ -43,7 +43,7 @@
     "@types/supertest": "^7.2.0",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
-    
+
     "jsonwebtoken": "^9.0.3",
     "nodemon": "^3.1.14",
     "prisma": "^6.19.3",
