@@ -18,14 +18,13 @@ let serviceResult: any;
 let config: any;
 
 Before(async () => {
+    await DBUtils.sincronizarFilmesAtivos();
+    await DBUtils.garantirFilmePopularSemente();
+
     const user = await DBUtils.garantirUsuario("julio_bdd_dinamico@teste.com", "Julio Cesar Dinamico");
     sharedState.currentUserId = user.id;
     await DBUtils.limparHistorico(sharedState.currentUserId);
-    config = { 
-        headers: { 
-            'x-test-user-id': sharedState.currentUserId 
-        } 
-    };
+    config = { headers: { 'x-test-user-id': sharedState.currentUserId } };
     response = undefined;
     serviceResult = undefined;
 

@@ -127,6 +127,7 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
 
   return (
     <div className="home-page">
+      {/* HEADER COMPONENTIZADO RECEBENDO AS AÇÕES DA PÁGINA */}
       <Header 
         activePage="home" 
         onGoToHome={onGoToHome}

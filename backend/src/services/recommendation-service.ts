@@ -2,12 +2,21 @@ import { PrismaClient } from '../generated/prisma';
 
 const prisma = new PrismaClient();
 
+// CONSTANTES ADICIONADAS
+const DIAS_HISTORICO_RECENTE = 7;
+const MINIMO_FILMES_PARA_RECOMENDAR = 3;
+const LIMITE_FILMES= 10;
+
 export class RecommendationService {
   
   // LÓGICA PARA A ROTA /recommendations/
   async getAllRecommendations(userId: string) {
     const ultimoRegistro = await prisma.history.findFirst({
-      where: { userId: userId },
+      where: { 
+        userId: userId,
+        is_completed: true, 
+        is_hidden: false
+       },
       orderBy: { watchedAt: 'desc' },
     });
 
@@ -40,42 +49,31 @@ export class RecommendationService {
 
   // LÓGICA PARA A ROTA /recommendations/trending
   async getTrendingMovies() {
-    const filmesPopulares = await prisma.movie.findMany({
-      where: { 
-        isPopular: true,
-        isDeleted:{not:true} 
-      },
-      take: 10,
-    });
+    const filmesPopulares = await this.fetchPopularMovies();
 
     return {
       sectionTitle: "Lançamentos e Populares",
-      movies: filmesPopulares,
+      movies: filmesPopulares
     };
   }
 
   // LÓGICA PARA A ROTA /recommendations/genres/:userId
   async getGenreRecommendations(userId: string) {
-    const seteDiasAtras = new Date();
-    seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+    const dataLimite = this.calcularDataLimite(DIAS_HISTORICO_RECENTE);
 
     const historicoRecente = await prisma.history.findMany({
       where: {
         userId: userId,
-        watchedAt: { gte: seteDiasAtras }
+        watchedAt: { gte: dataLimite },
+        is_completed: true,
+        is_hidden: false
       },
       include: { movie: true }
     });
 
     // Se não tem histórico recente, sugere os lançamentos e populares
     if (historicoRecente.length === 0) {
-      const filmesPopulares = await prisma.movie.findMany({ 
-        where: { 
-          isPopular: true,
-          isDeleted:{not:true} 
-        }, 
-        take: 10 
-      });
+      const filmesPopulares = await this.fetchPopularMovies();
       return {
         sectionTitle: "Lançamentos e Populares",
         movies: filmesPopulares,
@@ -83,31 +81,13 @@ export class RecommendationService {
       };
     }
 
-    const contagemGeneros: Record<string, number> = {};
-    const filmesContados = new Set<string>();
-
-    historicoRecente.forEach(registro => {
-      if (!filmesContados.has(registro.movieId)) {
-        filmesContados.add(registro.movieId);
-        const genero = registro.movie.genres;
-        contagemGeneros[genero] = (contagemGeneros[genero] || 0) + 1;
-      }
-    });
-
-    let generoFavorito = "";
-    let maiorContagem = 0;
-    for (const [genero, quantidade] of Object.entries(contagemGeneros)) {
-      if (quantidade > maiorContagem) {
-        maiorContagem = quantidade;
-        generoFavorito = genero;
-      }
-    }
+    const { generoFavorito, maiorContagem } = this.identificarGeneroFavorito(historicoRecente);
 
     // Regra dos 3 filmes mínimos
-    if (maiorContagem < 3) {
+    if (maiorContagem < MINIMO_FILMES_PARA_RECOMENDAR) {
       const todosOsFilmes = await prisma.movie.findMany({ 
         where: { isDeleted:{not:true}},
-        take: 10 // Pega os 10 primeiros como sugestão
+        take: LIMITE_FILMES
       }); 
       return {
         message: "Assista mais conteúdos para melhorar suas recomendações",
@@ -122,7 +102,7 @@ export class RecommendationService {
         id: { notIn: idsFilmesAssistidos },
         isDeleted:{not:true}
       },
-      take: 5
+      take: LIMITE_FILMES
     });
 
     return {
@@ -140,13 +120,7 @@ export class RecommendationService {
 
     // Se o filme sumiu ou o ID é inválido, aplica o plano B de retornar filmes populares
     if (!filmeAtual) {
-    const filmesPopulares = await prisma.movie.findMany({ 
-      where: { 
-        isPopular: true,
-        isDeleted:{not:true},
-      },
-      take: 10
-    });
+    const filmesPopulares = await this.fetchPopularMovies();
     
     return {
       sectionTitle: "Você também pode gostar", // Um título genérico seguro
@@ -163,13 +137,53 @@ export class RecommendationService {
         },
         isDeleted:{not:true}
       },
-      take: 10 // Limita a barra lateral em até 5 recomendações
+      take: LIMITE_FILMES
     });
 
     return {
       sectionTitle: `Porque você assistiu ${filmeAtual.title}`,
       movies: filmesSimilares
     };
+  }
+
+  private async fetchPopularMovies() {
+    return await prisma.movie.findMany({
+      where: { 
+        isPopular: true,
+        isDeleted: { not: true } 
+      },
+      take: LIMITE_FILMES
+    });
+  }
+
+  private identificarGeneroFavorito(historico: any[]) {
+    const contagemGeneros: Record<string, number> = {};
+    const filmesContados = new Set<string>();
+
+    historico.forEach(registro => {
+      if (!filmesContados.has(registro.movieId)) {
+        filmesContados.add(registro.movieId);
+        const genero = registro.movie.genres;
+        contagemGeneros[genero] = (contagemGeneros[genero] || 0) + 1;
+      }
+    });
+
+    let generoFavorito = "";
+    let maiorContagem = 0;
+    for (const [genero, quantidade] of Object.entries(contagemGeneros)) {
+      if (quantidade > maiorContagem) {
+        maiorContagem = quantidade;
+        generoFavorito = genero;
+      }
+    }
+
+    return { generoFavorito, maiorContagem };
+  }
+
+  private calcularDataLimite(dias: number): Date {
+    const data = new Date();
+    data.setDate(data.getDate() - dias);
+    return data;
   }
 
 }

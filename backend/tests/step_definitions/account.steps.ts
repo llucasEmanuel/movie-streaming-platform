@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Given, When, Then } from '@cucumber/cucumber';
 import assert from 'assert';
 import axios from 'axios';
-import prisma from '../../src/database/prisma';
+import { prisma }from '../../src/database/prisma';
 
 const api = axios.create({
     baseURL: 'http://localhost:3000',
@@ -65,10 +65,6 @@ When('altera o seu e-mail para {string}', async (newEmail: string) => {
 });
 
 When('salva as alterações', () => {
-});
-
-Then('o sistema exibe a mensagem {string}', (message: string) => {
-  assert.strictEqual(response.data.message, message);
 });
 
 Then('exibe a mensagem {string}', (message: string) => {
