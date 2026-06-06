@@ -12,6 +12,7 @@ model Movie {
   id        String    @id @default(uuid())
   title     String
   file_name String?
+  img_url   String?
   synopsis  String?
   genres    String    // Ex: "Ação", "Terror", "Comédia", "Documentário"
   isPopular Boolean   @default(false) // Fundamental para usuário novo ou sem histórico

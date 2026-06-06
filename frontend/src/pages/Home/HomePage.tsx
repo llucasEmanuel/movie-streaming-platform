@@ -14,9 +14,10 @@ interface HomePageProps {
   onGoToPlaylists: () => void;
   onGoToHome?: () => void;
   onGoToHistory: () => void;
+  onSelectMovie: (movie: Movie) => void;
 }
 
-export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory }: HomePageProps) {
+export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, onSelectMovie }: HomePageProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -162,6 +163,7 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory }:
               key={movie.id}
               movie={movie}
               onAddToPlaylist={openAddMovieToPlaylistModal}
+              onSelectMovie={onSelectMovie}
             />
           ))}
         </div>

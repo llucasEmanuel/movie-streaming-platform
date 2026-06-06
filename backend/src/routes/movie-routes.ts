@@ -21,7 +21,6 @@ router.delete("/movies/:id", checkAuthToken, checkAdmin, deleteMovie);
 // Rotas de busca e visualização continuam públicas
 router.get("/movies", getMovies);
 
-router.get("/movies/:moviesID", movieController.show)
+router.get("/movies/:moviesID", movieController.show);
 router.get("/movies/:moviesID/video", movieController.streamVideo);
-
 router.get("/movies/:moviesID/download", movieController.downloadMovie);

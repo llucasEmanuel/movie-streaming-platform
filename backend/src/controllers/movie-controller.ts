@@ -141,17 +141,24 @@ export class MovieController {
       // Define o nome do arquivo para o usuário final
       const fileName = `${movie.title.replace(/\s+/g, '_')}.mp4`;
 
-      res.writeHead(200, {
+      const headers: Record<string, string> = {
         'Content-Type': 'video/mp4',
         'Content-Disposition': `attachment; filename="${fileName}"`,
-        'Content-Length': response.headers.get('content-length') || '',
-      });
+      };
 
-      if (response.body) {
-        // Usando o helper do Node para maior performance
-        const { Readable } = await import('node:stream');
-        Readable.fromWeb(response.body as any).pipe(res);
+      const contentLength = response.headers.get('content-length');
+      if (contentLength) {
+        headers['Content-Length'] = contentLength;
       }
+
+      res.writeHead(200, headers);
+
+      if (!response.body) {
+        return res.status(500).json({ message: 'Resposta de stream inválida' });
+      }
+
+      const { Readable } = await import('node:stream');
+      Readable.fromWeb(response.body as any).pipe(res);
 
     } catch (error: any) {
       console.error("Download Error:", error);

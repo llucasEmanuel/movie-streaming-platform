@@ -24,6 +24,7 @@ export class MovieService {
     return {
       id: movie.id,
       title: movie.title || "No title",
+      img_url: movie.img_url || null,
       synopsis: movie.synopsis || "N/A",
       genres: movie.genres || "N/A",
       duration: movie.duration || "N/A",
