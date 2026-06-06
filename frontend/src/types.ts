@@ -1,7 +1,7 @@
 export interface Movie {
   id: string;
   title: string;
-  file_name?: string;
+  url_movie?: string;
   img_url?: string;
   synopsis?: string;
   genres: string;
@@ -47,4 +47,11 @@ export interface History {
   userId: string;
   movieId: string;
   watchedAt: string;
+}
+
+export type PageMessageType = "success" | "error" | "info";
+
+export interface PageMessage {
+  type: PageMessageType;
+  text: string;
 }

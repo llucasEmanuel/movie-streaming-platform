@@ -69,6 +69,21 @@ And o usuário "Victoria" continua possuindo a playlist "Maratonar nas férias"
 And o usuário "Victoria" continua possuindo a playlist "Maratonar no feriadão"
 And o sistema informa que já existe uma playlist com esse nome para o usuário "Victoria"
 
+Scenario: Visualizar filmes em uma playlist
+
+Given existe o usuário "Victoria" autenticado
+And o usuário "Victoria" possui a playlist "Filmes clássicos"
+And a playlist "Filmes clássicos" contém os filmes "E o vento levou" e "A felicidade não se compra"
+When o usuário "Victória" entra na página "Filmes clássicos"
+Then o sistema exibe os filmes "E o vento levou" e "A felicidade não se compra"
+
+Scenario: Visualizar playlist quando o usuário não possui filmes nela
+Given existe o usuário "Victoria" autenticado
+And o usuário "Victoria" possui a playlist "Filmes clássicos"
+And a playlist "Filmes clássicos" não possui filmes adicionados
+When o usuário "Victória" entra na página "Filmes clássicos"
+Then o sistema retorna uma lista vazia 
+
 Scenario: Adicionar filme a uma playlist
 
 Given existe o usuário "Victoria" autenticado

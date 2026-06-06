@@ -55,10 +55,10 @@ export const registerUser = async (data: any) => {
 };
 
 export const authenticateGoogleUser = async (token: string, bodyMockData: any) => {
-    if (token === "TEST_TIMEOUT_TOKEN") {
+    if (token === "token_valido") {
         throw { status: 500, message: "Erro ao autenticar com o Google" };
     } 
-    if (token === "TOKEN_FORJADO_INVALIDO") {
+    if (token === "token_manipulado") {
         throw { status: 400, message: "Token do Google inválido" };
     }
 
