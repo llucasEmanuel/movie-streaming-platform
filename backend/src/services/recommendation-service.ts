@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 export class RecommendationService {
-  
+
   // LÓGICA PARA A ROTA /recommendations/
   async getAllRecommendations(userId: string) {
     const ultimoRegistro = await prisma.history.findFirst({
@@ -20,7 +20,7 @@ export class RecommendationService {
 
     // 1. Sempre adiciona a seção de gêneros (personalizada ou fallback)
     if (generosResult) secoes.push(generosResult);
-    
+
     // 2.SÓ ADICIONA A SEÇÃO DE SIMILARES SE O USUÁRIO REALMENTE TIVER HISTÓRICO!
     if (ultimoRegistro) {
       const similarResult = await this.getSimilarMovies(ultimoRegistro.movieId);
@@ -29,7 +29,7 @@ export class RecommendationService {
         secoes.push(similarResult);
       }
     }
-    
+
     // 3. Sempre adiciona os populares no final
     if (trendingResult && generosResult?.sectionTitle !== "Lançamentos e Populares"){
       secoes.push(trendingResult);
