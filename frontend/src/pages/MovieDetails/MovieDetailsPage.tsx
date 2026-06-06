@@ -18,10 +18,10 @@ export function MovieDetailsPage({
   const [isDownloading, setIsDownloading] = useState(false);
 
   async function handleWatch() {
-    try {
-      setIsWatching(true);
+    setIsWatching(true);
 
-      // Registrar no histórico
+    try {
+      // Registrar no histórico sem bloquear a reprodução.
       const response = await fetch("http://localhost:3000/history", {
         method: "POST",
         headers: {
@@ -34,19 +34,10 @@ export function MovieDetailsPage({
       });
 
       if (!response.ok) {
-        throw new Error("Erro ao registrar visualização");
+        console.warn("Falha ao registrar visualização", response.status);
       }
-
-      // Simulação de reprodução do vídeo
-      alert(`▶️ Reproduzindo: ${movie.title}`);
     } catch (error) {
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Erro ao iniciar reprodução"
-      );
-    } finally {
-      setIsWatching(false);
+      console.warn("Erro ao registrar visualização", error);
     }
   }
 
@@ -66,77 +57,99 @@ export function MovieDetailsPage({
     }
   }
 
+  function handleBack() {
+    if (isWatching) {
+      setIsWatching(false);
+      return;
+    }
+
+    onGoToHome();
+  }
+
   return (
     <div className="movie-details-page">
-      <button className="details-back-button" onClick={onGoToHome}>
+      <button className="details-back-button" onClick={handleBack}>
         ← Voltar
       </button>
 
-      <div className="details-container">
-        <div className="details-poster">
-          {movie.url_movie ? (
-            <img src={movie.url_movie} alt={movie.title} />
-          ) : (
-            <div className="details-poster-placeholder">🎬</div>
-          )}
+      {isWatching ? (
+        <div className="details-video-player">
+          <video
+            controls
+            autoPlay
+            className="details-video"
+            src={movieService.getVideoStreamUrl(movie.id)}
+          >
+            Seu navegador não suporta vídeo HTML5.
+          </video>
         </div>
-
-        <div className="details-info">
-          <h1>{movie.title}</h1>
-
-          <div className="details-meta">
-            {movie.duration && (
-              <span className="details-meta-item">
-                ⏱️ {movie.duration} min
-              </span>
-            )}
-
-            {movie.director && (
-              <span className="details-meta-item">🎬 {movie.director}</span>
-            )}
-
-            {movie.genres && (
-              <span className="details-meta-item">
-                {typeof movie.genres === "string"
-                  ? movie.genres
-                  : movie.genres.join(", ")}
-              </span>
+      ) : (
+        <div className="details-container">
+          <div className="details-poster">
+            {movie.url_movie ? (
+              <img src={movie.url_movie} alt={movie.title} />
+            ) : (
+              <div className="details-poster-placeholder">🎬</div>
             )}
           </div>
 
-          {movie.synopsis && (
-            <div className="details-synopsis">
-              <h2>Sinopse</h2>
-              <p>{movie.synopsis}</p>
+          <div className="details-info">
+            <h1>{movie.title}</h1>
+
+            <div className="details-meta">
+              {movie.duration && (
+                <span className="details-meta-item">
+                  ⏱️ {movie.duration} min
+                </span>
+              )}
+
+              {movie.director && (
+                <span className="details-meta-item">🎬 {movie.director}</span>
+              )}
+
+              {movie.genres && (
+                <span className="details-meta-item">
+                  {typeof movie.genres === "string"
+                    ? movie.genres
+                    : movie.genres.join(", ")}
+                </span>
+              )}
             </div>
-          )}
 
-          {movie.cast && (
-            <div className="details-cast">
-              <h2>Elenco</h2>
-              <p>{movie.cast}</p>
+            {movie.synopsis && (
+              <div className="details-synopsis">
+                <h2>Sinopse</h2>
+                <p>{movie.synopsis}</p>
+              </div>
+            )}
+
+            {movie.cast && (
+              <div className="details-cast">
+                <h2>Elenco</h2>
+                <p>{movie.cast}</p>
+              </div>
+            )}
+
+            <div className="details-actions">
+              <button
+                className="details-button details-button-watch"
+                onClick={handleWatch}
+                disabled={isWatching}
+              >
+                {isWatching ? "⏳ Carregando..." : "▶️ Assistir Agora"}
+              </button>
+
+              <button
+                className="details-button details-button-download"
+                onClick={handleDownload}
+                disabled={isDownloading}
+              >
+                {isDownloading ? "📥 Iniciando download..." : "📥 Fazer Download"}
+              </button>
             </div>
-          )}
-
-          <div className="details-actions">
-            <button
-              className="details-button details-button-watch"
-              onClick={handleWatch}
-              disabled={isWatching}
-            >
-              {isWatching ? "⏳ Carregando..." : "▶️ Assistir Agora"}
-            </button>
-
-            <button
-              className="details-button details-button-download"
-              onClick={handleDownload}
-              disabled={isDownloading}
-            >
-              {isDownloading ? "📥 Iniciando download..." : "📥 Fazer Download"}
-            </button>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
