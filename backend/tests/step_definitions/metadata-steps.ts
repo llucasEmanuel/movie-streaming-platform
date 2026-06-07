@@ -20,6 +20,8 @@ Before(function () {
   sharedState.responseData = null;
 });
 
+/* ===== Cenários de Serviço ===== */
+
 // --- CENÁRIO: VALIDAR EXIBIÇÃO DE METADADOS ---
 
 Given('o filme {string} com id {string} está cadastrado no sistema', function (movieTitle, movieId) {
@@ -199,3 +201,5 @@ Then('eu vejo a mensagem de erro {string}', function (expectedMessage) {
   assert.strictEqual(sharedState.responseData.message, expectedMessage);
   mock.restoreAll();
 });
+
+/* ===== Cenários de Serviço ===== */
