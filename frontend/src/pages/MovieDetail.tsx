@@ -165,6 +165,11 @@ export function MovieDetail() {
                     <p data-testid="movie-duration">{movie.duration || 'Não informado'}</p>
                   </div>
 
+                  <div className="info-item">
+                    <label>Ano</label>
+                    <p data-testid="movie-year">{movie.year || 'Não informado'}</p>
+                  </div>
+
                   {/* 9. ADICIONADO: data-testid="movie-director" */}
                   <div className="info-item">
                     <label>Diretor</label>

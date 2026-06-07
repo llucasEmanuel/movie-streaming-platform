@@ -22,6 +22,7 @@ export interface MovieMetadata {
   duration: string;
   director: string;
   cast: string;
+  year: string;
 }
 
 export interface User {

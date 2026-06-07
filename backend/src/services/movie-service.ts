@@ -29,7 +29,8 @@ export class MovieService {
       genres: movie.genres || "N/A",
       duration: movie.duration || "N/A",
       director: movie.director || "N/A",
-      cast: movie.cast || "N/A"
+      cast: movie.cast || "N/A",
+      year: movie.year || "N/A"
     };
   }
   async getRawMovieData(id: string) {
