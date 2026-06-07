@@ -98,7 +98,7 @@ export class MovieController {
         timeoutPromise
       ]);
 
-      return res.json(metadata);
+      return res.status(200).json(metadata);
 
     } catch (error: any) {
       // Se o timeout ganhou a corrida, capturamos o erro aqui
