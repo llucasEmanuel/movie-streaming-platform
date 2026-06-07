@@ -107,7 +107,7 @@ export function MovieDetail() {
 
       {isPlaying ? (
         <div className="video-player-container">
-          <button onClick={handleCloseVideo} className="btn-close-video">
+          <button onClick={handleCloseVideo} className="btn-close-video" data-testid="btn-close-video">
             ✕ Fechar
           </button>
           <video

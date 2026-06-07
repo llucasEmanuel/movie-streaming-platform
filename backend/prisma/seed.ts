@@ -124,6 +124,21 @@ async function main() {
       isDeleted: false
     }
   });
+
+  await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000004",
+      title: "A Noite dos Mortos Vivos",
+      synopsis: "Zumbis atacam um grupo de sobreviventes refugiados em uma fazenda.",
+      genres: "Terror",
+      duration: "96 min",
+      year: "1968",
+      director: "George A. Romero",
+      cast: "Duane Jones, Judith O'Dea, Karl Hardman",
+      isPopular: true,
+      isDeleted: false
+    }
+  });
   // ─────────────────────────────────────────────────────────────────────────────
 
   console.log('⏳ Simulando histórico de visualização (Regra dos 7 dias)...');

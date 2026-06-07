@@ -32,6 +32,6 @@ Feature: MoviePlayerGUI
     Scenario: Sair do player durante a reprodução
         Given eu acesso o sistema como "usuário"
         And o filme "Metropolis" está sendo reproduzido no player
-        When eu seleciono a opção "Sair"
+        When eu seleciono a opção "Voltar"
         Then a reprodução é interrompida
         And eu retorno para a página "Página do filme" do filme "Metropolis"
