@@ -15,6 +15,8 @@ class HistoryRepository {
                 movie: {
                     select: {
                         title: true,
+                        duration: true,
+                        img_url: true
                     },
                 },
             },
