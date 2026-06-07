@@ -46,4 +46,3 @@ Scenario: Cadastro mal sucedido via formulário devido a senha inválida por tam
     And eu preencho o campo "nome" com "João"
     Then deve aparecer uma mensagem de aviso "tamanho de senha inválida"
     And eu devo permanecer na página "Cadastro"
-

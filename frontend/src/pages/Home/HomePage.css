@@ -87,11 +87,12 @@
 
 .home-content {
   padding: 36px 32px 56px;
+  margin: 0 32px 0;
 }
 
 .home-hero {
   max-width: 1180px;
-  margin: 0 auto 28px;
+  margin: 0 0 28px;
   text-align: left;
 }
 
@@ -495,4 +496,72 @@
     justify-content: space-between;
     margin-top: 12px;
   }
+}
+
+.keep-watching-section,
+.catalog-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.keep-watching-section {
+  margin-top: 12px;
+  margin-bottom: 40px; 
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.section-title-wrapper h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.section-title-line {
+  flex: 1;
+  height: 1px;
+  background-color: #2d2d2d; 
+}
+
+.keep-watching-scrollview {
+  display: flex;
+  gap: 20px; 
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 14px; 
+  scroll-behavior: smooth;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.keep-watching-scroll-item {
+  flex: 0 0 280px; 
+}
+
+.keep-watching-scrollview::-webkit-scrollbar {
+  height: 6px;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 10px;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-thumb:hover {
+  background: #fcc147;
 }

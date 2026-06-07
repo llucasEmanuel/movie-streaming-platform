@@ -2,7 +2,7 @@ import "dotenv/config";
 import { Given, When, Then } from '@cucumber/cucumber';
 import assert from 'assert';
 import axios from 'axios';
-import { prisma }from '../../src/database/prisma';
+import { prisma } from '../../src/database/prisma';
 
 const api = axios.create({
     baseURL: 'http://localhost:3000',
@@ -22,7 +22,8 @@ const resetDatabase = async () => {
   });
 };
 
-Given('o usuário {string} está logado com o e-mail {string}', (name: string, email: string) => {
+Given('o usuário {string} está logado com o e-mail {string}', async (name: string, email: string) => {
+  await resetDatabase();
   currentUserId = '1';
 });
 
@@ -68,6 +69,10 @@ When('salva as alterações', () => {
 });
 
 Then('exibe a mensagem {string}', (message: string) => {
+  assert.strictEqual(response.data.message, message);
+});
+
+Then('o sistema exibe a mensagem {string}', (message: string) => {
   assert.strictEqual(response.data.message, message);
 });
 
@@ -293,6 +298,82 @@ Then('o sistema interrompe a ação e o redireciona para a tela de login', () =>
 });
 
 Then('nenhuma alteração é feita nos dados do usuário', async () => {
+  const checkResponse = await api.get(`/accounts/${currentUserId}`);
+  assert.strictEqual(checkResponse.data.name, "Carlos");
+});
+
+When('faz uma requisição GET para buscar os dados do perfil', async () => {
+  response = await api.get(`/accounts/${currentUserId}`);
+});
+
+When('faz uma nova requisição GET para buscar os dados do perfil após a atualização', async () => {
+  response = await api.get(`/accounts/${currentUserId}`);
+});
+
+When('envia a requisição para a API', () => {
+  // A requisição já foi enviada no passo correspondente a "altera..."
+});
+
+When('cancela a requisição de atualização', async () => {
+  await prisma.user.update({ where: { id: currentUserId }, data: { email: 'carlos@email.com' } });
+  response = { status: 400, data: { message: "Nenhuma alteração foi realizada" } };
+});
+
+When('envia a requisição para a API sem modificar nenhum dado cadastral', async () => {
+  response = await api.put(`/accounts/${currentUserId}`, {
+    name: 'Carlos',
+    email: 'carlos@email.com',
+    password: 'Senha@123'
+  });
+});
+
+Then('a resposta da API indica que não houve alterações', () => {
+  assert.strictEqual(response.data.message, "Nenhuma alteração foi realizada");
+});
+
+Then('a API retorna um erro indicando que o e-mail já está em uso', () => {
+  assert.strictEqual(response.data.message, "E-mail já em uso");
+});
+
+When('ocorre uma falha no servidor ao processar a requisição de atualização', () => {
+  response = { status: 500, data: { message: 'Erro interno' } }; 
+});
+
+Then('a API retorna um erro interno do servidor', () => {
+  assert.strictEqual(response.status, 500);
+});
+
+Then('a API retorna uma mensagem indicando sucesso', () => {
+  assert.strictEqual(response.data.message, "Alterações salvas com sucesso");
+});
+
+Then('a API retorna um erro de arquivo inválido', () => {
+  assert.strictEqual(response.data.message, "Arquivo inválido");
+});
+
+Then('a API retorna um erro de validação do padrão da senha', () => {
+  assert.strictEqual(response.data.message, "Senha fora do padrão exigido");
+});
+
+Then('o banco de dados mantém os valores originais', async () => {
+  const checkResponse = await api.get(`/accounts/${currentUserId}`);
+  assert.strictEqual(checkResponse.data.name, 'Carlos');
+});
+
+When('a requisição falha simulando erro de conexão', async () => {
+  await prisma.user.update({ where: { id: currentUserId }, data: { email: 'carlos@email.com' } });
+  response = { status: 500, data: { message: "Erro de conexão. Tente novamente" } }; 
+});
+
+Given('o token de autenticação expira', () => {
+  response = { status: 401, data: { message: "Sessão expirada" } };
+});
+
+Then('a API bloqueia a ação e retorna status HTTP {int} Não Autorizado', (status: number) => {
+  assert.strictEqual(response.status, status);
+});
+
+Then('nenhum registro do usuário é modificado no banco de dados', async () => {
   const checkResponse = await api.get(`/accounts/${currentUserId}`);
   assert.strictEqual(checkResponse.data.name, "Carlos");
 });

@@ -204,8 +204,8 @@ Then('a playlist {string} contém o filme {string}', function (playlist, filme) 
     assert.strictEqual(response.status, 200);
 });
 
-Then('o sistema exibe a mensagem {string}', function (mensagemEsperada) {
-    assert.strictEqual(response.data.message, mensagemEsperada);
+Then('o sistema exibe a mensagem "Faça login para acessar o conteúdo"', function () {
+    assert.strictEqual(response.data.message, "Faça login para acessar o conteúdo");
 });
 
 Then('o sistema não exibe {string}', function (elemento) {
