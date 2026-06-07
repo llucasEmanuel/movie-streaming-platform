@@ -3,7 +3,7 @@ import "./KeepWatchingCard.css";
 
 interface KeepWatchingCardProps {
   title: string;
-  thumbnailUrl: string;
+  thumbnailUrl?: string | null;
   progressPercentage?: number; // Ex: 45 para 45%
   onClick?: () => void;
 }
@@ -19,7 +19,11 @@ export function KeepWatchingCard({ title, thumbnailUrl, progressPercentage, onCl
       onClick={onClick}
     >
       {/* Imagem de Capa do Filme */}
-      <img src={thumbnailUrl} alt={title} className="keep-watching-thumbnail" />
+      {thumbnailUrl ? (
+        <img src={thumbnailUrl} alt={title} className="keep-watching-thumbnail" />
+      ) : (
+        <div className="keep-watching-thumbnail keep-watching-thumbnail--fallback" aria-hidden="true" />
+      )}
 
       {/* Overlay com transparência no Hover */}
       <div className={`keep-watching-overlay ${isHovered ? "visible" : ""}`}>

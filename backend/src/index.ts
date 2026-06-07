@@ -6,6 +6,7 @@ import userRoutes from "./routes/routes";
 import { router as movieRoutes } from "./routes/movie-routes";
 import { router as playlistRouter } from "./routes/playlist-route";
 import { router as accountRouter } from "./routes/account-routes";
+import historyRoutes from "./routes/history-routes";
 
 const app = express();
 app.use(cors())
@@ -26,6 +27,10 @@ app.use("/", movieRoutes);
 
 // Registrando as rotas de playlists
 app.use("/", playlistRouter);
+
+// Registrando as rotas de histórico
+app.use("/history", historyRoutes);
+app.use("/api/history", historyRoutes);
 
 // Rotas quando a URL começar com /recommendations
 app.use("/recommendations", recommendationRoutes);

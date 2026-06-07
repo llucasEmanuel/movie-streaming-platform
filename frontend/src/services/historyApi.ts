@@ -17,6 +17,18 @@ export interface HistoryApiResponse {
   data: HistoryApiRecord[];
 }
 
+export interface UnfinishedMovieApiRecord {
+  movieId: string;
+  title: string;
+  image?: string | null;
+  progress_percentage: number;
+}
+
+export interface UnfinishedMovieApiResponse {
+  message?: string;
+  data: UnfinishedMovieApiRecord[];
+}
+
 async function parseResponse<T>(response: Response): Promise<T> {
   const data = await response.json();
 
@@ -62,4 +74,11 @@ export async function hideAllHistory(userId: string) {
   });
 
   return parseResponse<{ message: string }>(response);
+}
+
+export async function getUnfinishedMoviesByUserId(userId: string): Promise<UnfinishedMovieApiRecord[]> {
+  const response = await fetch(`${API_URL}/history/${userId}/unfinished`);
+  const data = await parseResponse<UnfinishedMovieApiResponse>(response);
+
+  return data.data ?? [];
 }

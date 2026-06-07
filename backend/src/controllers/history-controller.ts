@@ -62,6 +62,24 @@ class HistoryController {
             return res.status(500).json({ error: "Erro interno no servidor." });
         }
     }
+
+    async getUnfinishedMovies(req: Request, res: Response) {
+        try {
+            const id_user = req.params.id_user || req.body.id_user;
+            const unfinishedMovies = await historyService.showUnfinishedMovies(id_user);
+
+            if (unfinishedMovies.length === 0) {
+                return res.status(200).json({
+                    message: "Nenhum filme em andamento encontrado.",
+                    data: []
+                });
+            }
+
+            return res.status(200).json({ data: unfinishedMovies });
+        } catch (error: any) {
+            return res.status(500).json({ error: "Erro interno no servidor." });
+        }
+    }
 }
 
 export default new HistoryController();

@@ -23,6 +23,12 @@
   display: block;
 }
 
+.keep-watching-thumbnail--fallback {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent),
+    #2a2a2a;
+}
+
 /* Transparência preta no hover */
 .keep-watching-overlay {
   position: absolute;
