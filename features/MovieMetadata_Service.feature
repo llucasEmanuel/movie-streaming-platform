@@ -34,17 +34,18 @@ Feature: MovieMetadataService
         Given o filme "O Gabinete do Dr. Caligari" com id "2" está cadastrado no sistema
         And o filme possui os seguintes metadados incompletos:
             | campo          | valor                                      |
-            | titulo         | O Gabinete do Dr. Caligari                 |
-            | descricao      | Um filme de horror expressionista clássico |
-            | duracao        | 76                                         |
-            | genero         |                                            |
+            | título         | O Gabinete do Dr. Caligari                 |
+            | sinopse        | Um filme de horror expressionista clássico |
+            | duração        | 76                                         |
+            | gêneros        |                                            |
             | ano            | 1920                                       |
             | diretor        |                                            |
+            | elenco         |                                            |
         When eu requisito os metadados do filme com id "2"
         Then os metadados são retornados com sucesso
-        And os dados contém "titulo" "O Gabinete do Dr. Caligari"
-        And os dados contém "descricao" "Um filme de horror expressionista clássico"
-        And os dados contém "duracao" "76 min"
+        And os dados contém "título" "O Gabinete do Dr. Caligari"
+        And os dados contém "sinopse" "Um filme de horror expressionista clássico"
+        And os dados contém "duração" "76 min"
         And os dados contém "ano" "1920"
         And os campos vazios retornam "N/A"
 
