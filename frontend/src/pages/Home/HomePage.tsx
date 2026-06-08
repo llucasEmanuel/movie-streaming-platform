@@ -3,6 +3,7 @@ import { MovieCard } from "../../components/MovieCard";
 import { Header } from "../../components/Header"; 
 import { KeepWatchingCard } from "../../components/KeepWatchingCard"; // Certifique-se de que o card está importado
 import { getMovies } from "../../services/movieApi";
+import { movieService } from "../../services/movieService";
 import { getUnfinishedMoviesByUserId } from "../../services/historyApi";
 import {
   addMovieToPlaylist,
@@ -123,6 +124,35 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
     }
   }
 
+  async function handleResumeMovie(movieId: string, resumePosition: number) {
+    try {
+      // Busca os metadados completos do filme antes de navegar
+      const metadata = await movieService.getMovieDetails(movieId);
+
+      const movieToOpen: Movie = {
+        id: metadata.id,
+        title: metadata.title,
+        url_movie: undefined,
+        img_url: metadata.img_url,
+        synopsis: metadata.synopsis,
+        genres: metadata.genres,
+        isPopular: false,
+        duration: metadata.duration,
+        director: metadata.director,
+        cast: metadata.cast,
+        createdAt: new Date().toISOString(),
+        year: metadata.year,
+        resumePosition,
+      };
+
+      onSelectMovie(movieToOpen);
+    } catch (err) {
+      console.error("Erro ao carregar metadados do filme para retomar:", err);
+      // Fallback: navegar apenas com id e título mínimo
+      onSelectMovie({ id: movieId, title: "Filme", genres: "", isPopular: false, createdAt: new Date().toISOString(), } as Movie);
+    }
+  }
+
   function closePlaylistModal() {
     setSelectedMovie(null);
     setAvailablePlaylists([]);
@@ -208,13 +238,7 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
                     title={item.title}
                     thumbnailUrl={item.image ?? undefined}
                     progressPercentage={item.progress_percentage}
-                    onClick={() => {
-                      onSelectMovie({
-                        id: item.movieId,
-                        title: item.title,
-                        resumePosition: item.last_position,
-                      } as Movie);
-                    }}
+                    onClick={() => handleResumeMovie(item.movieId, item.last_position)}
                   />
                 </div>
               ))}
