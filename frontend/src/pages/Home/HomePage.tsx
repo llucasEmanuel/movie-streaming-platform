@@ -28,6 +28,7 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
     title: string;
     image?: string | null;
     progress_percentage: number;
+    last_position: number; 
   }[]>([]);
   const [isLoadingKeepWatching, setIsLoadingKeepWatching] = useState(false);
 
@@ -207,7 +208,9 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
                     title={item.title}
                     thumbnailUrl={item.image ?? undefined}
                     progressPercentage={item.progress_percentage}
-                    onClick={() => console.log(`Clicou no filme: ${item.title}`)}
+                    onClick={() => {
+                      onSelectMovie({ id: item.movieId, title: item.title } as Movie);
+                    }}
                   />
                 </div>
               ))}

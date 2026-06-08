@@ -86,6 +86,7 @@ class HistoryService {
         title: record.movie.title,
         image: record.movie.img_url,
         progress_percentage: percentage,
+        last_position: record.last_position,
       });
     }
   }

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { movieService, ApiError } from '../services/movieService';
-import { updateHistoryProgress } from '../services/historyApi';
+import { updateHistoryProgress, getUnfinishedMoviesByUserId } from '../services/historyApi';
 import type { MovieMetadata } from '../types';
 import './MovieDetail.css';
+
 
 interface MovieDetailProps {
   userId?: string;
@@ -35,6 +36,7 @@ export function MovieDetail({ userId }: MovieDetailProps) {
   const wasPlayingRef = useRef(false);
   const isSavingProgressRef = useRef(false);
   const resolvedUserId = resolveUserId(userId);
+  const [startPosition, setStartPosition] = useState(0);
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -68,6 +70,19 @@ export function MovieDetail({ userId }: MovieDetailProps) {
     fetchMovieDetails();
   }, [movieId]);
 
+  useEffect(() => {
+  if (resolvedUserId && movieId) {
+    getUnfinishedMoviesByUserId(resolvedUserId)
+      .then((unfinished) => {
+        const historyItem = unfinished.find((m: any) => m.movieId === movieId);
+        if (historyItem && historyItem.last_position) {
+          setStartPosition(historyItem.last_position); // Salva de onde deve recomeçar
+        }
+      })
+      .catch(console.error);
+  }
+}, [resolvedUserId, movieId]);
+
   const handlePlayVideo = () => {
     if (!movieId) return;
     wasPlayingRef.current = true;
@@ -85,8 +100,11 @@ export function MovieDetail({ userId }: MovieDetailProps) {
   };
 
   const handleCloseVideo = () => {
-    setIsPlaying(false);
-  };
+  if (videoRef.current) {
+    setPlaybackPosition(videoRef.current.currentTime);
+  }
+  setIsPlaying(false);
+};
 
   useEffect(() => {
     const shouldPersistProgress = wasPlayingRef.current && !isPlaying;
@@ -200,6 +218,12 @@ export function MovieDetail({ userId }: MovieDetailProps) {
             onTimeUpdate={handleTimeUpdate}
             onPause={handleTimeUpdate}
             onEnded={handleVideoEnded}
+            onLoadedMetadata={(e) => {
+              // Assim que o vídeo carregar as informações, pula direto para onde parou
+              if (startPosition > 0) {
+                e.currentTarget.currentTime = startPosition;
+              }
+            }}
           >
             Seu navegador não suporta vídeo HTML5
           </video>
