@@ -22,6 +22,7 @@ export interface UnfinishedMovieApiRecord {
   title: string;
   image?: string | null;
   progress_percentage: number;
+  last_position: number;
 }
 
 export interface UnfinishedMovieApiResponse {

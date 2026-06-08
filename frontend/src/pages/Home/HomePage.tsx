@@ -209,7 +209,11 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
                     thumbnailUrl={item.image ?? undefined}
                     progressPercentage={item.progress_percentage}
                     onClick={() => {
-                      onSelectMovie({ id: item.movieId, title: item.title } as Movie);
+                      onSelectMovie({
+                        id: item.movieId,
+                        title: item.title,
+                        resumePosition: item.last_position,
+                      } as Movie);
                     }}
                   />
                 </div>

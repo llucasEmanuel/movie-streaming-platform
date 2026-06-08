@@ -19,6 +19,7 @@ export function MovieDetailsPage({
   const [isDownloading, setIsDownloading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [startPosition, setStartPosition] = useState(movie.resumePosition ?? 0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const isSavingProgressRef = useRef(false);
 
@@ -91,6 +92,11 @@ export function MovieDetailsPage({
   }
 
   function handleTimeUpdate() {
+    const currentTime = videoRef.current?.currentTime ?? 0;
+
+    if (currentTime > 0) {
+      setStartPosition(Math.floor(currentTime));
+    }
   }
 
   function handleVideoEnded() {
@@ -141,6 +147,11 @@ export function MovieDetailsPage({
             onTimeUpdate={handleTimeUpdate}
             onPause={handleTimeUpdate}
             onEnded={handleVideoEnded}
+            onCanPlay={(event) => {
+              if (startPosition > 0 && event.currentTarget.currentTime < 1) {
+                event.currentTarget.currentTime = startPosition;
+              }
+            }}
             onError={() =>
               setErrorMessage(
                 "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde"
