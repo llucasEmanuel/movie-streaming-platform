@@ -45,7 +45,7 @@ Given('o email {string} possui cadastro no sistema', async function (email) {
             data: {
                 email,
                 name: "Usuário Teste",
-                password: "SenhaSegura123!" 
+                password: "SenhaSegura123!" // Conta de formulário precisa de senha
             }
         });
     }
@@ -77,9 +77,11 @@ When('eu tento realizar o cadastro com o email {string} e senha {string}', funct
 });
 
 When('eu preencho o campo {string} com {string}', async function (campo, valor) {
+    // Mapeamos os nomes do BDD para os nomes do seu Banco/Prisma
     const mapaCampos: any = { "nome": "name", "email": "email", "senha": "password" };
     userData[mapaCampos[campo] || campo] = valor;
 
+    // Só enviamos para a rota /register se chegarmos no campo nome E existir uma senha (fluxo normal)
     if (campo === "nome" && userData.password) {
         response = await api.post('/api/register', userData);
     }

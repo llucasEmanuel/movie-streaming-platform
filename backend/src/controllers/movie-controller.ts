@@ -31,6 +31,15 @@ export class MovieController {
         return res.status(404).json({ message: "Este título não está disponível para reprodução no momento" });
       }
 
+      try {
+        const parsedUrl = new URL(videoUrl);
+        if (!parsedUrl.hostname.endsWith('archive.org')) {
+          return res.status(422).json({ message: "URL de reprodução inválida" });
+        }
+      } catch {
+        return res.status(422).json({ message: "URL de reprodução inválida" });
+      }
+
       // O fetch do Node segue redirecionamentos automaticamente (follow redirects)
       const response = await fetch(videoUrl, {
         headers: {
@@ -72,8 +81,7 @@ export class MovieController {
           message: "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde" 
         });
       }
-      console.error("Streaming error:", error);
-      return res.status(404).json({ message: "Movie not found" });
+      return res.status(404).json({ message: error.message });
     }
   }
 
@@ -98,7 +106,7 @@ export class MovieController {
         timeoutPromise
       ]);
 
-      return res.json(metadata);
+      return res.status(200).json(metadata);
 
     } catch (error: any) {
       // Se o timeout ganhou a corrida, capturamos o erro aqui

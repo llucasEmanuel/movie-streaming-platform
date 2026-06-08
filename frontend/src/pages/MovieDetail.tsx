@@ -63,22 +63,28 @@ export function MovieDetail() {
     setIsPlaying(false);
   };
 
+  // 1. ADICIONADO: data-testid="loading-indicator" para o cenário de carregamento
   if (loading) {
     return (
       <div className="movie-detail">
-        <div className="loading">
+        <div className="loading" data-testid="loading-indicator">
           <p>Carregando...</p>
         </div>
       </div>
     );
   }
 
+  // 2. ADICIONADO: data-testid="error-message" e data-testid="btn-voltar" na tela de erro/não encontrado
   if (error || !movie) {
     return (
       <div className="movie-detail">
         <div className="error-container">
-          <p className="error">❌ {error || 'Filme não encontrado'}</p>
-          <button onClick={() => navigate('/')} className="btn-back">
+          <p className="error" data-testid="error-message">❌ {error || 'Filme não encontrado'}</p>
+          <button 
+            onClick={() => navigate('/')} 
+            className="btn-back"
+            data-testid="btn-voltar"
+          >
             Voltar
           </button>
         </div>
@@ -89,13 +95,19 @@ export function MovieDetail() {
   return (
     <div className="movie-detail">
       <title>CInema: Public Domain Streaming</title>
-      <button onClick={() => navigate('/')} className="btn-back">
+      
+      {/* 3. ADICIONADO: data-testid="btn-voltar" no botão principal de retorno */}
+      <button 
+        onClick={() => navigate('/')} 
+        className="btn-back"
+        data-testid="btn-voltar"
+      >
         ← Voltar
       </button>
 
       {isPlaying ? (
         <div className="video-player-container">
-          <button onClick={handleCloseVideo} className="btn-close-video">
+          <button onClick={handleCloseVideo} className="btn-close-video" data-testid="btn-close-video">
             ✕ Fechar
           </button>
           <video
@@ -116,7 +128,12 @@ export function MovieDetail() {
                 <img src={movie.img_url} alt={movie.title} className="movie-poster-detail" />
               )}
               <div className="action-buttons">
-                <button onClick={handlePlayVideo} className="btn-play">
+                {/* 4. ADICIONADO: data-testid="btn-assistir" no botão de play */}
+                <button 
+                  onClick={handlePlayVideo} 
+                  className="btn-play"
+                  data-testid="btn-assistir"
+                >
                   ▶ Assistir
                 </button>
                 <button onClick={handleDownload} className="btn-download">
@@ -126,31 +143,43 @@ export function MovieDetail() {
             </div>
 
             <div className="movie-details-column">
-              <h1>{movie.title}</h1>
+              {/* 5. ADICIONADO: data-testid="movie-title" no título principal */}
+              <h1 data-testid="movie-title">{movie.title}</h1>
+              
               <div className="movie-info">
+                {/* 6. ADICIONADO: data-testid="movie-synopsis" na sinopse */}
                 <div className="info-section">
-                  <p>{movie.synopsis || 'Sinopse não disponível'}</p>
+                  <p data-testid="movie-synopsis">{movie.synopsis || 'Sinopse não disponível'}</p>
                 </div>
 
                 <div className="info-grid">
+                  {/* 7. ADICIONADO: data-testid="movie-genres" */}
                   <div className="info-item">
                     <label>Gêneros</label>
-                    <p>{movie.genres || 'Não informado'}</p>
+                    <p data-testid="movie-genres">{movie.genres || 'Não informado'}</p>
                   </div>
 
+                  {/* 8. ADICIONADO: data-testid="movie-duration" */}
                   <div className="info-item">
                     <label>Duração</label>
-                    <p>{movie.duration || 'Não informado'}</p>
+                    <p data-testid="movie-duration">{movie.duration || 'Não informado'}</p>
                   </div>
 
+                  <div className="info-item">
+                    <label>Ano</label>
+                    <p data-testid="movie-year">{movie.year || 'Não informado'}</p>
+                  </div>
+
+                  {/* 9. ADICIONADO: data-testid="movie-director" */}
                   <div className="info-item">
                     <label>Diretor</label>
-                    <p>{movie.director || 'Não informado'}</p>
+                    <p data-testid="movie-director">{movie.director || 'Não informado'}</p>
                   </div>
 
+                  {/* 10. ADICIONADO: data-testid="movie-cast" */}
                   <div className="info-item">
                     <label>Elenco</label>
-                    <p>{movie.cast || 'Não informado'}</p>
+                    <p data-testid="movie-cast">{movie.cast || 'Não informado'}</p>
                   </div>
                 </div>
               </div>

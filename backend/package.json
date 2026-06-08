@@ -7,7 +7,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "test:login": "cucumber-js ../features/user_login_service.feature --require-module ts-node/register --require tests/step_definitions/userLogin.steps.ts",
+    "test:login": "cucumber-js --profile login",
     "test:signin": "npm run test:signup && npm run test:login",
     "test": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:cucumber",
     "test:unit": "node --import tsx --test src/**/*.spec.ts",
@@ -23,6 +23,8 @@
     "test:signupservice": "NODE_ENV=test cucumber-js ../features/userSignUp.feature --require-module ts-node/register --require tests/step_definitions/**/*.ts --tags \"@test-signup-service\"",
     "test:cucumber:implemented": "cucumber-js -p implemented",
     "test:movies": "NODE_ENV=test cucumber-js -p movies",
+    "test:metadata": "NODE_OPTIONS='--import tsx' cucumber-js --config='' ../features/MovieMetadata_Service.feature --import 'tests/step_definitions/metadata-steps.ts'",
+    "test:player": "NODE_OPTIONS='--import tsx' cucumber-js --config='' ../features/MoviePlayer_Service.feature --import 'tests/step_definitions/player-steps.ts'",
     "db:seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],

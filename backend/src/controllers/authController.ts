@@ -74,4 +74,3 @@ export const deleteMe = async (req: Request, res: Response): Promise<Response | 
         return res.status(500).json({ error: 'Erro interno no servidor ao tentar excluir conta.' });
     }
 };
-

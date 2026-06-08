@@ -74,6 +74,73 @@ async function main() {
     data: { title: "Um Lugar Silencioso", genres: "Terror", isPopular: true, isDeleted: false, synopsis: "Uma família precisa lutar para sobreviver em silêncio absoluto para não ser caçada por criaturas cegas.", duration: "90 min" }
   });
 
+  // ─── 📥 NOVAS ADIÇÕES PARA OS TESTES E2E DE METADADOS DO CUCUMBER ─────────────
+  console.log('🤖 Inserindo cenários de teste controlados para o Cucumber...');
+  
+  // 1. Metropolis (Metadados Completos)
+  await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000001", // ID amarrado ao mapeamento 'Metropolis' no front-end
+      title: "Metropolis",
+      synopsis: "Numa cidade futurística...",
+      genres: "Drama, Ficção Científica",
+      duration: "153 minutos", // Ajustado para bater com o dataTable do teste
+      year: "1927",             // Se o seu banco aceitar string/Int, garanta coerência
+      director: "Fritz Lang",
+      cast: "Brigitte Helm, Alfred Abel, Gustav Fröhlich",
+      isPopular: false,
+      isDeleted: false
+    }
+  });
+
+  // 2. The Rink (Título populado, resto N/A / Null)
+  await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000002",
+      title: "The Rink",
+      synopsis: "N/A",  // Forçando "N/A" se seu front ler direto do banco,
+      genres: "N/A",    // ou mude para null caso seu front trate valores nulos 
+      duration: "N/A",  // transformando-os em "N/A" na tela automaticamente.
+      year: "N/A",
+      director: "N/A",
+      cast: "N/A",
+      isPopular: false,
+      isDeleted: false
+    }
+  });
+
+  // 3. Filme Sem Título (Tudo N/A / Null)
+  await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000003",
+      title: "N/A",
+      synopsis: "N/A",
+      genres: "N/A",
+      duration: "N/A",
+      year: "N/A",
+      director: "N/A",
+      cast: "N/A",
+      isPopular: false,
+      isDeleted: false
+    }
+  });
+
+  await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000004",
+      title: "A Noite dos Mortos Vivos",
+      synopsis: "Zumbis atacam um grupo de sobreviventes refugiados em uma fazenda.",
+      genres: "Terror",
+      duration: "96 min",
+      year: "1968",
+      director: "George A. Romero",
+      cast: "Duane Jones, Judith O'Dea, Karl Hardman",
+      isPopular: true,
+      isDeleted: false
+    }
+  });
+  // ─────────────────────────────────────────────────────────────────────────────
+
   console.log('⏳ Simulando histórico de visualização (Regra dos 7 dias)...');
   // Júlio assistiu Vingadores hoje (Gera playlist "Porque você assistiu Vingadores")
   await prisma.history.create({
@@ -93,7 +160,7 @@ async function main() {
     data: { userId: usuarioJulio.id, movieId: v2.id, watchedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), is_completed: true,is_hidden: false } // Ontem
   });
 
-  console.log('✅ Banco de dados populado com sucesso para testes manuais!');
+  console.log('✅ Banco de dados populado com sucesso para testes manuais e E2E!');
 }
 
 main()

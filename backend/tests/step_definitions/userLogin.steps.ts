@@ -135,7 +135,7 @@ Given(
 When(
     "uma tentativa de login for realizada com o e-mail {string} e senha {string}",
     async function (email: string, password: string) {
-        response = await api.post("/login", {
+        response = await api.post("/api/login", {
             email,
             password,
         });
@@ -145,7 +145,7 @@ When(
 When(
     "uma tentativa de login for realizada com e-mail vazio e senha vazia",
     async function () {
-        response = await api.post("/login", {
+        response = await api.post("/api/login", {
             email: "",
             password: "",
         });
@@ -157,7 +157,7 @@ When(
     async function (email: string) {
         currentEmail = email;
 
-        response = await api.post("/auth/google", {
+        response = await api.post("/api/auth/google", {
             token: "TEST_VALID_TOKEN",
             mockEmail: email,
             mockName: "Usuário Google",

@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "test:metadata" :  "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
+    "test:player" :  "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -17,14 +19,19 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@types/node": "^24.12.3",
+    "@types/node": "^24.13.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/selenium-webdriver": "^4.35.6",
     "@vitejs/plugin-react": "^6.0.1",
+    "axios-mock-adapter": "^2.1.0",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "selenium-webdriver": "^4.44.0",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.22.4",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12"

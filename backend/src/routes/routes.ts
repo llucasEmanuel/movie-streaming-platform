@@ -11,8 +11,8 @@ router.post('/auth/google', googleLogin);
 
 router.use(userLoginRouter);
 
-// Rotas de Usuário
-router.delete('/users/me', checkAuthToken, deleteMe);
-router.delete('/users/:id', checkAuthToken, deleteMe);
+router.use(userLoginRouter);
+
+router.delete("/users/me", checkAuthToken, deleteMe);
 
 export default router;

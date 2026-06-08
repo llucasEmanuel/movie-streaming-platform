@@ -10,6 +10,7 @@ export interface Movie {
   director?: string;
   cast?: string;
   createdAt: string;
+  year?: string;
 }
 
 export interface MovieMetadata {
@@ -21,6 +22,7 @@ export interface MovieMetadata {
   duration: string;
   director: string;
   cast: string;
+  year: string;
 }
 
 export interface User {
