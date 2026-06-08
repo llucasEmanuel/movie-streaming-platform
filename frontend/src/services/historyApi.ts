@@ -29,6 +29,12 @@ export interface UnfinishedMovieApiResponse {
   data: UnfinishedMovieApiRecord[];
 }
 
+export interface UpdateProgressPayload {
+  id_user: string;
+  id_movie: string;
+  last_position: number;
+}
+
 async function parseResponse<T>(response: Response): Promise<T> {
   const data = await response.json();
 
@@ -81,4 +87,16 @@ export async function getUnfinishedMoviesByUserId(userId: string): Promise<Unfin
   const data = await parseResponse<UnfinishedMovieApiResponse>(response);
 
   return data.data ?? [];
+}
+
+export async function updateHistoryProgress(payload: UpdateProgressPayload) {
+  const response = await fetch(`${API_URL}/history/progress`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  return parseResponse<{ message: string }>(response);
 }

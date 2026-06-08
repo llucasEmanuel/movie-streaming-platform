@@ -15,16 +15,18 @@ class HistoryService {
   const movieDuration = parseInt(movie.duration ?? "", 10) || 0;
 
   const percentageWatched = movieDuration > 0 
-    ? (last_position / movieDuration) * 100 
+    ? ((last_position/60) / movieDuration) * 100 
     : 0;
     const is_completed = percentageWatched >= 95; 
     const today = new Date().toISOString().split('T')[0];
+
+    const finalPosition = is_completed ? 0 : last_position;
 
     const historyData: HistoryModel = {
       id_user,
       id_movie,
       watched_at: today,
-      last_position,
+      last_position: finalPosition,
       is_completed,
       is_hidden: false
     };
@@ -76,7 +78,7 @@ class HistoryService {
       
       // Calculando a porcentagem
       const percentage = movieDuration > 0 
-        ? Math.round((record.last_position / movieDuration) * 100) 
+        ? Math.round(((record.last_position / 60) / movieDuration) * 100) 
         : 0;
 
       unfinishedMovies.push({
