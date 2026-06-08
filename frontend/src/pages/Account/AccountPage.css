@@ -1,0 +1,114 @@
+/* AccountPage.css */
+
+.sidebar-border {
+  border-right: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.input-glow:focus {
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.5);
+  border-color: #FFC107;
+}
+
+.active-nav-item {
+  background-color: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+/* Custom scrollbar for brand-dark */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #121414;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #FFC107;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e0a800;
+}
+
+/* Input locked vs editable state styles */
+.input-locked {
+  background-color: rgba(18, 20, 20, 0.6) !important;
+  border-color: rgba(255, 193, 7, 0.1) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  cursor: not-allowed;
+  pointer-events: none; /* Prevents focusing or clicking when locked */
+}
+
+.input-editable {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  border-color: rgba(255, 193, 7, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.input-editable:focus {
+  border-color: #FFC107 !important;
+  box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.3);
+}
+
+/* Toggle buttons styling inside the relative input wrapper */
+.input-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: rgba(255, 193, 7, 0.7);
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.input-action-btn:hover {
+  color: #FFC107;
+}
+
+.input-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Help Modal and Backdrop styles */
+.catalog-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 999;
+}
+
+.catalog-modal {
+  background: #1A1C1C !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 193, 7, 0.2) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Custom styles for help content scrollbar */
+.catalog-modal div::-webkit-scrollbar {
+  width: 6px;
+}
+
+.catalog-modal div::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.catalog-modal div::-webkit-scrollbar-thumb {
+  background: rgba(255, 193, 7, 0.3);
+  border-radius: 3px;
+}
+
+.catalog-modal div::-webkit-scrollbar-thumb:hover {
+  background: #FFC107;
+}
+

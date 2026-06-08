@@ -116,8 +116,8 @@ export class AccountService {
     * Método privado de validação do Nome do usuário.
     */
    private validateName(newName: string) {
-      // Permite apenas letras (maiúsculas e minúsculas) e espaços. Bloqueia números e caracteres especiais.
-      const nameRegex = /^[a-zA-Z\s]+$/;
+      // Permite apenas letras (maiúsculas e minúsculas), caracteres acentuados e espaços. Bloqueia números e caracteres especiais.
+      const nameRegex = /^[a-zA-ZÀ-ÿ\s]+$/;
       if (!nameRegex.test(newName)) throw new BadRequestError("Nome inválido");
    }
 
@@ -185,8 +185,9 @@ export class AccountService {
       const user = await this.repo.findById(id);
       if (!user) throw new NotFoundError("Usuário não encontrado");
 
-      this.validatePhoto(filename, sizeMB);
-      return await this.repo.update(id, { photo: filename });
+      if (filename) {
+         this.validatePhoto(filename, sizeMB);
+      }
+      return await this.repo.update(id, { photo: filename || null });
    }
 }
-

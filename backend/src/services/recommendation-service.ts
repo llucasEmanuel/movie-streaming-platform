@@ -90,6 +90,7 @@ export class RecommendationService {
         take: LIMITE_FILMES
       }); 
       return {
+        sectionTitle: "Explorar catálogo",
         message: "Assista mais conteúdos para melhorar suas recomendações",
         movies: todosOsFilmes,
       };

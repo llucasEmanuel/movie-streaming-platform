@@ -1,0 +1,70 @@
+/* Container principal do campo (rótulo, campo e erro) */
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem; /* Aumentamos um pouco o espaçamento */
+  width: 100%;
+}
+
+.input-label {
+  font-size: 0.75rem; /* Menor e em maiúsculas, igual ao design */
+  font-weight: 700;
+  color: #A1A1AA; /* Cinza médio para o rótulo */
+  margin-bottom: 0.5rem;
+  text-transform: uppercase; /* Força maiúsculas */
+  letter-spacing: 0.05em; /* Espaçamento entre letras */
+}
+
+/* Novo container que segura o ícone e o input juntos */
+.input-container {
+  display: flex;
+  align-items: center;
+  background-color: #1E1E1E; /* Cinza bem escuro para o fundo do campo */
+  border: 1px solid #2A2A2A; /* Borda quase invisível */
+  border-radius: 8px; /* Cantos mais arredondados */
+  transition: border-color 0.2s ease;
+  position: relative;
+}
+
+/* Foco no container inteiro quando clica no input */
+.input-container:focus-within {
+  border-color: #FBBF24; /* Amarelo-ouro ao focar  */
+}
+
+/* Área do ícone */
+.input-icon-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 1rem;
+  color: #FBBF24; /* Ícones em amarelo-ouro */
+  font-size: 1.1rem;
+}
+
+/* O elemento input real */
+.input-element {
+  flex: 1; /* Ocupa todo o espaço restante */
+  background: transparent; /* Fundo transparente para usar o do container */
+  color: #ffffff;
+  border: none; /* Removemos a borda individual */
+  padding: 1rem 1rem 1rem 0.75rem; /* Ajustamos o padding esquerdo para dar espaço ao ícone */
+  font-size: 1rem;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.input-element::placeholder {
+  color: #52525B; /* Cinza escuro para o placeholder */
+}
+
+/* Estado de Erro */
+.input-container--error {
+  border-color: #ef4444;
+}
+
+.input-error-message {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
+}

@@ -40,12 +40,24 @@ model User {
   id        String   @id @default(uuid())
   email     String   @unique
   name      String?
-  password  String?  // Se faz opcional devido ao cadastro de usuário via Google
-  googleId  String?  @unique // opcional pois pode ser feito o cadastro tanto por meio do registro de email e senha como via Google
-  avatarUrl String?  // Esse campo serve para caso o usuário queria ter uma foto de perfil
-  createdAt DateTime @default(now()) // Serve para registrar o momento que o usuário realizou o cadastro
-  history   History[] // Relacionamento: Um usuário tem muitos registros no histórico
-  role      String   @default("usuario")  // cargo do usuário
+  password  String?                           // Se faz opcional devido ao cadastro de usuário via Google
+  googleId  String?  @unique                 
+  avatarUrl String?                           // Esse campo serve para caso o usuário queria ter uma foto de perfil
+  createdAt DateTime @default(now())          // Serve para registrar o momento que o usuário realizou o cadastro
+  history   History[]                         // Relacionamento: Um usuário tem muitos registros no histórico
+  role      String   @default("usuario")      // cargo do usuário
+  isVerified       Boolean   @default(false)  // Por padrão, o cadastro via email e senha começa como falso
+  verificationCode String?                    // Guarda temporariamente os 6 dígitos
+}
+
+model PreRegistration {
+  id               String   @id @default(uuid())
+  name             String
+  email            String   @unique
+  password         String   // Guardará a senha já encriptada (hashed)
+  role             String   @default("usuario")
+  verificationCode String
+  createdAt        DateTime @default(now()) // Essencial para podermos limpar por tempo depois
 }
 
 model History {

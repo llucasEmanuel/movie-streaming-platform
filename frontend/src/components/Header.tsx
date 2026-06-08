@@ -1,14 +1,16 @@
 import cinemaLogo from "../assets/cinema_logo.png"; // Ajuste o caminho se necessário
 
 interface HeaderProps {
-  activePage: "home" | "playlists" | "perfil" | string;
+  activePage: "home" | "playlists" | "perfil" | "history" | "recommendations" | string;
   onGoToHome?: () => void;
   onGoToPlaylists?: () => void;
   onLogout?: () => void;
   onGoToHistory?: () => void;
+  onGoToProfile?: () => void;
+  onGoToRecommendations?: () => void;
 }
 
-export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGoToHistory}: HeaderProps) {
+export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGoToHistory, onGoToProfile, onGoToRecommendations }: HeaderProps) {
   return (
     <header className="home-header">
       <img 
@@ -36,6 +38,14 @@ export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGo
           >
             Minhas Playlists
           </button>
+
+          <button
+            className={`home-nav-button ${activePage === "recommendations" ? "active" : ""}`} 
+            type="button"
+            onClick={onGoToRecommendations}
+          >
+            Recomendados
+          </button>
         </nav>
 
         <div className="profile-dropdown">
@@ -44,7 +54,7 @@ export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGo
             <span className="profile-arrow"></span>
           </button>
           <div className="profile-menu">
-            <button type="button" className="profile-menu-item">
+            <button type="button" className="profile-menu-item" onClick={onGoToProfile}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Perfil
             </button>

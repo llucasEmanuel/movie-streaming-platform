@@ -14,11 +14,13 @@ import "./MinhasPlaylistsPage.css";
 interface MinhasPlaylistsPageProps {
   userId: string;
   onGoToHome: () => void;
+  onGoToRecommendations: () => void;
 }
 
 export function MinhasPlaylistsPage({
   userId,
   onGoToHome,
+  onGoToRecommendations,
 }: MinhasPlaylistsPageProps) {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -242,6 +244,15 @@ export function MinhasPlaylistsPage({
           >
             <span>≡+</span>
             Minhas Playlists
+          </button>
+
+          <button
+            className="playlist-menu-item"
+            type="button"
+            onClick={onGoToRecommendations}
+          >
+            <span>☆</span>
+            Recomendados
           </button>
         </nav>
       </aside>

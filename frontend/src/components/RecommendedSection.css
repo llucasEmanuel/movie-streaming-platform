@@ -1,0 +1,180 @@
+.recommended-section-container {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.recommendation-row {
+  margin-bottom: 40px;
+}
+
+.recommendation-row:last-child {
+  margin-bottom: 24px;
+}
+
+/* Glassmorphic Info Banner */
+.recommendations-info-banner {
+  max-width: 100%;
+  margin-bottom: 20px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  background: rgba(255, 193, 7, 0.07);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.info-icon {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.recommendations-info-message {
+  margin: 0;
+  color: var(--home-primary, #ffc107);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+/* Carousel Wrapper to Position Arrows */
+.recommendations-carousel-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Arrow Navigation Buttons */
+.carousel-arrow {
+  position: absolute;
+  top: calc(50% - 8px); /* Center vertically minus padding bottom space */
+  transform: translateY(-50%);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  opacity: 0; /* Hide by default and show on hover */
+  transition: opacity 0.3s ease, background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.carousel-arrow.left {
+  left: -20px;
+}
+
+.carousel-arrow.right {
+  right: -20px;
+}
+
+/* Show arrows on hover of wrapper */
+.recommendations-carousel-wrapper:hover .carousel-arrow {
+  opacity: 1;
+}
+
+.carousel-arrow:hover {
+  background: var(--home-primary, #ffc107);
+  color: var(--home-on-primary, #111111);
+  border-color: var(--home-primary, #ffc107);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* Horizontal Scroll Carousel */
+.recommendations-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 16px;
+  scroll-behavior: smooth;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.recommendations-carousel-item {
+  flex: 0 0 240px;
+  transition: transform 0.3s ease;
+}
+
+.recommendations-carousel-item:hover {
+  transform: translateY(-2px);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.recommendations-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.recommendations-carousel {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Empty, loading, and error states */
+.recommendations-loading,
+.recommendations-error,
+.no-recommendations-movies {
+  padding: 24px 0;
+  color: var(--home-muted, #c8c6c5);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.recommendations-error {
+  color: var(--home-error, #ffb4ab);
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 780px) {
+  .recommendations-carousel-item {
+    flex: 0 0 190px;
+  }
+  
+  .recommendations-info-banner {
+    padding: 12px 16px;
+  }
+  
+  .recommendations-info-message {
+    font-size: 13px;
+  }
+  
+  /* On touch screens, standard scroll is preferred, hide arrows to avoid layout overlap */
+  .carousel-arrow {
+    display: none;
+  }
+}

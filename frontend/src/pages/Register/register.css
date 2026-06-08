@@ -1,0 +1,251 @@
+/* CONTEXTO GERAL E CENTRALIZAÇÃO */
+.register-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #0f0f0f; /* Fundo escuro de cinema */
+  padding: 20px;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* O CARTÃO DE CADASTRO */
+.register-card {
+  background-color: #141414; /* Fundo do cartão ligeiramente mais claro */
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+
+/* SEÇÃO DA LOGO */
+.logo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.main-logo {
+  height: 90px;
+  object-fit: contain;
+}
+
+/* CABEÇALHO (TÍTULOS) */
+.header-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.register-title {
+  color: #FBBF24; /* Tom dourado oficial */
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.register-subtitle {
+  color: #888888;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* FORMULÁRIO E INPUTS */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Espaçamento vertical perfeito entre os inputs */
+}
+
+/* LINHA DAS SENHAS (O FIX DE ALINHAMENTO) */
+.form-row-password {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.form-row-password > * {
+  flex: 1;
+  min-width: 0; /* Impede que o input quebre para fora do cartão */
+}
+
+/* BOTÃO PRINCIPAL (DOURADO) */
+.btn-primary-gold {
+  background-color: #FBBF24;
+  color: #000000;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.2s ease;
+  margin-top: 10px;
+}
+
+.btn-primary-gold:hover {
+  background-color: #F59E0B;
+}
+
+.btn-icon-right {
+  font-size: 16px;
+}
+
+/* DIVISOR (OR CONTINUE WITH) */
+.divider-section {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: #444;
+}
+
+.divider-section::before,
+.divider-section::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #222;
+}
+
+.divider-text {
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  letter-spacing: 1px;
+}
+
+/* BOTÃO DO GOOGLE */
+.btn-google {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid #333333;
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-google:hover {
+  background-color: #1f1f1f;
+  border-color: #444;
+}
+
+.btn-icon-google {
+  font-size: 18px;
+}
+
+/* LINKS E TEXTOS EM DOURADO */
+.gold-link {
+  color: #FBBF24;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.gold-link:hover {
+  text-decoration: underline;
+}
+
+.footer-section {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #888888;
+}
+
+/* MENSAGENS DE STATUS (SUCESSO / ERRO DO BACKEND) */
+.status-alert {
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.status-alert.error {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.status-alert.success {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+/* Centraliza o título e textos internos do bloco de verificação */
+.register-card h2, 
+.register-card p {
+  text-align: center;
+}
+
+/* Localize o input de código (geralmente gerado por bibliotecas ou input padrão) */
+.register-card input[type="text"][maxlength="6"],
+.register-card .verification-input, /* Classe genérica caso use biblioteca */
+.register-card input[placeholder="000000"] {
+  background-color: #141414 !important; /* Mesma cor do fundo do cartão */
+  color: #FBBF24 !important;            /* O tom dourado oficial da sua paleta */
+  border: 1px solid #FBBF24 !important; /* Borda dourada como na imagem de referência */
+  border-radius: 6px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 8px;                  /* Dá o espaçamento elegante entre os números */
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+  max-width: 200px;                     /* Limita o tamanho para não esticar muito */
+  margin: 20px auto;                    /* Centraliza horizontalmente */
+  display: block;
+  outline: none;
+  box-shadow: 0 0 10px rgba(251, 191, 36, 0.1); /* Leve brilho dourado ao redor */
+}
+
+/* Garante o botão "Ativar Conta" com a mesma identidade visual dos inputs */
+.register-card button:disabled {
+  background-color: #333333;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+/* Alveja o título "Verifique o seu E-mail" dentro do bloco de verificação */
+.register-card h2,
+.register-card .verify-title {
+  color: #ffffff !important; /* Branco para dar destaque principal */
+  font-size: 22px;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Alveja os parágrafos de instrução ("Enviámos um código..." e "Por favor, introduza-o...") */
+.register-card p,
+.register-card .verify-subtitle,
+.register-card .verify-instructions {
+  color: #b3b3b3 !important; /* Um cinza-claro elegante, excelente para leitura no escuro */
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+/* Se o email do utilizador estiver dentro de uma tag de destaque (como strong ou span) */
+.register-card p strong,
+.register-card p span {
+  color: #FBBF24 !important; /* Destaca o e-mail do usuário em dourado */
+  font-weight: 600;
+}

@@ -17,10 +17,12 @@ interface HomePageProps {
   onGoToPlaylists: () => void;
   onGoToHome?: () => void;
   onGoToHistory: () => void;
+  onGoToRecommendations: () => void;
   onSelectMovie: (movie: Movie) => void;
+  onGoToProfile?: () => void;
 }
 
-export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, onSelectMovie }: HomePageProps) {
+export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, onGoToRecommendations, onSelectMovie, onGoToProfile }: HomePageProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -116,8 +118,8 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
         type: "error",
         text:
           err instanceof Error
-            ? err.message
-            : "Erro inesperado ao buscar playlists disponíveis",
+          ? err.message
+          : "Erro inesperado ao buscar playlists disponíveis",
       });
     } finally {
       setIsLoadingPlaylists(false);
@@ -191,7 +193,6 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
 
   return (
     <div className="home-page">
-      {/* HEADER COMPONENTIZADO RECEBENDO AS AÇÕES DA PÁGINA */}
       <Header 
         activePage="home" 
         onGoToHome={onGoToHome}
@@ -200,6 +201,8 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
           console.log("Usuário deslogado");
         }}
         onGoToHistory={onGoToHistory}
+        onGoToProfile={onGoToProfile}
+        onGoToRecommendations={onGoToRecommendations}
       />
 
       <main className="home-content">
@@ -253,27 +256,27 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
             <div className="section-title-line"></div> {/* Linha que vai até o outro lado */}
           </div>
 
-        {loadingMovies && (
-          <p className="catalog-empty-message">Carregando filmes...</p>
-        )}
+          {loadingMovies && (
+            <p className="catalog-empty-message">Carregando filmes...</p>
+          )}
 
-        {!loadingMovies && movies.length === 0 && !error && (
-          <p className="catalog-empty-message">
-            Nenhum filme encontrado no catálogo.
-          </p>
-        )}
+          {!loadingMovies && movies.length === 0 && !error && (
+            <p className="catalog-empty-message">
+              Nenhum filme encontrado no catálogo.
+            </p>
+          )}
 
-        <div className="movie-grid">
-          {movies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-              onAddToPlaylist={openAddMovieToPlaylistModal}
-              onSelectMovie={onSelectMovie}
-            />
-          ))}
-        </div>
-      </section>
+          <div className="movie-grid">
+            {movies.map((movie) => (
+              <MovieCard
+                key={movie.id}
+                movie={movie}
+                onAddToPlaylist={openAddMovieToPlaylistModal}
+                onSelectMovie={onSelectMovie}
+              />
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* MODAL DE PLAYLIST */}

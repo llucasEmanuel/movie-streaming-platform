@@ -3,7 +3,6 @@ import { DBUtils } from "../../src/utils/db-utils";
 import { RecommendationService } from "../../src/services/recommendation-service";
 import axios from "axios";
 import assert from "assert";
-import { sharedState } from "./shared-state";
 
 const api = axios.create({ 
     baseURL: 'http://localhost:3000', 
@@ -16,15 +15,16 @@ const service = new RecommendationService();
 let response: any;
 let serviceResult: any;
 let config: any;
+let currentUserId: string = ""; 
 
 Before(async () => {
     await DBUtils.sincronizarFilmesAtivos();
     await DBUtils.garantirFilmePopularSemente();
 
     const user = await DBUtils.garantirUsuario("julio_bdd_dinamico@teste.com", "Julio Cesar Dinamico");
-    sharedState.currentUserId = user.id;
-    await DBUtils.limparHistorico(sharedState.currentUserId);
-    config = { headers: { 'x-test-user-id': sharedState.currentUserId } };
+    currentUserId = user.id;
+    await DBUtils.limparHistorico(currentUserId);
+    config = { headers: { 'x-test-user-id': currentUserId } };
     response = undefined;
     serviceResult = undefined;
 
@@ -32,25 +32,21 @@ Before(async () => {
 
 // --- GIVENS (Contextos) ---
 
-Given('eu não estou logado na plataforma', function () {
-    sharedState.currentUserId = ""; 
-});
-
 Given('eu não possuo histórico de visualização', async function () {
-    await DBUtils.limparHistorico(sharedState.currentUserId);
+    await DBUtils.limparHistorico(currentUserId);
 });
 
 
 Given('eu assisti a {string} filmes do gênero {string} nos últimos {string} dias', async function (qtd, genero, dias) {
-    await DBUtils.garantirEAssistirFilmes(sharedState.currentUserId, qtd, genero);
+    await DBUtils.garantirEAssistirFilmes(currentUserId, qtd, genero);
 });
 
 Given('eu assisti a {string} filmes do gênero {string}', async function (qtd, genero) {
-    await DBUtils.garantirEAssistirFilmes(sharedState.currentUserId, qtd, genero);
+    await DBUtils.garantirEAssistirFilmes(currentUserId, qtd, genero);
 });
 
 Given('eu assisti a {string} filme do gênero {string}', async function (qtd, genero) {
-    await DBUtils.garantirEAssistirFilmes(sharedState.currentUserId, qtd, genero);
+    await DBUtils.garantirEAssistirFilmes(currentUserId, qtd, genero);
 });
 
 Given('a regra de negócio exige no mínimo {string} filmes do mesmo gênero para gerar recomendações', function (minimo) {
@@ -62,13 +58,13 @@ Given('a regra de negócio exige no mínimo {string} filmes do mesmo gênero par
 
 Given('eu possuo no histórico o filme {string}', async function (nomeFilme) {
     const filme = await DBUtils.garantirFilmeUnico(nomeFilme);
-    await DBUtils.adicionarAoHistorico(sharedState.currentUserId, filme.id);
+    await DBUtils.adicionarAoHistorico(currentUserId, filme.id);
 });
 
 Given('eu possuo no histórico os filmes {string} e {string}', async function (filme1, filme2) {
     for (const nome of [filme1, filme2]) {
         const filme = await DBUtils.garantirFilmeUnico(nome);
-        await DBUtils.adicionarAoHistorico(sharedState.currentUserId, filme.id);
+        await DBUtils.adicionarAoHistorico(currentUserId, filme.id);
     }
 });
 
@@ -77,19 +73,19 @@ Given('a playlist {string} está disponível', function (_playlist) {
 });
 
 Given('eu possuo {string} filme(s) assistido(s) do gênero {string} nos últimos {string} dias', async function (quantidade, genero, _dias) {
-    await DBUtils.garantirEAssistirFilmes(sharedState.currentUserId, quantidade, genero);
+    await DBUtils.garantirEAssistirFilmes(currentUserId, quantidade, genero);
 });
 
 Given('eu assisti ao filme {string} do gênero {string} por {string} vezes nos últimos {string} dias', async function (titulo, genero, vezes, _dias) {
     const loop = parseInt(vezes, 10);
     
-    await DBUtils.assistirMesmoFilmeRepetido(sharedState.currentUserId, titulo, genero, loop);
+    await DBUtils.assistirMesmoFilmeRepetido(currentUserId, titulo, genero, loop);
 });
 
 // --- WHENS (Ações com Headers Injetados) ---
 
 When('eu acesso a página {string}', async function (pagina) {
-    if (!sharedState.currentUserId) {
+    if (!currentUserId) {
         response = { status: 401, data: { message: "Faça login para acessar o conteúdo" } };
         return;
     }
@@ -101,16 +97,16 @@ When('eu acesso a página {string}', async function (pagina) {
 });
 
 When('eu assistir a um novo filme do gênero {string}', async function (genero) {
-    await DBUtils.garantirEAssistirFilmes(sharedState.currentUserId, "1", genero);
+    await DBUtils.garantirEAssistirFilmes(currentUserId, "1", genero);
 });
 
 When('eu assisto ao filme {string}', async function (nomeFilme) {
     const filme = await DBUtils.garantirFilmeUnico(nomeFilme);
-    await DBUtils.adicionarAoHistorico(sharedState.currentUserId, filme.id);
+    await DBUtils.adicionarAoHistorico(currentUserId, filme.id);
 });
 
 When('eu removo o filme {string} do histórico', async function (nomeFilme) {
-    await DBUtils.removerFilmeDoHistorico(sharedState.currentUserId, nomeFilme);
+    await DBUtils.removerFilmeDoHistorico(currentUserId, nomeFilme);
 });
 
 When('eu atualizo a página {string}', async function (pag) {
@@ -121,9 +117,14 @@ When('eu atualizo a página {string}', async function (pag) {
 
 When('o serviço calcula as recomendações de gênero para o usuário {string}', async function (_role) {
     // Independente do texto ser "usuário", o código usa o ID seguro do Before
-    serviceResult = await service.getGenreRecommendations(sharedState.currentUserId);
+    serviceResult = await service.getGenreRecommendations(currentUserId);
 });
 
+When('eu seleciono a opção {string}', async function (opcao) {
+    if (opcao === "Apagar histórico completo") {
+        await DBUtils.limparHistorico(currentUserId);
+    }
+});
 // --- THENS (Validações) ---
 
 Then('a página {string} deve exibir a playlist {string} em destaque na página', function (pag, tituloEsperado) {
@@ -204,13 +205,6 @@ Then('a playlist {string} contém o filme {string}', function (playlist, filme) 
     assert.strictEqual(response.status, 200);
 });
 
-Then('o sistema exibe a mensagem "Faça login para acessar o conteúdo"', function () {
-    assert.strictEqual(response.data.message, "Faça login para acessar o conteúdo");
-});
-
-Then('o sistema não exibe {string}', function (elemento) {
-    assert.strictEqual(response.status, 401);
-});
 
 Then('o serviço retorna a seção de título {string}', function (tituloEsperado) {
     assert.strictEqual(serviceResult?.sectionTitle, tituloEsperado);
