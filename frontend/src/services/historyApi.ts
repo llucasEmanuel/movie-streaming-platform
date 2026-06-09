@@ -10,6 +10,10 @@ export interface HistoryApiRecord {
   is_completed: boolean;
   is_hidden: boolean;
   title?: string;
+  progress_percentage?: number;
+  movie?: {
+    duration?: string | null;
+  };
 }
 
 export interface HistoryApiResponse {
