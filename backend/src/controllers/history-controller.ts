@@ -6,9 +6,9 @@ class HistoryController {
 
     async updateProgress(req: Request, res: Response) {
         try {
-            const { id_user, id_movie, last_position } = req.body;
+            const { id_user, id_movie, last_position, watched_at } = req.body;
             
-            await historyService.processVideoProgress(id_user, id_movie, last_position);
+            await historyService.processVideoProgress(id_user, id_movie, last_position, watched_at);
             
             return res.status(200).json({ message: "Progresso salvo com sucesso." });
         } catch (error: any) {

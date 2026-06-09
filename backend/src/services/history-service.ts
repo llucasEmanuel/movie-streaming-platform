@@ -5,7 +5,12 @@ import {MovieRepository} from '../repositories/movie-repository';
 class HistoryService {
   private movieRepository = new MovieRepository();
 
-  async processVideoProgress(id_user: string, id_movie: string, last_position: number) {
+  async processVideoProgress(
+    id_user: string,
+    id_movie: string,
+    last_position: number,
+    watched_at?: string,
+  ) {
     const movie = await this.movieRepository.findById(id_movie);
   
   if (!movie) {
@@ -18,14 +23,16 @@ class HistoryService {
     ? ((last_position/60) / movieDuration) * 100 
     : 0;
     const is_completed = percentageWatched >= 95; 
-    const today = new Date().toISOString().split('T')[0];
+    const watchedDate = watched_at ? new Date(watched_at) : new Date();
+    watchedDate.setHours(0, 0, 0, 0);
+    const dayOnly = watchedDate.toISOString().split('T')[0];
 
     const finalPosition = is_completed ? 0 : last_position;
 
     const historyData: HistoryModel = {
       id_user,
       id_movie,
-      watched_at: today,
+      watched_at: dayOnly,
       last_position: finalPosition,
       is_completed,
       is_hidden: false

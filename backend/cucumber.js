@@ -51,5 +51,13 @@ module.exports = {
     requireModule: ['ts-node/register'],
     format: ['summary', 'progress-bar'],
     publishQuiet: true
+  },
+
+  history: {
+    paths: ['../features/history.feature'], 
+    require: ['tests/step_definitions/history_service.steps.ts'],
+    requireModule: ['ts-node/register'],
+    format: ['summary', 'progress-bar'],
+    publishQuiet: true
   }
 };
