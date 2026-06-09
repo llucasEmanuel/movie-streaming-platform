@@ -4,13 +4,12 @@ interface HeaderProps {
   activePage: "home" | "playlists" | "perfil" | "history" | "recommendations" | string;
   onGoToHome?: () => void;
   onGoToPlaylists?: () => void;
-  onLogout?: () => void;
   onGoToHistory?: () => void;
   onGoToProfile?: () => void;
   onGoToRecommendations?: () => void;
 }
 
-export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGoToHistory, onGoToProfile, onGoToRecommendations }: HeaderProps) {
+export function Header({ activePage, onGoToHome, onGoToPlaylists, onGoToHistory, onGoToProfile, onGoToRecommendations }: HeaderProps) {
   return (
     <header className="home-header">
       <img 
@@ -62,11 +61,7 @@ export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGo
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
               Histórico
             </button>
-            <div className="profile-menu-divider"></div>
-            <button type="button" className="profile-menu-item logout" onClick={onLogout}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              Sair
-            </button>
+            {/* O divisor e o botão 'Sair' foram removidos daqui de forma limpa */}
           </div>
         </div>
       </div>

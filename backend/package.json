@@ -25,6 +25,7 @@
     "test:movies": "NODE_ENV=test cucumber-js -p movies",
     "test:metadata": "NODE_OPTIONS='--import tsx' cucumber-js --config='' ../features/MovieMetadata_Service.feature --import 'tests/step_definitions/metadata-steps.ts'",
     "test:player": "NODE_OPTIONS='--import tsx' cucumber-js --config='' ../features/MoviePlayer_Service.feature --import 'tests/step_definitions/player-steps.ts'",
+    "test:integ:metadata-url-bd": "npx vitest tests/integration/movie-db.integration.spec.ts",
     "db:seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
@@ -40,7 +41,8 @@
     "nodemailer": "^8.0.10",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^14.0.0"
+    "uuid": "^14.0.0",
+    "vitest": "^4.1.8"
   },
   "devDependencies": {
     "@cucumber/cucumber": "^12.9.0",
