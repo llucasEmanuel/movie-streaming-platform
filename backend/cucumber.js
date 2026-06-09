@@ -53,8 +53,8 @@ module.exports = {
     publishQuiet: true
   },
 
-  history: {
-    paths: ['../features/history.feature'], 
+  history_service: {
+    paths: ['../features/history_service.feature'], 
     require: ['tests/step_definitions/history_service.steps.ts'],
     requireModule: ['ts-node/register'],
     format: ['summary', 'progress-bar'],
