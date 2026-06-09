@@ -39,6 +39,7 @@ class HistoryRepository {
                 // Se já existir hoje, atualiza a posição e o status
                 last_position: data.last_position,
                 is_completed: data.is_completed,
+                is_hidden: false,
             },
             create: {
                 // Se não existir hoje, cria uma nova

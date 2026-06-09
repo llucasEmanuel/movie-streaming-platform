@@ -102,7 +102,6 @@ export function HistoryPage({ userId, onGoToHome, onGoToPlaylists, onGoToHistory
         activePage="history" 
         onGoToHome={onGoToHome}
         onGoToPlaylists={onGoToPlaylists}
-        onLogout={() => console.log("Usuário deslogado do histórico")}
         onGoToHistory={onGoToHistory}
         onGoToProfile={onGoToProfile}
         onGoToRecommendations={onGoToRecommendations}

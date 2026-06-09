@@ -197,9 +197,6 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
         activePage="home" 
         onGoToHome={onGoToHome}
         onGoToPlaylists={onGoToPlaylists}
-        onLogout={() => {
-          console.log("Usuário deslogado");
-        }}
         onGoToHistory={onGoToHistory}
         onGoToProfile={onGoToProfile}
         onGoToRecommendations={onGoToRecommendations}

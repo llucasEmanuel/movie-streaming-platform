@@ -1,0 +1,11 @@
+{
+  "baseUrl": "http://localhost:5173",
+  "video": false,
+  "screenshotsFolder": "cypress/screenshots",
+  "videosFolder": "cypress/videos",
+  "testFiles": "cypress/e2e/**/*.feature",
+  "cucumber": {
+    "features": "./cypress/e2e",
+    "stepDefinitions": "./cypress/support/step_definitions"
+  }
+}
