@@ -2,6 +2,7 @@ export interface Movie {
   id: string;
   title: string;
   url_movie?: string;
+  file_name?: string;
   img_url?: string;
   synopsis?: string;
   genres: string | string[];
@@ -71,6 +72,8 @@ export interface LoggedUser {
   id: string;
   name: string;
   email?: string;
+  token?: string;
+  role?: string;
 }
 export interface RecommendationSection {
   sectionTitle?: string;

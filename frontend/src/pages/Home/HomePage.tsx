@@ -20,9 +20,12 @@ interface HomePageProps {
   onGoToRecommendations: () => void;
   onSelectMovie: (movie: Movie) => void;
   onGoToProfile?: () => void;
+  onGoToAddMovie?: () => void;
+  onGoToEditMovie?: (movie: Movie) => void;
+  isAdmin?: boolean;
 }
 
-export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, onGoToRecommendations, onSelectMovie, onGoToProfile }: HomePageProps) {
+export function HomePage({ userId, isAdmin, onGoToPlaylists, onGoToHome, onGoToHistory, onGoToRecommendations, onSelectMovie, onGoToProfile, onGoToAddMovie, onGoToEditMovie }: HomePageProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loadingMovies, setLoadingMovies] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +44,10 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
   const [isLoadingPlaylists, setIsLoadingPlaylists] = useState(false);
 
   const [playlistMessage, setPlaylistMessage] = useState<PageMessage | null>(null);
+  
+  const [movieToDelete, setMovieToDelete] = useState<Movie | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deletedMovieTitle, setDeletedMovieTitle] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadMovies() {
@@ -191,6 +198,36 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
     }
   }
 
+  function handleDeleteMovie(movie: Movie) {
+    setMovieToDelete(movie);
+  }
+
+  async function confirmDeleteMovie() {
+    if (!movieToDelete) return;
+    
+    try {
+      setIsDeleting(true);
+      await movieService.deleteMovie(movieToDelete.id);
+      setMovies(movies.filter((m) => m.id !== movieToDelete.id));
+      setDeletedMovieTitle(movieToDelete.title);
+      setMovieToDelete(null);
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao deletar filme.");
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
+  function cancelDeleteMovie() {
+    setMovieToDelete(null);
+  }
+
+  function handleEditMovie(movieToEdit: Movie) {
+    if (onGoToEditMovie) {
+      onGoToEditMovie(movieToEdit);
+    }
+  }
+
   return (
     <div className="home-page">
       <Header 
@@ -200,6 +237,7 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
         onGoToHistory={onGoToHistory}
         onGoToProfile={onGoToProfile}
         onGoToRecommendations={onGoToRecommendations}
+        onGoToAddMovie={onGoToAddMovie}
       />
 
       <main className="home-content">
@@ -270,6 +308,8 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
                 movie={movie}
                 onAddToPlaylist={openAddMovieToPlaylistModal}
                 onSelectMovie={onSelectMovie}
+                onDeleteMovie={isAdmin ? handleDeleteMovie : undefined}
+                onEditMovie={isAdmin ? handleEditMovie : undefined}
               />
             ))}
           </div>
@@ -329,6 +369,68 @@ export function HomePage({ userId, onGoToPlaylists, onGoToHome, onGoToHistory, o
               </div>
             )}
           </section>
+        </div>
+      )}
+
+      {/* Modal Confirmar Exclusão */}
+      {movieToDelete && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#1c1b1f] border-t-4 border-error rounded-xl p-8 flex flex-col items-center max-w-[400px] w-full shadow-2xl animate-slideUp">
+            <div className="w-16 h-16 bg-error/10 border border-error/20 rounded-2xl flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-error text-[32px]">delete</span>
+            </div>
+
+            <h3 className="text-2xl text-on-background font-medium mb-2">Excluir Filme</h3>
+            <p className="text-center text-on-surface-variant mb-8">
+              Tem certeza que deseja excluir o filme <strong className="text-error">"{movieToDelete.title}"</strong> permanentemente?
+            </p>
+
+            <div className="flex flex-col gap-3 w-full">
+              <button
+                onClick={confirmDeleteMovie}
+                disabled={isDeleting}
+                className="w-full py-3 bg-error text-on-error font-medium rounded hover:opacity-90 flex items-center justify-center gap-2 transition-opacity disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined text-[20px]">
+                  {isDeleting ? "hourglass_empty" : "delete_forever"}
+                </span>
+                {isDeleting ? "Excluindo..." : "Sim, excluir filme"}
+              </button>
+              <button
+                onClick={cancelDeleteMovie}
+                disabled={isDeleting}
+                className="w-full py-3 bg-transparent border border-outline text-on-background font-medium rounded hover:bg-surface-container-highest flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Sucesso (Pós-Exclusão) */}
+      {deletedMovieTitle && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-[#1c1b1f] border-t-4 border-[#ffc107] rounded-xl p-8 flex flex-col items-center max-w-[400px] w-full shadow-2xl animate-slideUp">
+            <div className="w-16 h-16 bg-[#3f3100] border border-[#ffc107]/20 rounded-2xl flex items-center justify-center mb-6">
+              <span className="material-symbols-outlined text-[#ffc107] text-[32px]">check_circle</span>
+            </div>
+
+            <h3 className="text-2xl text-on-background font-medium mb-2">Excluído!</h3>
+            <p className="text-center text-on-surface-variant mb-8">
+              Filme <strong className="text-[#ffc107]">"{deletedMovieTitle}"</strong> foi excluído com sucesso do catálogo.
+            </p>
+
+            <div className="flex w-full">
+              <button
+                onClick={() => setDeletedMovieTitle(null)}
+                className="w-full py-3 bg-[#ffc107] text-[#3f2e00] font-medium rounded hover:opacity-90 flex items-center justify-center gap-2 transition-opacity"
+              >
+                <span className="material-symbols-outlined text-[20px]">grid_view</span>
+                Voltar para o catálogo
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

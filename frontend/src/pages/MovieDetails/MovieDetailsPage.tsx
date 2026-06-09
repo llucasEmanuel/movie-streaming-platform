@@ -181,7 +181,7 @@ export function MovieDetailsPage({
               </span>
               
               <span data-testid="movie-duration" className="details-meta-item">
-                ⏱️ {movie.duration ? `${movie.duration} min` : "N/A"}
+                ⏱️ {movie.duration ? `${movie.duration}` : "N/A"}
               </span>
 
               <span data-testid="movie-director" className="details-meta-item">

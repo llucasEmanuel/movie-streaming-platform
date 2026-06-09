@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { UserLoginRepository } from "../repositories/user_login-repository";
 
 const userLoginRepository = new UserLoginRepository();
@@ -39,12 +40,19 @@ export class UserLoginService {
             };
         }
 
+        const token = jwt.sign(
+            { id: user.id, email: user.email, role: user.role },
+            process.env.JWT_SECRET || "secret",
+            { expiresIn: "1d" }
+        );
+
         return {
             status: 200,
             body: {
                 authenticated: true,
                 message: "Login realizado com sucesso",
                 redirect: "home",
+                token: token,
                 session: {
                     active: true,
                 },
@@ -52,6 +60,7 @@ export class UserLoginService {
                     id: user.id,
                     name: user.name,
                     email: user.email,
+                    role: user.role,
                 },
             },
         };

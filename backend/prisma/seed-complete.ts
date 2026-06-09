@@ -123,6 +123,71 @@ async function main() {
     },
   });
 
+  const m7 = await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000001", // ID amarrado ao mapeamento 'Metropolis' no front-end
+      title: "Metropolis",
+      synopsis: "Numa cidade futurística...",
+      genres: "Drama, Ficção Científica",
+      duration: "153", // Ajustado para bater com o dataTable do teste
+      year: "1927",             // Se o seu banco aceitar string/Int, garanta coerência
+      director: "Fritz Lang",
+      cast: "Brigitte Helm, Alfred Abel, Gustav Fröhlich",
+      isPopular: false,
+      isDeleted: false,
+      file_name: "https://dn600200.us.archive.org/0/items/Metropolis1925-ShorterVersion/Metropolis1925Vhs_512kb.mp4",
+      img_url: "https://ia601600.us.archive.org/33/items/caratula-metropolis_vhs/METROPOLIS.JPG"
+    },
+  });
+
+  const m8 = await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000002",
+      title: "The Rink",
+      synopsis: "N/A", // Forçando "N/A" se seu front ler direto do banco,
+      genres: "N/A", // ou mude para null caso seu front trate valores nulos
+      duration: "N/A", // transformando-os em "N/A" na tela automaticamente.
+      year: "N/A",
+      director: "N/A",
+      cast: "N/A",
+      isPopular: false,
+      isDeleted: false,
+      img_url: "https://dn721808.ca.archive.org/0/items/TheRinkposter/The_Rink_%28poster%29.jpg"
+    },
+  });
+
+  const m9 = await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000003",
+      title: "N/A",
+      synopsis: "N/A",
+      genres: "N/A",
+      duration: "N/A",
+      year: "N/A",
+      director: "N/A",
+      cast: "N/A",
+      isPopular: false,
+      isDeleted: false,
+    },
+  });
+
+  const m10 = await prisma.movie.create({
+    data: {
+      id: "00000000-0000-0000-0000-000000000004",
+      title: "A Noite dos Mortos Vivos",
+      synopsis:
+        "Zumbis atacam um grupo de sobreviventes refugiados em uma fazenda.",
+      genres: "Terror",
+      duration: "96",
+      year: "1968",
+      director: "George A. Romero",
+      cast: "Duane Jones, Judith O'Dea, Karl Hardman",
+      isPopular: true,
+      isDeleted: false,
+      file_name: "https://dn600306.us.archive.org/0/items/NightOfTheLivingDead-MPEG/NightOfTheLivingDead_512kb.mp4",
+      img_url: "https://ia803202.us.archive.org/21/items/night-of-the-living-dead-1/Q4RTzV.jpg"
+    },
+  });
 
   console.log("✅ Banco de dados populado com a SEED COMPLETA!");
 }

@@ -6,10 +6,12 @@ interface LoginResponse {
   authenticated: boolean;
   message?: string;
   error?: string;
+  token?: string;
   user?: {
     id: string;
     name: string;
     email?: string;
+    role?: string;
   };
 }
 
@@ -35,5 +37,7 @@ export async function loginUser(
     id: data.user.id,
     name: data.user.name,
     email: data.user.email,
+    token: data.token,
+    role: data.user.role,
   };
 }

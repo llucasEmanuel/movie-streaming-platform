@@ -10,11 +10,18 @@
     "test:metadata": "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
     "test:player": "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
     "test:login": "echo 'Running Login GUI tests' && cucumber-js --config='' ../features/userlogingui.feature --import tsx --require 'tests/step_definitions/userLogin.steps.ts'",
+    "test:moviesmanagement": "echo 'Running Movies Management Cypress' && cypress run --spec '../features/moviesmanagement_GUI.feature'",
     "test:signup": "echo 'Running SignUp State tests' && cucumber-js --config='' ../features/userSignUp.feature --import tsx --require 'tests/step_definitions/userSignUp-steps.ts'",
     "test:history:gui:cypress": "cypress run --spec 'cypress/e2e/history_gui.feature'",
     "cypress:open": "cypress open",
     "preview": "vite preview",
-    "test:integ:movie-fetch-frontend": "npx vitest tests/integration/movieService.integration.spec.ts"
+    "test:integ:movie-fetch-frontend": "npx vitest tests/integration/movieService.integration.spec.ts",
+    "cypress:open": "cypress open"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": [
+      "tests/step_definitions/**/*.cy.{js,ts}"
+    ]
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
@@ -26,24 +33,35 @@
     "vitest": "^4.1.8"
   },
   "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^24.0.1",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "@cucumber/cucumber": "^13.0.0",
     "@eslint/js": "^10.0.1",
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.11",
     "@playwright/test": "^1.60.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.13.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/selenium-webdriver": "^4.35.6",
     "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.5.0",
     "axios-mock-adapter": "^2.1.0",
     "cucumber-html-reporter": "^7.2.0",
     "cucumber-pretty": "^6.0.1",
     "cypress": "^15.17.0",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-xpath": "^2.0.1",
+    "esbuild": "^0.28.0",
     "eslint": "^10.3.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "jsonwebtoken": "^9.0.3",
+    "postcss": "^8.5.15",
     "selenium-webdriver": "^4.44.0",
+    "tailwindcss": "^3.4.19",
     "ts-node": "^10.9.2",
     "tsx": "^4.22.4",
     "typescript": "~6.0.2",

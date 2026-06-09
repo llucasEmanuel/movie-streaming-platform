@@ -5,7 +5,7 @@ import { prisma } from "../database/prisma-client";
 // Camada responsável pela interação com o banco de dados
 
 export class MovieRepository {
-  constructor(private prismaClient: PrismaClient = prisma) {}
+  constructor(private prismaClient: PrismaClient = prisma) { }
 
   // Seleciona do BD pelo ID (uuid)
   async findById(id: string) {
@@ -33,7 +33,7 @@ export const getAllMovies = async (search?: string, genre?: string): Promise<Mov
 
   // Filtra a lista na memória
   return allMovies.filter((movie: any) => {
-    
+
     // Filtro Ícone de Gênero
     let matchesGenre = true;
     if (genreLower) {
@@ -61,15 +61,14 @@ export const insertMovie = async (movie: any) => {
       title: movie.title,
       synopsis: movie.synopsis,
       // Fazendo a ponte do nome do front para o nome do banco
-      file_name: movie.url_movie, 
-      
+      file_name: movie.url_movie,
+
       // O banco espera strings, mas o front manda arrays/números, então convertemos:
       duration: movie.duration ? String(movie.duration) : null,
       genres: Array.isArray(movie.genres) ? movie.genres.join(", ") : movie.genres,
-      director: Array.isArray(movie.directors) ? movie.directors.join(", ") : movie.directors,
-      cast: Array.isArray(movie.cast) ? movie.cast.join(", ") : movie.cast
-      
-      // url_poster é ignorado aqui pois a tabela não tem essa coluna configurada
+      director: Array.isArray(movie.director) ? movie.director.join(", ") : movie.director,
+      cast: Array.isArray(movie.cast) ? movie.cast.join(", ") : movie.cast,
+      img_url: movie.url_poster
     }
   });
 };
@@ -84,13 +83,28 @@ export const deleteMovie = async (id: string) => {
   return false;
 };
 
-export const updateMovie = async (id: string, updates: Partial<MovieModel>) => {
+export const updateMovie = async (id: string, updates: any) => {
   const movie = await prisma.movie.findUnique({ where: { id } });
 
   if (movie) {
+    const dataToUpdate: any = {};
+    if (updates.title !== undefined) dataToUpdate.title = updates.title;
+    if (updates.synopsis !== undefined) dataToUpdate.synopsis = updates.synopsis;
+    if (updates.url_movie !== undefined) dataToUpdate.file_name = updates.url_movie;
+    if (updates.duration !== undefined) dataToUpdate.duration = updates.duration ? String(updates.duration) : null;
+    if (updates.genres !== undefined) dataToUpdate.genres = Array.isArray(updates.genres) ? updates.genres.join(", ") : updates.genres;
+    
+    // Tratando o caso do diretor que pode vir como director (Frontend atual) ou directors
+    if (updates.director !== undefined) dataToUpdate.director = Array.isArray(updates.director) ? updates.director.join(", ") : updates.director;
+    else if (updates.directors !== undefined) dataToUpdate.director = Array.isArray(updates.directors) ? updates.directors.join(", ") : updates.directors;
+    
+    if (updates.cast !== undefined) dataToUpdate.cast = Array.isArray(updates.cast) ? updates.cast.join(", ") : updates.cast;
+    if (updates.url_poster !== undefined) dataToUpdate.img_url = updates.url_poster;
+    if (updates.isPopular !== undefined) dataToUpdate.isPopular = updates.isPopular;
+
     return await prisma.movie.update({
       where: { id },
-      data: updates as any,
+      data: dataToUpdate,
     }) as unknown as MovieModel;
   }
   return null;

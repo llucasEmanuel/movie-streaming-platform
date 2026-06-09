@@ -8,6 +8,21 @@ const apiClient = axios.create({
   timeout: 30000,
 });
 
+apiClient.interceptors.request.use((config) => {
+  const storedUser = localStorage.getItem('cinema_logged_user');
+  if (storedUser) {
+    try {
+      const user = JSON.parse(storedUser);
+      if (user.token) {
+        config.headers.Authorization = `Bearer ${user.token}`;
+      }
+    } catch (e) {
+      // Ignora erro de parse
+    }
+  }
+  return config;
+});
+
 // Classe para gerenciar erros de API
 export class ApiError extends Error {
   statusCode: number;

@@ -7,9 +7,10 @@ interface HeaderProps {
   onGoToHistory?: () => void;
   onGoToProfile?: () => void;
   onGoToRecommendations?: () => void;
+  onGoToAddMovie?: () => void;
 }
 
-export function Header({ activePage, onGoToHome, onGoToPlaylists, onGoToHistory, onGoToProfile, onGoToRecommendations }: HeaderProps) {
+export function Header({ activePage, onGoToHome, onGoToPlaylists, onLogout, onGoToHistory, onGoToProfile, onGoToRecommendations, onGoToAddMovie }: HeaderProps) {
   return (
     <header className="home-header">
       <img 
@@ -45,6 +46,16 @@ export function Header({ activePage, onGoToHome, onGoToPlaylists, onGoToHistory,
           >
             Recomendados
           </button>
+
+          {onGoToAddMovie && (
+            <button
+              className={`home-nav-button ${activePage === "add-movie" ? "active" : ""}`} 
+              type="button"
+              onClick={onGoToAddMovie}
+            >
+              Adicionar Filme
+            </button>
+          )}
         </nav>
 
         <div className="profile-dropdown">
