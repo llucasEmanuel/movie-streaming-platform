@@ -1,0 +1,129 @@
+/* Container que gerencia o cabeçalho e alinha o botão 'Ocultar tudo' na direita */
+.home-hero-history {
+  max-width: 1180px;
+  margin: 0 auto 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.home-hero-text {
+  text-align: left;
+}
+
+/* Botão Ocultar Tudo no estilo dos botões secundários da sua navbar */
+.btn-hide-all-dark {
+  background: var(--home-surface);
+  color: var(--home-text);
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-hide-all-dark:hover {
+  background: var(--home-surface-high);
+  border-color: var(--home-primary);
+  color: var(--home-primary);
+}
+
+/* Container do Scroll Automático */
+.history-scroll-container {
+  max-width: 1180px;
+  margin: 24px auto 0;
+  max-height: 450px; /* Limita a altura e cria o scroll se passar disso */
+  overflow-y: auto;
+  border: 1px solid var(--home-border);
+  border-radius: 10px;
+  background: var(--home-bg-dark);
+}
+
+/* Customização sutil da barra de rolagem (Scrollbar) */
+.history-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+.history-scroll-container::-webkit-scrollbar-track {
+  background: var(--home-bg-dark);
+}
+.history-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--home-surface-high);
+  border-radius: 4px;
+}
+
+.history-list-dark {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Linha do Histórico combinando com o tema Cinema */
+.history-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--home-border);
+  background: var(--home-surface);
+  transition: background 0.15s ease;
+}
+
+/* Remove a borda de baixo do último elemento para não duplicar com o container */
+.history-item-row:last-child {
+  border-bottom: none;
+}
+
+.history-item-row:hover {
+  background: rgba(255, 193, 7, 0.02); /* Tom amarelo bem sutil no fundo ao passar o mouse */
+}
+
+.history-date {
+  width: 120px;
+  color: var(--home-soft);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  text-align: left;
+}
+
+.history-title {
+  flex: 1;
+  text-align: left;
+  padding: 0 24px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--home-text);
+}
+
+/* Botão redondo discreto para ocultar linha individual */
+.btn-hide-item-dark {
+  background: transparent;
+  border: none;
+  color: var(--home-soft);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-hide-item-dark:hover {
+  color: var(--home-primary); /* Acende em amarelo no hover igual seu padrão */
+  background: var(--home-surface-high);
+}
+
+/* Caixa vazia original customizada por você na imagem image_39b36c.png */
+.history-empty-box {
+  max-width: 1180px;
+  margin: 24px auto 0;
+  border: 1px dashed var(--home-border); 
+  border-radius: 8px; 
+  padding: 40px; 
+  text-align: center;
+  color: var(--home-muted);
+  font-size: 15px;
+}

@@ -31,14 +31,23 @@ export class MovieController {
         return res.status(404).json({ message: "Este título não está disponível para reprodução no momento" });
       }
 
-      // O fetch do Node segue redirecionamentos automaticamente (follow redirects)
+      try {
+        const parsedUrl = new URL(videoUrl);
+        if (!parsedUrl.hostname.endsWith('archive.org')) {
+          return res.status(422).json({ message: "URL de reprodução inválida" });
+        }
+      } catch {
+        return res.status(422).json({ message: "URL de reprodução inválida" });
+      }
+
+      // Recebe os dados do Internet Archive
       const response = await fetch(videoUrl, {
         headers: {
           'Range': range
         }
       });
 
-      // Repassa os cabeçalhos do Internet Archive para o navegador
+      // Envia os cabeçalhos HTTP para o Internet Archive
       res.writeHead(response.status, {
         'Content-Type': response.headers.get('content-type') || 'video/mp4',
         'Content-Range': response.headers.get('content-range') || '',
@@ -46,11 +55,11 @@ export class MovieController {
         'Content-Length': response.headers.get('content-length') || '',
       });
 
-      // Transforma o body do fetch em um stream do Node e faz o pipe para a resposta
+      // Lê o stream de dados do video
       if (response.body) {
         const reader = response.body.getReader();
         
-        // Função para ler o stream do vídeo
+        // Definição de função para ler o stream do vídeo
         const push = async () => {
           const { done, value } = await reader.read();
           if (done) {
@@ -62,6 +71,7 @@ export class MovieController {
         };
         
         push();
+
       } else {
         res.status(500).send("Unable to read movie stream");
       }
@@ -72,8 +82,7 @@ export class MovieController {
           message: "Não foi possível carregar o filme. Verifique sua conexão ou tente novamente mais tarde" 
         });
       }
-      console.error("Streaming error:", error);
-      return res.status(404).json({ message: "Movie not found" });
+      return res.status(404).json({ message: error.message });
     }
   }
 
@@ -92,23 +101,22 @@ export class MovieController {
         setTimeout(() => reject(new Error("TIMEOUT_EXCEEDED")), 10000)
       );
 
-      // Promise.race executa as duas funções ao mesmo tempo e ganha a que terminar primeiro
+      // Promise.race() executa as duas funções ao mesmo tempo e ganha a que terminar primeiro
       const metadata = await Promise.race([
         movieService.getMetadata(moviesID),
         timeoutPromise
       ]);
 
-      return res.json(metadata);
+      return res.status(200).json(metadata);
 
     } catch (error: any) {
-      // Se o timeout ganhou a corrida, capturamos o erro aqui
+      // Se o timeout ganhou a corrida, o erro é detectado aqui
       if (error.message === "TIMEOUT_EXCEEDED") {
         return res.status(408).json({ 
           message: "Não foi possível carregar a página do filme. Verifique sua conexão ou tente novamente mais tarde" 
         });
       }
 
-      // Se foi outro erro, mantém o comportamento padrão
       return res.status(404).json({ message: error.message });
     }
   }
@@ -125,10 +133,10 @@ export class MovieController {
 
     try {
       const movieService = new MovieService();
-      // Pega os dados brutos (onde está a URL)
+
+      // Pega os dados brutos (sem pré-processamento do getMetadata)
       const movie = await movieService.getRawMovieData(moviesID);
       
-      // Supondo que no seu Prisma/Model o nome seja url_movie
       const videoUrl = movie.file_name; 
 
       if (!videoUrl) {
@@ -138,7 +146,7 @@ export class MovieController {
       const response = await fetch(videoUrl);
       if (!response.ok) throw new Error("Erro ao conectar com Archive.org");
 
-      // Define o nome do arquivo para o usuário final
+      // Define o nome do arquivo para o usuário
       const fileName = `${movie.title.replace(/\s+/g, '_')}.mp4`;
 
       const headers: Record<string, string> = {
@@ -157,6 +165,7 @@ export class MovieController {
         return res.status(500).json({ message: 'Resposta de stream inválida' });
       }
 
+      // Lê a stream de dados do Internet Archive
       const { Readable } = await import('node:stream');
       Readable.fromWeb(response.body as any).pipe(res);
 

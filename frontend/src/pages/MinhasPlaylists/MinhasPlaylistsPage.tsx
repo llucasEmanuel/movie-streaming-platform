@@ -8,16 +8,19 @@ import {
   removeMovieFromPlaylist,
   updatePlaylist,
 } from "../../services/playlistApi";
+import cinemaLogo from "../../assets/cinema_logo.png";
 import "./MinhasPlaylistsPage.css";
 
 interface MinhasPlaylistsPageProps {
   userId: string;
   onGoToHome: () => void;
+  onGoToRecommendations: () => void;
 }
 
 export function MinhasPlaylistsPage({
   userId,
   onGoToHome,
+  onGoToRecommendations,
 }: MinhasPlaylistsPageProps) {
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,37 +40,37 @@ export function MinhasPlaylistsPage({
 
   const hasPlaylists = playlists.length > 0;
 
-  async function loadPlaylists() {
-    try {
-      setLoading(true);
-
-      const data = await getPlaylistsByUserId(userId);
-
-      setPlaylists(data.playlists);
-
-      if (data.playlists.length === 0) {
-        setMessage({
-          type: "info",
-          text: "Ainda não existem playlists criadas",
-        });
-      } else {
-        setMessage(null);
-      }
-    } catch (error) {
-      setMessage({
-        type: "error",
-        text:
-          error instanceof Error
-            ? error.message
-            : "Erro inesperado ao buscar playlists",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }
-
   useEffect(() => {
-    loadPlaylists();
+    async function loadPlaylists() {
+      try {
+        setLoading(true);
+
+        const data = await getPlaylistsByUserId(userId);
+
+        setPlaylists(data.playlists);
+
+        if (data.playlists.length === 0) {
+          setMessage({
+            type: "info",
+            text: "Ainda não existem playlists criadas",
+          });
+        } else {
+          setMessage(null);
+        }
+      } catch (error) {
+        setMessage({
+          type: "error",
+          text:
+            error instanceof Error
+              ? error.message
+              : "Erro inesperado ao buscar playlists",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void loadPlaylists();
   }, [userId]);
 
   function openCreateModal() {
@@ -125,7 +128,10 @@ export function MinhasPlaylistsPage({
           userId,
         });
 
-        setPlaylists((currentPlaylists) => [data.playlist, ...currentPlaylists]);
+        setPlaylists((currentPlaylists) => [
+          data.playlist,
+          ...currentPlaylists,
+        ]);
 
         setMessage({
           type: "success",
@@ -212,7 +218,14 @@ export function MinhasPlaylistsPage({
   return (
     <div className="playlist-shell">
       <aside className="playlist-sidebar">
-        <div className="playlist-logo">Cinema</div>
+        <button
+          className="playlist-logo"
+          type="button"
+          onClick={onGoToHome}
+          aria-label="Ir para a página principal"
+        >
+          <img src={cinemaLogo} alt="CInema Filmes Antigos" />
+        </button>
 
         <nav className="playlist-menu">
           <button
@@ -231,6 +244,15 @@ export function MinhasPlaylistsPage({
           >
             <span>≡+</span>
             Minhas Playlists
+          </button>
+
+          <button
+            className="playlist-menu-item"
+            type="button"
+            onClick={onGoToRecommendations}
+          >
+            <span>☆</span>
+            Recomendados
           </button>
         </nav>
       </aside>

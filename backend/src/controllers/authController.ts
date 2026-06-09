@@ -75,3 +75,24 @@ export const deleteMe = async (req: Request, res: Response): Promise<Response | 
     }
 };
 
+export const verifyEmail = async (req: Request, res: Response): Promise<Response | any> => {
+    try {
+        const { email, code } = req.body;
+
+        // Validação básica se o frontend mandou os dados corretos
+        if (!email || !code) {
+            return res.status(400).json({ error: "E-mail e código são obrigatórios." });
+        }
+
+        // Chama o serviço que acabámos de criar
+        await authService.verifyUserEmail(email, code);
+
+        return res.status(200).json({ 
+            message: "Conta ativada com sucesso! Você já pode fazer login." 
+        });
+
+    } catch (error: any) {
+        return res.status(error.status || 500).json({ error: error.message || "Erro interno ao validar e-mail" });
+    }
+};
+

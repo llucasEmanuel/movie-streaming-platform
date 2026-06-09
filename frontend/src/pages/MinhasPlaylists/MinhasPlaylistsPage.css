@@ -66,11 +66,20 @@
 }
 
 .playlist-logo {
-  padding: 42px 32px;
-  color: var(--cinema-primary);
-  font-family: Manrope, sans-serif;
-  font-size: 22px;
-  font-weight: 800;
+  border: 0;
+  background: transparent;
+  padding: 24px 24px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.playlist-logo img {
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 .playlist-menu {
@@ -601,6 +610,10 @@
 
   .playlist-logo {
     padding: 24px 20px;
+  }
+
+  .playlist-logo img {
+    width: 180px;
   }
 
   .playlist-menu {

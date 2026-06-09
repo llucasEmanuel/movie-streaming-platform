@@ -10,6 +10,8 @@ export interface Movie {
   director?: string;
   cast?: string;
   createdAt: string;
+  year?: string;
+  resumePosition?: number;
 }
 
 export interface MovieMetadata {
@@ -21,6 +23,7 @@ export interface MovieMetadata {
   duration: string;
   director: string;
   cast: string;
+  year: string;
 }
 
 export interface User {
@@ -49,9 +52,28 @@ export interface History {
   watchedAt: string;
 }
 
+export interface UnfinishedMovieApiRecord {
+  movieId: string;
+  title: string;
+  image?: string | null;
+  progress_percentage: number;
+  last_position: number;
+}
+
 export type PageMessageType = "success" | "error" | "info";
 
 export interface PageMessage {
   type: PageMessageType;
   text: string;
+}
+
+export interface LoggedUser {
+  id: string;
+  name: string;
+  email?: string;
+}
+export interface RecommendationSection {
+  sectionTitle?: string;
+  movies: Movie[];
+  message?: string;
 }

@@ -63,12 +63,12 @@ export class RecommendationController {
   async handleSimilar(request: Request, response: Response): Promise<Response> {
     try {
       const movieId = request.params.movieId as string;
-
+      const userId = request.params.userId as string;
       if (!movieId) {
         return response.status(400).json({ error: 'O ID do filme é obrigatório.' });
       }
 
-      const similarMovies = await recommendationService.getSimilarMovies(movieId);
+      const similarMovies = await recommendationService.getSimilarMovies(movieId,userId);
       return response.status(200).json(similarMovies);
     } catch (error) {
       console.error(error);

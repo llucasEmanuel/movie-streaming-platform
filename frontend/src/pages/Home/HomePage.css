@@ -41,7 +41,7 @@
 }
 
 .home-header {
-  padding: 28px 32px;
+  padding: 24px 32px;
   border-bottom: 1px solid var(--home-border);
   background: var(--home-bg-dark);
   display: flex;
@@ -72,6 +72,10 @@
   font-weight: 700;
   cursor: pointer;
   transition: 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
 }
 
 .home-nav-button:hover,
@@ -83,11 +87,12 @@
 
 .home-content {
   padding: 36px 32px 56px;
+  margin: 0 32px 0;
 }
 
 .home-hero {
   max-width: 1180px;
-  margin: 0 auto 28px;
+  margin: 0 0 28px;
   text-align: left;
 }
 
@@ -363,4 +368,200 @@
   .movie-card-placeholder {
     height: 260px;
   }
+}
+
+/* ESTILOS PARA O MENU DE PERFIL (DROPDOWN) */
+
+.home-header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-trigger {
+  background: var(--home-surface);
+  border: 1px solid var(--home-border);
+  border-radius: 12px;
+  padding: 4px 12px 4px 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.profile-trigger:hover {
+  border-color: rgba(255, 193, 7, 0.35);
+  background: rgba(255, 193, 7, 0.05);
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--home-primary);
+  color: var(--home-on-primary);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.profile-arrow {
+  border: solid var(--home-text);
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.profile-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 12px); 
+  width: 220px;
+  background: var(--home-bg-dark);
+  border: 1px solid var(--home-border);
+  border-radius: 10px;
+  padding: 6px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 100;
+}
+
+.profile-menu::before {
+  content: '';
+  position: absolute;
+
+  top: -14px; 
+  left: 0;
+  right: 0;
+  height: 14px; 
+  background: transparent; 
+}
+
+.profile-dropdown:hover .profile-menu {
+  display: block;
+}
+
+.profile-dropdown:hover .profile-arrow {
+  transform: rotate(-135deg);
+}
+
+.profile-menu-item {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: var(--home-text);
+  padding: 12px 20px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: 0.15s ease;
+}
+
+.profile-menu-item svg {
+  opacity: 0.7;
+}
+
+.profile-menu-item:hover {
+  background: var(--home-surface-high);
+  color: var(--home-primary);
+}
+
+.profile-menu-item:hover svg {
+  opacity: 1;
+}
+
+.profile-menu-divider {
+  height: 1px;
+  background: var(--home-border);
+  margin: 6px 0;
+}
+
+@media (max-width: 780px) {
+  .home-header-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+}
+
+.keep-watching-section,
+.catalog-section {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.keep-watching-section {
+  margin-top: 12px;
+  margin-bottom: 40px; 
+}
+
+.section-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.section-title-wrapper h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.section-title-line {
+  flex: 1;
+  height: 1px;
+  background-color: #2d2d2d; 
+}
+
+.keep-watching-scrollview {
+  display: flex;
+  gap: 20px; 
+  overflow-x: auto;
+  width: 100%;
+  box-sizing: border-box;
+  padding-bottom: 14px; 
+  scroll-behavior: smooth;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.keep-watching-scroll-item {
+  flex: 0 0 280px; 
+}
+
+.keep-watching-scrollview::-webkit-scrollbar {
+  height: 6px;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 10px;
+}
+
+.keep-watching-scrollview::-webkit-scrollbar-thumb:hover {
+  background: #fcc147;
 }

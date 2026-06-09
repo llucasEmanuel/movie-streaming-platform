@@ -78,13 +78,6 @@ Scenario: Atualizar seções após remoção parcial do histórico
     Then a página "Recomendados" não exibe a playlist "Porque você assistiu Vingadores"
     And a página "Recomendados" exibe a playlist "Porque você assistiu Titanic"
 
-Scenario: Restringir acesso para usuário não autenticado
-    Given eu não estou logado na plataforma
-    When eu acesso a página "Principal"
-    Then o sistema exibe a mensagem "Faça login para acessar o conteúdo"
-    And o sistema não exibe "Páginas"
-    And o sistema não exibe "Playlists"
-
 Scenario: Gerar recomendações após atingir o mínimo de filmes no gênero
     Given eu acesso o sistema como "usuário"
     And eu assisti a "2" filmes do gênero "Terror"

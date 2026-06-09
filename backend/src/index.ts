@@ -5,8 +5,8 @@ import { recommendationRoutes } from "./routes/recommendation-routes";
 import userRoutes from "./routes/routes";
 import { router as movieRoutes } from "./routes/movie-routes";
 import { router as playlistRouter } from "./routes/playlist-route";
-import historyRoutes from './routes/history-routes';
 import { router as accountRouter } from "./routes/account-routes";
+import historyRoutes from "./routes/history-routes";
 
 const app = express();
 app.use(cors())
@@ -28,6 +28,10 @@ app.use("/", movieRoutes);
 // Registrando as rotas de playlists
 app.use("/", playlistRouter);
 
+// Registrando as rotas de histórico
+app.use("/history", historyRoutes);
+app.use("/api/history", historyRoutes);
+
 // Rotas quando a URL começar com /recommendations
 app.use("/recommendations", recommendationRoutes);
 
@@ -35,9 +39,6 @@ app.use("/recommendations", recommendationRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.json({ message: "Movie Streaming API is running" });
 });
-
-// Rota principal do histórico
-app.use('/history', historyRoutes);
 
 // Iniciando o servidor APENAS se não estivermos em ambiente de teste
 if (process.env.NODE_ENV !== 'test') {
