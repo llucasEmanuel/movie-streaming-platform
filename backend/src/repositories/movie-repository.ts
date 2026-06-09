@@ -1,16 +1,18 @@
 import { MovieModel } from "../models/movie-model";
 import { PrismaClient } from "../generated/prisma";
-import { prisma } from "../database/prisma-client"; // <-- Única importação do prisma
+import { prisma } from "../database/prisma-client";
 
 // Camada responsável pela interação com o banco de dados
 
 export class MovieRepository {
   constructor(private prismaClient: PrismaClient = prisma) {}
 
+  // Seleciona do BD pelo ID (uuid)
   async findById(id: string) {
     return await this.prismaClient.movie.findUnique({ where: { id } });
   }
 
+  // Salva filme no BD
   async save(data: any) {
     return await this.prismaClient.movie.create({ data });
   }

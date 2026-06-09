@@ -20,6 +20,7 @@ export class MovieService {
   async getMetadata(id: string) {
     const movie = await this.repository.findById(id);
 
+    // Pré-processamento dos metadados para tratar campos vazios
     if (!movie) throw new NotFoundError("Filme não encontrado");
     return {
       id: movie.id,
@@ -33,6 +34,8 @@ export class MovieService {
       year: movie.year || "N/A"
     };
   }
+
+  // Retorna os metadados brutos do filme
   async getRawMovieData(id: string) {
     // O service chama o repository, mantendo-se isolado do Prisma
     const movie = await this.repository.findById(id);
