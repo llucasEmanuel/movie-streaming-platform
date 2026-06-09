@@ -7,11 +7,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test:metadata" :  "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
-    "test:player" :  "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
+    "test:metadata": "echo 'Running Metadata GUI tests' && cucumber-js --config='' ../features/MovieMetadata_GUI.feature --import tsx --require 'tests/step_definitions/metadata-steps.ts'",
+    "test:player": "echo 'Running Player GUI tests' && cucumber-js --config='' ../features/MoviePlayer_GUI.feature --import tsx --require 'tests/step_definitions/player-steps.ts'",
     "test:login": "echo 'Running Login GUI tests' && cucumber-js --config='' ../features/userlogingui.feature --import tsx --require 'tests/step_definitions/userLogin.steps.ts'",
     "test:signup": "echo 'Running SignUp State tests' && cucumber-js --config='' ../features/userSignUp.feature --import tsx --require 'tests/step_definitions/userSignUp-steps.ts'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:integ:movie-fetch-frontend": "npx vitest tests/integration/movieService.integration.spec.ts"
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.5",
@@ -19,10 +20,12 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-icons": "^5.6.0",
-    "react-router-dom": "^6.28.0"
+    "react-router-dom": "^6.28.0",
+    "vitest": "^4.1.8"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^24.13.1",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
